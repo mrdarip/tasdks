@@ -1,4 +1,5 @@
 plugins {
+    id("com.google.devtools.ksp")
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
 }
@@ -23,7 +24,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -56,7 +60,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.room.common)
+    implementation("androidx.room:room-runtime:{latest_version}")
+    annotationProcessor("androidx.room:room-compiler:{latest_version}")
+    implementation("androidx.room:room-ktx:{latest_version}")
+    implementation("androidx.navigation:navigation-compose:{latest_version}")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
