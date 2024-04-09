@@ -4,5 +4,3 @@ plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
 }
-
-val room_version by extra { "2.6.1" }
