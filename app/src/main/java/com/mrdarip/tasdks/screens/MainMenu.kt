@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -26,7 +27,7 @@ import com.mrdarip.tasdks.R
 import com.mrdarip.tasdks.data.entity.Playlist
 
 @Composable
-fun MainMenu(navController:NavController) {
+fun MainMenu(navController: NavController) {
     Scaffold(topBar = {
         Text(text = "hello")
     }, bottomBar = {
@@ -57,13 +58,13 @@ fun MainMenu(navController:NavController) {
 @Composable
 fun BodyContent() {
     Column(Modifier.verticalScroll(rememberScrollState())) {
+        PlaylistsDisplay(
+            title = "Hola mundo",
+            playlists = listOf(Playlist(0, "test1"), Playlist(1, "test2"))
+        )
 
-        for (i in 1..10) {
-            SquarePlaylist(name = "hola $i", drawable = R.drawable.ic_launcher_foreground)
-        }
     }
 }
-
 
 
 @Composable
@@ -78,6 +79,11 @@ fun SquarePlaylist(name: String, @DrawableRes drawable: Int) {
 }
 
 @Composable
-fun PlaylistsDisplay(title:String,playlist:List<Playlist>){
+fun PlaylistsDisplay(title: String, playlists: List<Playlist>) {
+    Row {
+        for (playlist in playlists) {
+            SquarePlaylist(name = playlist.name, drawable = R.drawable.ic_launcher_foreground)
+        }
+    }
 
 }
