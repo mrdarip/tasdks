@@ -2,6 +2,8 @@ package com.mrdarip.tasdks.screens
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,11 +14,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,10 +31,23 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.R
 import com.mrdarip.tasdks.data.entity.Playlist
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMenu(navController: NavController) {
+    Text(
+        text = "Hello World!"
+    )
     Scaffold(topBar = {
-        Text(text = "hello")
+        TopAppBar(
+            colors = topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            ),
+            title = {
+                Text("Top app bar")
+            }
+        )
     }, bottomBar = {
         BottomAppBar(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -60,7 +78,14 @@ fun BodyContent() {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         PlaylistsDisplay(
             title = "Hola mundo",
-            playlists = listOf(Playlist(0, "test1"), Playlist(1, "test2"))
+            playlists = listOf(
+                Playlist(0, "test1"),
+                Playlist(1, "test2"),
+                Playlist(1, "test2"),
+                Playlist(1, "test2"),
+                Playlist(1, "test2"),
+                Playlist(1, "test2")
+            )
         )
 
     }
@@ -69,7 +94,11 @@ fun BodyContent() {
 
 @Composable
 fun SquarePlaylist(name: String, @DrawableRes drawable: Int) {
-    Column(verticalArrangement = Arrangement.SpaceBetween) {
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+            .padding(24.dp)
+            .clickable(onClick = {/*TODO*/ })
+    ) {
         Image(
             painter = painterResource(id = drawable),
             contentDescription = "imagen"
@@ -80,7 +109,8 @@ fun SquarePlaylist(name: String, @DrawableRes drawable: Int) {
 
 @Composable
 fun PlaylistsDisplay(title: String, playlists: List<Playlist>) {
-    Row {
+
+    Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
         for (playlist in playlists) {
             SquarePlaylist(name = playlist.name, drawable = R.drawable.ic_launcher_foreground)
         }

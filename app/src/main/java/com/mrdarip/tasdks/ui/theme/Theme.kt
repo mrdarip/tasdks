@@ -41,6 +41,7 @@ private val LightColorScheme = lightColorScheme(
 fun TasdksTheme(
         darkTheme: Boolean = isSystemInDarkTheme(),
         // Dynamic color is available on Android 12+
+
         dynamicColor: Boolean = true,
         content: @Composable () -> Unit
 ) {
@@ -64,7 +65,7 @@ fun TasdksTheme(
 
     MaterialTheme(
             colorScheme = colorScheme,
-            typography = Typography,
+            typography = TasdksTypography,
             content = content
     )
 }
