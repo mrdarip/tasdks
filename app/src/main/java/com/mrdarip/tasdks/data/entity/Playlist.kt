@@ -5,7 +5,20 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "playlists")
 data class Playlist(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val playlistId: Long = 0,
     val name: String
-)
+){}
+
+@Entity(tableName = "Tasks")
+data class Task(
+    @PrimaryKey(autoGenerate = true)
+    val taskId: Long = 0,
+    val name: String
+){}
+
+@Entity()
+data class PlaylistTaskCR(
+    val playlistId: Long,
+    val taskId: Long
+){}
 
