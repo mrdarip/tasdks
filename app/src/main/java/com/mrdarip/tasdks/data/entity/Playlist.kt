@@ -4,12 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
 
-@Entity(tableName = "playlists")
-data class Playlist(
-    @PrimaryKey(autoGenerate = true)
-    val playlistId: Long = 0,
-    val name: String
-){}
 
 @Entity(tableName = "Tasks")
 data class Task(
@@ -72,11 +66,8 @@ data class Resource(
 
 
 
-@Entity()
-data class PlaylistTaskCR(
-    val playlistId: Long,
-    val taskId: Long
-){}
+
+
 
 @Entity()
 data class TaskObjectCR(
