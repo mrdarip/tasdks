@@ -42,11 +42,11 @@ data class Object(
 data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
     val comment: String?,
-    val minRepSec: UInt,
-    val optRepSec: UInt?,
-    val maxRepSec: UInt?,
+    val minRepSec: Int,
+    val optRepSec: Int?,
+    val maxRepSec: Int?,
     val endAfterDate: Date?,
-    val endAfterRep: UInt?,
+    val endAfterRep: Int?,
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean
 )
 

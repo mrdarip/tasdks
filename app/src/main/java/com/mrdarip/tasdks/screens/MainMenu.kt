@@ -31,12 +31,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.R
-import com.mrdarip.tasdks.data.entity.Playlist
+import com.mrdarip.tasdks.data.Repository
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainMenu(navController: NavController) {
+fun MainMenu(navController: NavController,repository: Repository) {
     Text(
         text = "Hello World!"
     )
@@ -76,14 +76,7 @@ fun MainMenu(navController: NavController) {
 fun BodyContent() {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         PlaylistsDisplay(
-            title = "Hola mundo", playlists = listOf(
-                Playlist(0, "test1"),
-                Playlist(1, "test2"),
-                Playlist(1, "test2"),
-                Playlist(1, "test2"),
-                Playlist(1, "test2"),
-                Playlist(1, "test2")
-            )
+            title = "Hola mundo"
         )
 
     }
@@ -105,12 +98,12 @@ fun SquarePlaylist(name: String, @DrawableRes drawable: Int) {
 }
 
 @Composable
-fun PlaylistsDisplay(title: String, playlists: List<Playlist>) {
+fun PlaylistsDisplay(title: String) {
 
     Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-        for (playlist in playlists) {
+        /*for (playlist in playlists) {
             SquarePlaylist(name = playlist.name, drawable = R.drawable.ic_launcher_foreground)
-        }
+        }*/
     }
 
 }
