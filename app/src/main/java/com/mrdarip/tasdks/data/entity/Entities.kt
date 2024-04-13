@@ -84,30 +84,22 @@ data class TaskTaskCR(
     val childTaskId: Long
 )
 
-data class TasksByTask(
+data class TaskWithTasks(
     @Embedded val task: Task,
     @Relation(
-        parentColumn = "parentTaskId",
+        parentColumn = "taskId",
         entityColumn = "childTaskId",
         associateBy = Junction(TaskTaskCR::class)
     )
-    val songs: List<Task>
+    val tasks: List<Task>
 )
 
-@Dao
-interface TaskDAO {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(task : Task)
-
-    @Update
-    suspend fun update(item: Task)
-
-    @Delete
-    suspend fun delete(item: Task)
-
-    @Query("SELECT * from tasks WHERE taskId = :id")
-    fun getItem(id: Int): Flow<Task>
-
-    @Query("SELECT * from tasks ORDER BY name ASC")
-    fun getAllItems(): Flow<List<Task>>
-}
+data class TaskWithObjects(
+    @Embedded val task: Task,
+    @Relation(
+        parentColumn = "taskId",
+        entityColumn = "objectId",
+        associateBy = Junction(TaskObjectCR::class)
+    )
+    val objects: List<Object>
+)
