@@ -30,13 +30,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.R
-import com.mrdarip.tasdks.data.Repository
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainMenu(navController: NavController,repository: Repository) {
+fun MainMenu(navController: NavController) {
     Text(
         text = "Hello World!"
     )
