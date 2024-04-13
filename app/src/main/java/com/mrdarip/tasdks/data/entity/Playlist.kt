@@ -10,6 +10,7 @@ data class Task(
     @PrimaryKey(autoGenerate = true)
     val taskId: Long = 0,
     val name: String,
+    val comment: String,
     val placeId: Long
 ){}
 
@@ -38,7 +39,8 @@ data class Activator(
     val optRepSec: UInt,
     val maxRepSec: UInt,
     val endAfterDate: Date,
-    val endAfterRep: UInt
+    val endAfterRep: UInt,
+    val userCancelled: Bool
 ){}
 
 @Entity(tableName = "Executions")
