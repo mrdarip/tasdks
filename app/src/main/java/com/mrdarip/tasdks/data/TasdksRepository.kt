@@ -11,6 +11,23 @@ class TasdksRepository(
     private val ActivatorDAO: DAOs.ActivatorDAO,
     private val ExecutionDAO: DAOs.ExecutionDAO,
     private val ResourceDAO: DAOs.ResourceDAO,
+    private val TaskWithTaskDAO: DAOs.TaskWithTasksDAO
 ) {
+
+    //Todo add other DAOs, video 5/7
+    val tasks = TaskDAO.getAllTasks()
+    //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
+    fun getTaskById(taskId: Long) = TaskDAO.getTaskById(taskId)
+    suspend fun insertTask(task: Task) {
+        TaskDAO.insert(task)
+    }
+
+    suspend fun updateTask(task: Task) {
+        TaskDAO.update(task)
+    }
+
+    suspend fun deleteTask(task: Task) {
+        TaskDAO.delete(task)
+    }
 
 }

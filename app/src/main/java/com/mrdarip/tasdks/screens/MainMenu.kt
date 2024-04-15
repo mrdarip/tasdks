@@ -29,12 +29,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMenu(navController: NavController) {
+    val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
+    val mainMenuState = mainMenuViewModel.state
+
+
     Text(
         text = "Hello World!"
     )
@@ -57,7 +62,7 @@ fun MainMenu(navController: NavController) {
             )
         }
     }, floatingActionButton = {
-        FloatingActionButton(onClick = { }) {
+        FloatingActionButton(onClick = {}) {
             Icon(Icons.Default.Add, contentDescription = "Add")
         }
     }) { innerPadding ->
@@ -66,6 +71,9 @@ fun MainMenu(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             BodyContent()
+            mainMenuState.tasks.forEach {
+                Text(text = it.name)
+            }
         }
     }
 }
@@ -77,6 +85,8 @@ fun BodyContent() {
             title = "Hola mundo"
         )
 
+
+
     }
 }
 
@@ -84,7 +94,8 @@ fun BodyContent() {
 @Composable
 fun SquarePlaylist(name: String, @DrawableRes drawable: Int) {
     Column(
-        verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.clip(RoundedCornerShape(16.dp))
+        verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = {/*TODO*/ })
             .padding(24.dp)
     ) {

@@ -84,15 +84,16 @@ data class TaskTaskCR(
     val childTaskId: Long
 )
 
-data class TaskWithTasks(
+data class TaskWithParentTasks(
     @Embedded val task: Task,
     @Relation(
         parentColumn = "taskId",
-        entityColumn = "childTaskId",
+        entity = Task::class,
+        entityColumn = "taskId",
         associateBy = Junction(TaskTaskCR::class)
     )
-    val tasks: List<Task>
-)
+    val parentTasks: List<Task>
+))
 
 data class TaskWithObjects(
     @Embedded val task: Task,
