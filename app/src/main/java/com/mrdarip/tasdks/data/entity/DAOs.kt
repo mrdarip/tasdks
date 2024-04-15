@@ -1,5 +1,6 @@
-package com.mrdarip.tasdks.data
+package com.mrdarip.tasdks.data.entity
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -28,7 +29,7 @@ class DAOs {
         fun delete(task: Task)
 
         @Query("SELECT * FROM tasks")
-        fun getAllTasks(): List<Task>
+        fun getAllTasks(): LiveData<List<Task>>
 
         @Query("SELECT * FROM tasks WHERE taskId = :taskId")
         fun getTaskById(taskId: Long): Task
@@ -46,7 +47,7 @@ class DAOs {
         fun delete(place: Place)
 
         @Query("SELECT * FROM places")
-        fun getAllPlaces(): List<Place>
+        fun getAllPlaces(): LiveData<List<Place>>
 
         @Query("SELECT * FROM places WHERE placeId = :placeId")
         fun getPlaceById(placeId: Long): Place
@@ -64,7 +65,7 @@ class DAOs {
         fun delete(obj: Object)
 
         @Query("SELECT * FROM objects")
-        fun getAllObjects(): List<Object>
+        fun getAllObjects(): LiveData<List<Object>>
 
         @Query("SELECT * FROM objects WHERE objectId = :objectId")
         fun getObjectById(objectId: Long): Object
@@ -82,7 +83,7 @@ class DAOs {
         fun delete(activator: Activator)
 
         @Query("SELECT * FROM activators")
-        fun getAllActivators(): List<Activator>
+        fun getAllActivators(): LiveData<List<Activator>>
 
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
         fun getActivatorById(activatorId: Long): Activator
@@ -100,14 +101,14 @@ class DAOs {
         fun delete(execution: Execution)
 
         @Query("SELECT * FROM executions")
-        fun getAllExecutions(): List<Execution>
+        fun getAllExecutions(): LiveData<List<Execution>>
 
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
         fun getExecutionById(executionId: Long): Execution
     }
 
     @Dao
-    interface resourceDAO {
+    interface ResourceDAO {
         @Insert
         fun insert(resource: Resource)
 
@@ -118,7 +119,7 @@ class DAOs {
         fun delete(resource: Resource)
 
         @Query("SELECT * FROM resources")
-        fun getAllResources(): List<Resource>
+        fun getAllResources(): LiveData<List<Resource>>
 
         @Query("SELECT * FROM resources WHERE resourceId = :resourceId")
         fun getResourceById(resourceId: Long): Resource
@@ -128,13 +129,13 @@ class DAOs {
     interface TaskWithTasksDAO {
         @Transaction
         @Query("SELECT * FROM tasks")
-        fun getTasksWithTasks(): List<TaskWithTasks>
+        fun getTasksWithTasks(): LiveData<List<TaskWithTasks>>
     }
 
     @Dao
     interface TaskWithObjectsDAO {
         @Transaction
         @Query("SELECT * FROM tasks")
-        fun getTasksWithObjects(): List<TaskWithObjects>
+        fun getTasksWithObjects(): LiveData<List<TaskWithObjects>>
     }
 }
