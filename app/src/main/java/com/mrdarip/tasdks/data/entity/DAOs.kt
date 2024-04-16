@@ -119,10 +119,10 @@ class DAOs {
     }
 
     @Dao
-    interface TaskWithParentTasksDAO {
+    interface TaskWithTasksDAO {
         @Transaction
         @Query("SELECT * FROM tasks")
-        fun getTasksWithParentTasks(): Flow<List<TaskWithParentTasks>>
+        fun getTasksWithParentTasks(): Flow<List<TaskWithTasks>>
     }
 
     @Dao
