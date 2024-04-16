@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -28,9 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.R
+import com.mrdarip.tasdks.data.entity.Task
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,49 +75,44 @@ fun MainMenu(navController: NavController) {
             modifier = Modifier.padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            BodyContent()
-            mainMenuState.tasks.forEach {
-                Text(text = it.name)
-            }
+            BodyContent(mainMenuViewModel,mainMenuState)
         }
     }
 }
 
 @Composable
-fun BodyContent() {
+fun BodyContent(mainMenuViewModel: MainMenuViewModel,mainMenuState: MainMenuState) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        PlaylistsDisplay(
-            title = "Hola mundo"
-        )
-
-
-
+        TasksCardRow(mainMenuState.tasks)
     }
+
+
 }
 
 
 @Composable
-fun SquarePlaylist(name: String, @DrawableRes drawable: Int) {
+fun TaskCard(name: String, @DrawableRes drawable: Int, onClick: () -> Unit = {}) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
-            .clickable(onClick = {/*TODO*/ })
+            .clickable(onClick = onClick)
             .padding(24.dp)
     ) {
         Image(
             painter = painterResource(id = drawable), contentDescription = "imagen"
         )
-        Text(text = name)
+        Text(text = name, overflow = TextOverflow.Ellipsis, maxLines = 1)
     }
 }
 
 @Composable
-fun PlaylistsDisplay(title: String) {
+fun TasksCardRow(tasks :List<Task>, onClick: () -> Unit = {}) {
+    val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
 
-    Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-        /*for (playlist in playlists) {
-            SquarePlaylist(name = playlist.name, drawable = R.drawable.ic_launcher_foreground)
-        }*/
+    LazyRow(modifier = Modifier) {
+        items(tasks) { task ->
+            TaskCard(name = task.name, drawable = R.drawable.ic_launcher_foreground, onClick = { /*mainMenuViewModel.deleteTask(task)*/ })
+        }
     }
 
 }
