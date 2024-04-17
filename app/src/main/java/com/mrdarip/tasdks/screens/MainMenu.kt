@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.screens
 
+import android.text.EmojiConsistency
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -8,7 +9,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -100,39 +103,52 @@ fun MainMenu(navController: NavController) {
 @Composable
 fun BodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        TasksCardRow(mainMenuState.tasks)
+        TasksCardRow(mainMenuState.tasks, "All tasks")
     }
-
-
 }
 
 
 @Composable
-fun TaskCard(name: String, @DrawableRes drawable: Int, onClick: () -> Unit = {}) {
+fun TaskCard(name: String, comment: String?, iconEmoji:String?, onClick: () -> Unit = {}) {
     Column(
-        verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+        verticalArrangement = Arrangement.Top, modifier = Modifier
+            .width(200.dp)
+            .height(150.dp)
             .padding(12.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(24.dp)
     ) {
-        Image(
-            painter = painterResource(id = drawable), contentDescription = "imagen"
+        Text(
+            text = (iconEmoji?:"🗒️") + " "+ name,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
         )
-        Text(text = name, overflow = TextOverflow.Ellipsis, maxLines = 1)
+        Text(
+            text = comment ?: "",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
 @Composable
-fun TasksCardRow(tasks: List<Task>, onClick: () -> Unit = {}) {
-    val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
+fun TasksCardRow(tasks: List<Task>, title: String, onClick: () -> Unit = {}) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.headlineMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
+    )
 
-    LazyRow(modifier = Modifier, ) {
+    LazyRow(modifier = Modifier) {
         items(tasks) { task ->
             TaskCard(
                 name = task.name,
-                drawable = R.drawable.ic_launcher_foreground,
-                onClick = { /*mainMenuViewModel.deleteTask(task)*/ })
+                comment = task.comment,
+                iconEmoji = "🐐"
+            )
         }
     }
 }
