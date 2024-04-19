@@ -48,6 +48,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -103,13 +104,15 @@ fun MainMenu(navController: NavController) {
 @Composable
 fun BodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        TasksCardRow(mainMenuState.tasks, "All tasks")
+        TasksCardRow(mainMenuState.tasks, "All tasks", mainMenuViewModel)
+        TasksCardRow(mainMenuState.tasksOrderedByLastDone, "Last done", mainMenuViewModel)
+        TasksCardRow(mainMenuState.tasksOrderedByUsuallyAtThisTime, "Usually at this time", mainMenuViewModel)
     }
 }
 
 
 @Composable
-fun TaskCard(name: String, comment: String?, iconEmoji:String?, onClick: () -> Unit = {}) {
+fun TaskCard(task:Task, onClick: () -> Unit = {}) {
     Column(
         verticalArrangement = Arrangement.Top, modifier = Modifier
             .width(200.dp)
@@ -120,12 +123,18 @@ fun TaskCard(name: String, comment: String?, iconEmoji:String?, onClick: () -> U
             .padding(24.dp)
     ) {
         Text(
-            text = (iconEmoji?:"🗒️") + " "+ name,
+            text = (task.iconEmoji?:"🗒️") + " "+ task.name,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(
-            text = comment ?: "",
+            text = task.comment ?: "",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = task.placeId?.toString() ?: "",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             overflow = TextOverflow.Ellipsis
@@ -134,7 +143,7 @@ fun TaskCard(name: String, comment: String?, iconEmoji:String?, onClick: () -> U
 }
 
 @Composable
-fun TasksCardRow(tasks: List<Task>, title: String, onClick: () -> Unit = {}) {
+fun TasksCardRow(tasks: List<Task>, title: String, HomeViewModel: MainMenuViewModel) {
     Text(
         text = title,
         style = MaterialTheme.typography.headlineMedium,
@@ -145,9 +154,10 @@ fun TasksCardRow(tasks: List<Task>, title: String, onClick: () -> Unit = {}) {
     LazyRow(modifier = Modifier) {
         items(tasks) { task ->
             TaskCard(
-                name = task.name,
-                comment = task.comment,
-                iconEmoji = "🐐"
+                task = task,
+                onClick = {
+                    HomeViewModel.deleteTask(task)
+                }
             )
         }
     }

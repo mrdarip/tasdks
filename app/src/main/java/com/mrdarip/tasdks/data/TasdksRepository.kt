@@ -3,6 +3,8 @@ package com.mrdarip.tasdks.data
 import androidx.lifecycle.LiveData
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class TasdksRepository(
     private val TaskDAO: DAOs.TaskDAO,
@@ -15,9 +17,17 @@ class TasdksRepository(
 ) {
 
     //Todo add other DAOs, video 5/7
-    val tasks = TaskDAO.getAllTasks()
+    val tasks = TaskDAO.getAll()
+    val tasksOrderByLastDone = TaskDAO.getAllOrderByLastDone()
+    val tasksOrderByUsuallyAtThisTime = TaskDAO.getAllOrderByUsuallyAtThisTime()
+    val places = PlaceDAO.getAllPlaces()
+    val objects = ObjectDAO.getAllObjects()
+    val activators = ActivatorDAO.getAllActivators()
+    val executions = ExecutionDAO.getAllExecutions()
+    val resources = ResourceDAO.getAllResources()
+
     //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
-    fun getTaskById(taskId: Long) = TaskDAO.getTaskById(taskId)
+    fun getTaskById(taskId: Long) = TaskDAO.getById(taskId)
     suspend fun insertTask(task: Task) {
         TaskDAO.insert(task)
     }
@@ -27,7 +37,9 @@ class TasdksRepository(
     }
 
     suspend fun deleteTask(task: Task) {
-        TaskDAO.delete(task)
+        withContext(Dispatchers.IO) {
+            TaskDAO.delete(task)
+        }
     }
 
 }

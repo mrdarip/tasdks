@@ -21,6 +21,7 @@ data class Task(
     @PrimaryKey(autoGenerate = true) val taskId: Long = 0,
     val name: String,
     val comment: String?,
+    val iconEmoji: String?,
     val placeId: Long?
 )
 

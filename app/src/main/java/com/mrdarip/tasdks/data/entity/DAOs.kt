@@ -22,10 +22,16 @@ class DAOs {
         fun delete(task: Task)
 
         @Query("SELECT * FROM tasks")
-        fun getAllTasks(): Flow<List<Task>>
+        fun getAll(): Flow<List<Task>>
+
+        @Query("SELECT * FROM tasks")
+        fun getAllOrderByLastDone(): Flow<List<Task>>
+
+        @Query("SELECT * FROM tasks")
+        fun getAllOrderByUsuallyAtThisTime(): Flow<List<Task>>
 
         @Query("SELECT * FROM tasks WHERE taskId = :taskId")
-        fun getTaskById(taskId: Long): Task
+        fun getById(taskId: Long): Task
     }
 
     @Dao
