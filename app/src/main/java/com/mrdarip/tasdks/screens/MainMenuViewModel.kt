@@ -3,12 +3,15 @@ package com.mrdarip.tasdks.screens
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
 import com.mrdarip.tasdks.data.entity.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 class MainMenuViewModel(
@@ -20,7 +23,8 @@ class MainMenuViewModel(
     init {
         getTasks()
         getPlaces()
-        getTasksOrdered()
+        getTasksOrderByLastDone()
+        getTasksOrderByUsuallyAtThisTime()
     }
 
     private fun getTasks() {
@@ -33,30 +37,39 @@ class MainMenuViewModel(
 
     private fun getPlaces() {
         viewModelScope.launch {
-            repository.tasks.collectLatest {
-                state = state.copy(tasks = it)
+            repository.places.collectLatest {
+                state = state.copy(places = it)
             }
         }
     }
 
-    private fun getTasksOrdered() {
+    private fun getObjects() {
         viewModelScope.launch {
-            getTasksOrderByLastDone()
-            getTasksOrderByUsuallyAtThisTime()
+            repository.objects.collectLatest {
+                state = state.copy(objects = it)
+            }
         }
     }
 
-    private suspend fun getTasksOrderByUsuallyAtThisTime() {
-        repository.tasksOrderByUsuallyAtThisTime.collectLatest {
-            state = state.copy(tasksOrderedByUsuallyAtThisTime = it)
+    private fun getTasksOrderByUsuallyAtThisTime() {
+        viewModelScope.launch {
+            repository.tasksOrderByUsuallyAtThisTime.collectLatest {
+                state = state.copy(tasksOrderedByUsuallyAtThisTime = it)
+            }
         }
 
     }
 
-    private suspend fun getTasksOrderByLastDone() {
-        repository.tasksOrderByLastDone.collectLatest {
-            state = state.copy(tasksOrderedByLastDone = it)
+    private fun getTasksOrderByLastDone() {
+        viewModelScope.launch {
+            repository.tasksOrderByLastDone.collectLatest {
+                state = state.copy(tasksOrderedByLastDone = it)
+            }
         }
+    }
+
+    fun getPlaceName(placeId: Long?): Flow<String> {
+        return repository.getPlaceName(placeId)
     }
 
     fun deleteTask(task: Task) {
@@ -70,8 +83,9 @@ class MainMenuViewModel(
 
 data class MainMenuState(
     val tasks: List<Task> = emptyList(),
+    val objects: List<Object> = emptyList(),
+    val places: List<Place> = emptyList(),
     val tasksOrderedByLastDone: List<Task> = emptyList(),
     val tasksOrderedByUsuallyAtThisTime: List<Task> = emptyList(),
-    val places: List<Place> = emptyList(),
     //TODO: Add other entities video 6/7
 )

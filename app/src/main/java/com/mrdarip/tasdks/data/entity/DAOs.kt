@@ -24,10 +24,10 @@ class DAOs {
         @Query("SELECT * FROM tasks")
         fun getAll(): Flow<List<Task>>
 
-        @Query("SELECT * FROM tasks")
+        @Query("SELECT * FROM tasks")//TODO: Implement query
         fun getAllOrderByLastDone(): Flow<List<Task>>
 
-        @Query("SELECT * FROM tasks")
+        @Query("SELECT * FROM tasks")//TODO: Implement query
         fun getAllOrderByUsuallyAtThisTime(): Flow<List<Task>>
 
         @Query("SELECT * FROM tasks WHERE taskId = :taskId")
@@ -49,7 +49,7 @@ class DAOs {
         fun getAllPlaces(): Flow<List<Place>>
 
         @Query("SELECT * FROM places WHERE placeId = :placeId")
-        fun getPlaceById(placeId: Long): Place
+        fun getPlaceById(placeId: Long): Flow<Place>
     }
 
     @Dao

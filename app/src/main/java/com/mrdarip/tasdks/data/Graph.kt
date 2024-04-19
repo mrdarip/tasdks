@@ -15,7 +15,7 @@ object Graph {
             db.activatorDao(),
             db.executionDao(),
             db.resourceDao(),
-            db.taskWithTaskDao()
+            db.taskWithTasksDao()
         )
     }
 

@@ -1,45 +1,56 @@
 package com.mrdarip.tasdks.data
 
+import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.LiveData
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 
 class TasdksRepository(
-    private val TaskDAO: DAOs.TaskDAO,
-    private val PlaceDAO: DAOs.PlaceDAO,
-    private val ObjectDAO: DAOs.ObjectDAO,
-    private val ActivatorDAO: DAOs.ActivatorDAO,
-    private val ExecutionDAO: DAOs.ExecutionDAO,
-    private val ResourceDAO: DAOs.ResourceDAO,
-    private val TaskWithTaskDAO: DAOs.TaskWithTasksDAO
+    private val taskDAO: DAOs.TaskDAO,
+    private val placeDAO: DAOs.PlaceDAO,
+    private val objectDAO: DAOs.ObjectDAO,
+    private val activatorDAO: DAOs.ActivatorDAO,
+    private val executionDAO: DAOs.ExecutionDAO,
+    private val resourceDAO: DAOs.ResourceDAO,
+    private val taskWithTasksDAO: DAOs.TaskWithTasksDAO
 ) {
 
     //Todo add other DAOs, video 5/7
-    val tasks = TaskDAO.getAll()
-    val tasksOrderByLastDone = TaskDAO.getAllOrderByLastDone()
-    val tasksOrderByUsuallyAtThisTime = TaskDAO.getAllOrderByUsuallyAtThisTime()
-    val places = PlaceDAO.getAllPlaces()
-    val objects = ObjectDAO.getAllObjects()
-    val activators = ActivatorDAO.getAllActivators()
-    val executions = ExecutionDAO.getAllExecutions()
-    val resources = ResourceDAO.getAllResources()
+    val tasks = taskDAO.getAll()
+    val tasksOrderByLastDone = taskDAO.getAllOrderByLastDone()
+    val tasksOrderByUsuallyAtThisTime = taskDAO.getAllOrderByUsuallyAtThisTime()
+    val places = placeDAO.getAllPlaces()
+    val objects = objectDAO.getAllObjects()
+    val activators = activatorDAO.getAllActivators()
+    val executions = executionDAO.getAllExecutions()
+    val resources = resourceDAO.getAllResources()
 
     //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
-    fun getTaskById(taskId: Long) = TaskDAO.getById(taskId)
+    fun getTaskById(taskId: Long) = taskDAO.getById(taskId)
     suspend fun insertTask(task: Task) {
-        TaskDAO.insert(task)
+        taskDAO.insert(task)
     }
 
     suspend fun updateTask(task: Task) {
-        TaskDAO.update(task)
+        taskDAO.update(task)
     }
 
     suspend fun deleteTask(task: Task) {
         withContext(Dispatchers.IO) {
-            TaskDAO.delete(task)
+            taskDAO.delete(task)
         }
+    }
+
+    fun getPlaceName(placeId: Long?): Flow<String> {
+        if(placeId==null) return emptyFlow()
+        return placeDAO.getPlaceById(placeId).mapNotNull { it?.name ?: "PLACENOTFOUND" }
     }
 
 }

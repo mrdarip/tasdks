@@ -37,7 +37,8 @@ abstract class TasdksDatabase : RoomDatabase() {
     abstract fun activatorDao(): DAOs.ActivatorDAO
     abstract fun executionDao(): DAOs.ExecutionDAO
     abstract fun resourceDao(): DAOs.ResourceDAO
-    abstract fun taskWithTaskDao(): DAOs.TaskWithTasksDAO
+    abstract fun taskWithTasksDao(): DAOs.TaskWithTasksDAO
+    abstract fun taskWithObjectsDao(): DAOs.TaskWithObjectsDAO
     companion object {
         @Volatile
         private var INSTANCE: TasdksDatabase? = null
