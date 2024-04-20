@@ -66,7 +66,7 @@ fun TaskCard(task: Task, mainMenuViewModel: MainMenuViewModel, onClick: () -> Un
                 .padding(16.dp)
         ) {
             Text(
-                text = (task.iconEmoji ?: "🗒️") + " " + task.name,
+                text = task.name,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 overflow = TextOverflow.Ellipsis,
@@ -92,7 +92,7 @@ fun TaskCard(task: Task, mainMenuViewModel: MainMenuViewModel, onClick: () -> Un
             text = task.iconEmoji ?: "🗒️",
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.absoluteOffset(12.dp, (-12).dp)
+            modifier = Modifier.absoluteOffset(12.dp, (-14).dp)
         )
     }
 
