@@ -51,83 +51,16 @@ import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun SearchMenu(navController: NavController) {
     val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
     val mainMenuState = mainMenuViewModel.state
-
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-
-
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Text(text = "paracetamol")
-            }
-        },
-        content = {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        colors = topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            titleContentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        title = {
-                            Text("Top app bar")
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = {scope.launch { drawerState.open() }}) {
-                                Icon(
-                                    Icons.Filled.Home,
-                                    contentDescription = ""
-                                )
-                            }
-                        }, actions = {
-                            IconButton(onClick = { /*TODO*/ }) {
-                                Icon(
-                                    Icons.Filled.AccountCircle,
-                                    contentDescription = ""
-                                )
-                            }
-                        })
-                }, bottomBar = {
-                    var selectedItem by remember { mutableIntStateOf(0) }
-                    val items = listOf("MainMenu", "search", "Stats")
-
-                    NavigationBar {
-                        items.forEachIndexed { index, item ->
-                            NavigationBarItem(
-                                icon = { Icon(Icons.Filled.Favorite, contentDescription = item) },
-                                label = { Text(item) },
-                                selected = selectedItem == index,
-                                onClick = { selectedItem = index }
-                            )
-                        }
-                    }
-                }, floatingActionButton = {
-                    FloatingActionButton(onClick = {}) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = "Add")
-                    }
-                }) { innerPadding ->
-                Column(
-                    modifier = Modifier.padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    searchMenuBodyContent(mainMenuViewModel, mainMenuState)
-                }
-            }
-        }
-    )
-
+    SearchMenuBodyContent(mainMenuViewModel = mainMenuViewModel, mainMenuState = mainMenuState)
 }
 
 @Composable
-fun searchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
+fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         TasksCardRow(mainMenuState.tasks, "OTRO MENUUU", mainMenuViewModel)
 
