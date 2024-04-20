@@ -4,9 +4,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -52,7 +58,7 @@ fun AppNavigation() {
             }, actions = {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
-                        Icons.Filled.AccountCircle,
+                        Icons.Filled.Warning,
                         contentDescription = ""
                     )
                 }
@@ -96,7 +102,71 @@ fun DrawerContent(){
     Text("Drawer title", modifier = Modifier.padding(16.dp))
     Divider()
     NavigationDrawerItem(
-        label = { Text(text = "Drawer Item") },
+        label = { Text(text = "Manage Tasks") },
+        icon = {
+            Icon(
+                Icons.Filled.Build,
+                contentDescription = "Tasks"
+            )
+        },
+        selected = false,
+        onClick = { /*TODO*/ }
+    )
+    NavigationDrawerItem(
+        label = { Text(text = "Manage Activators") },
+        icon = {
+            Icon(
+                Icons.Filled.PlayArrow,
+                contentDescription = "Places"
+            )
+        },
+        selected = false,
+        onClick = { /*TODO*/ }
+    )
+    NavigationDrawerItem(
+        label = { Text(text = "Manage Objects") },
+        icon = {
+            Icon(
+                Icons.Filled.ShoppingCart,
+                contentDescription = "Objects"
+            )
+        },
+        selected = false,
+        onClick = { /*TODO*/ }
+    )
+    NavigationDrawerItem(
+        label = { Text(text = "Manage Places") },
+        icon = {
+            Icon(
+                Icons.Filled.Place,
+                contentDescription = "Places"
+            )
+        },
+        selected = false,
+        onClick = { /*TODO*/ }
+    )
+    NavigationDrawerItem(
+        label = { Text(text = "Manage Resources") },
+        icon = {
+            Icon(
+                Icons.Filled.Face,
+                contentDescription = "Resources"
+            )
+        },
+        selected = false,
+        onClick = { /*TODO*/ }
+    )
+
+    Divider()
+
+    NavigationDrawerItem(
+        label = { Text(text = "Settings") },
+        icon = {
+            Icon(
+                Icons.Filled.Settings,
+                contentDescription = "Settings"
+            )
+        },
         selected = false,
         onClick = { /*TODO*/ }
     )
@@ -109,7 +179,8 @@ fun BottomBar(navController: NavController){
             0
         )
     }
-    val items = listOf("MainMenu", "search", "Stats")
+    val items = listOf("Menu", "Search", "Stats")
+    val icons = listOf(Icons.Filled.Home,Icons.Filled.Search,Icons.Filled.AccountCircle)
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.route) {
@@ -122,7 +193,7 @@ fun BottomBar(navController: NavController){
         items.forEachIndexed { index, item ->
             NavigationBarItem(icon = {
                 Icon(
-                    Icons.Filled.Favorite,
+                    icons[index],
                     contentDescription = item
                 )
             }, label = { Text(item) }, selected = selectedItem == index, onClick = {
