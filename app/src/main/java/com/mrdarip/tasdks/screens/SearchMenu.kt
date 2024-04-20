@@ -47,16 +47,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.mrdarip.tasdks.data.entity.Task
-import com.mrdarip.tasdks.navigation.AppNavigation
-import com.mrdarip.tasdks.navigation.AppScreens
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainMenu(navController: NavController) {
+fun SearchMenu(navController: NavController) {
     val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
     val mainMenuState = mainMenuViewModel.state
 
@@ -108,22 +105,7 @@ fun MainMenu(navController: NavController) {
                                 icon = { Icon(Icons.Filled.Favorite, contentDescription = item) },
                                 label = { Text(item) },
                                 selected = selectedItem == index,
-                                onClick = { selectedItem = index
-
-                                        navController.navigate(AppScreens.SecondScreen.route) {
-                                            // Pop up to the start destination of the graph to
-                                            // avoid building up a large stack of destinations
-                                            // on the back stack as users select items
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
-                                            }
-                                            // Avoid multiple copies of the same destination when
-                                            // reselecting the same item
-                                            launchSingleTop = true
-                                            // Restore state when reselecting a previously selected item
-                                            restoreState = true
-                                        }
-                                }
+                                onClick = { selectedItem = index }
                             )
                         }
                     }
@@ -136,7 +118,7 @@ fun MainMenu(navController: NavController) {
                     modifier = Modifier.padding(innerPadding),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    BodyContent(mainMenuViewModel, mainMenuState)
+                    searchMenuBodyContent(mainMenuViewModel, mainMenuState)
                 }
             }
         }
@@ -145,81 +127,10 @@ fun MainMenu(navController: NavController) {
 }
 
 @Composable
-fun BodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
+fun searchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        TasksCardRow(mainMenuState.tasks, "All tasks", mainMenuViewModel)
-        TasksCardRow(mainMenuState.tasksOrderedByLastDone, "Last done", mainMenuViewModel)
-        TasksCardRow(
-            mainMenuState.tasksOrderedByUsuallyAtThisTime,
-            "Usually at this time",
-            mainMenuViewModel
-        )
+        TasksCardRow(mainMenuState.tasks, "OTRO MENUUU", mainMenuViewModel)
+
     }
 }
 
-
-@Composable
-fun TaskCard(task: Task, mainMenuViewModel: MainMenuViewModel, onClick: () -> Unit = {}) {
-    val placeName by mainMenuViewModel.getPlaceName(task.placeId).collectAsState(initial = "")
-
-    Column(
-        verticalArrangement = Arrangement.Top, modifier = Modifier
-            .width(150.dp)
-            .height(120.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .clickable(onClick = onClick)
-            .padding(16.dp)
-    ) {
-        Text(
-            text = (task.iconEmoji ?: "🗒️") + " " + task.name,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 2
-        )
-        Text(
-            text = task.comment ?: "",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-        Text(
-            text = placeName,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-    }
-}
-
-@Composable
-fun TasksCardRow(tasks: List<Task>, title: String, mainMenuViewModel: MainMenuViewModel) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.headlineMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier
-            .padding(16.dp, 32.dp, 16.dp, 8.dp)
-            .fillMaxWidth()
-
-    )
-
-    LazyRow(
-        modifier = Modifier.padding(0.dp, 8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(tasks) { task ->
-            TaskCard(
-                task = task,
-                mainMenuViewModel = mainMenuViewModel,
-                onClick = {
-                    mainMenuViewModel.deleteTask(task)
-                }
-            )
-        }
-    }
-}
