@@ -1,6 +1,8 @@
 package com.mrdarip.tasdks.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -23,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -64,45 +67,34 @@ fun AppNavigation() {
                     )
                 }
             })
-        }, bottomBar = {
-            BottomBar(navController = navController)
-        }, floatingActionButton = {
-            FloatingActionButton(onClick = {}) {
-                IconButton(onClick = {scope.launch{drawerState.open()}}) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Add"
-                    )
+        },
+            bottomBar = {
+                BottomBar(navController = navController)
+            },
+            floatingActionButton = {
+                FloatingActionButton(onClick = {}) {
+                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = "Add"
+                        )
+                    }
                 }
-            }
-        }) { innerPadding ->
-            androidx.compose.foundation.layout.Column(
+            }) { innerPadding ->
+            Column(
                 modifier = Modifier.padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(
                     16.dp
                 ),
             ) {
-                NavHost(
-                    navController = navController, startDestination = AppScreens.FirstScreen.route
-                ) {
-
-                    composable(route = AppScreens.FirstScreen.route) {
-                        MainMenu(navController)
-                    }
-                    composable(route = AppScreens.SecondScreen.route) {
-                        SearchMenu(navController)
-                    }
-                    composable(route = AppScreens.ThirdScreen.route) {
-                        StatsMenu(navController)
-                    }
-                }
+                MainNavHost(navController = navController)
             }
         }
     })
 }
 
 @Composable
-fun DrawerContent(){
+fun DrawerContent() {
     Text("Drawer title", modifier = Modifier.padding(16.dp))
     Divider()
     NavigationDrawerItem(
@@ -177,14 +169,14 @@ fun DrawerContent(){
 }
 
 @Composable
-fun BottomBar(navController: NavController){
+fun BottomBar(navController: NavController) {
     var selectedItem by remember {
         androidx.compose.runtime.mutableIntStateOf(
             0
         )
     }
     val items = listOf("Menu", "Search", "Stats")
-    val icons = listOf(Icons.Filled.Home,Icons.Filled.Search,Icons.Filled.AccountCircle)
+    val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.AccountCircle)
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.route) {
@@ -195,30 +187,51 @@ fun BottomBar(navController: NavController){
 
     NavigationBar {
         items.forEachIndexed { index, item ->
-            NavigationBarItem(icon = {
-                Icon(
-                    icons[index],
-                    contentDescription = item
-                )
-            }, label = { Text(item) }, selected = selectedItem == index, onClick = {
-                selectedItem = index
-                navController.navigate(
-                    when (index) {
-                        0 -> AppScreens.FirstScreen.route
-                        1 -> AppScreens.SecondScreen.route
-                        else -> AppScreens.FirstScreen.route
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        icons[index],
+                        contentDescription = item
+                    )
+                },
+                label = { Text(item) },
+                selected = selectedItem == index,
+                onClick = {
+                    selectedItem = index
+                    navController.navigate(
+                        when (index) {
+                            0 -> AppScreens.FirstScreen.route
+                            1 -> AppScreens.SecondScreen.route
+                            2 -> AppScreens.ThirdScreen.route
+                            else -> AppScreens.FirstScreen.route
+                        }
+                    ) {
+                        // Avoid recreating the screen if it's already on the back stack
+                        launchSingleTop = true
+                        // Pop up to the start destination before navigating
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        // Restore state when reusing a screen
+                        restoreState = true
                     }
-                ) {
-                    // Avoid recreating the screen if it's already on the back stack
-                    launchSingleTop = true
-                    // Pop up to the start destination before navigating
-                    popUpTo(navController.graph.startDestinationId) {
-                        saveState = true
-                    }
-                    // Restore state when reusing a screen
-                    restoreState = true
                 }
-            })
+            )
+        }
+    }
+}
+
+@Composable
+fun MainNavHost(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = AppScreens.FirstScreen.route) {
+        composable(route = AppScreens.FirstScreen.route) {
+            MainMenu(navController)
+        }
+        composable(route = AppScreens.SecondScreen.route) {
+            SearchMenu(navController)
+        }
+        composable(route = AppScreens.ThirdScreen.route) {
+            StatsMenu(navController)
         }
     }
 }
