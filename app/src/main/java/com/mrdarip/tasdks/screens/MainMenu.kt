@@ -3,8 +3,10 @@ package com.mrdarip.tasdks.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -56,7 +58,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainMenu (navController: NavController) {
+fun MainMenu(navController: NavController) {
     val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
     val mainMenuState = mainMenuViewModel.state
     BodyContent(mainMenuViewModel = mainMenuViewModel, mainMenuState = mainMenuState)
@@ -80,37 +82,48 @@ fun BodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuSta
 fun TaskCard(task: Task, mainMenuViewModel: MainMenuViewModel, onClick: () -> Unit = {}) {
     val placeName by mainMenuViewModel.getPlaceName(task.placeId).collectAsState(initial = "")
 
-    Column(
-        verticalArrangement = Arrangement.Top, modifier = Modifier
-            .width(150.dp)
-            .height(120.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .clickable(onClick = onClick)
-            .padding(16.dp)
-    ) {
+    Box(modifier = Modifier) {
+
+        Column(
+            verticalArrangement = Arrangement.Top, modifier = Modifier
+                .width(150.dp)
+                .height(120.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .clickable(onClick = onClick)
+                .padding(16.dp)
+        ) {
+            Text(
+                text = (task.iconEmoji ?: "🗒️") + " " + task.name,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
+            Text(
+                text = task.comment ?: "",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+            Text(
+                text = placeName,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+
+        }
         Text(
-            text = (task.iconEmoji ?: "🗒️") + " " + task.name,
-            style = MaterialTheme.typography.labelLarge,
+            text = task.iconEmoji ?: "🗒️",
+            style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurface,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 2
-        )
-        Text(
-            text = task.comment ?: "",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-        Text(
-            text = placeName,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
+            modifier = Modifier.absoluteOffset(12.dp, (-12).dp)
         )
     }
+
 }
 
 @Composable

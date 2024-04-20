@@ -9,6 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
@@ -60,12 +61,19 @@ fun AppNavigation() {
                             }
                         })
                 }, bottomBar = {
-                    var selectedItem by androidx.compose.runtime.remember {
+                    var selectedItem by remember {
                         androidx.compose.runtime.mutableIntStateOf(
                             0
                         )
                     }
                     val items = listOf("MainMenu", "search", "Stats")
+
+                    navController.addOnDestinationChangedListener { _, destination, _ ->
+                        when (destination.route) {
+                            AppScreens.FirstScreen.route -> selectedItem = 0
+                            AppScreens.SecondScreen.route -> selectedItem = 1
+                        }
+                    }
 
                     NavigationBar {
                         items.forEachIndexed { index, item ->

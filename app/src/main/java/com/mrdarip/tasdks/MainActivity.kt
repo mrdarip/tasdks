@@ -1,7 +1,9 @@
 package com.mrdarip.tasdks
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,9 +54,8 @@ import com.mrdarip.tasdks.ui.theme.TasdksTheme
 import kotlinx.coroutines.launch
 
 
-
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+    private var backPressedTime = 0L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -67,5 +68,27 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+
+        // Handle back button press
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                        isEnabled = false
+                        onBackPressed()
+                    } else {
+                        Toast.makeText(
+                            applicationContext,
+                            "Press back again to exit",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    backPressedTime = System.currentTimeMillis()
+                }
+            }
+        )
     }
+
 }
