@@ -28,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mrdarip.tasdks.screens.MainMenu
 import com.mrdarip.tasdks.screens.SearchMenu
+import com.mrdarip.tasdks.screens.StatsMenu
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,6 +91,9 @@ fun AppNavigation() {
                     }
                     composable(route = AppScreens.SecondScreen.route) {
                         SearchMenu(navController)
+                    }
+                    composable(route = AppScreens.ThirdScreen.route) {
+                        StatsMenu(navController)
                     }
                 }
             }
