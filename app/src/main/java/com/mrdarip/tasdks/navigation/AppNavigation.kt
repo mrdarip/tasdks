@@ -1,6 +1,8 @@
 package com.mrdarip.tasdks.navigation
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -12,7 +14,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -27,115 +31,119 @@ fun AppNavigation() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Text(text = "paracetamol")
+    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
+        ModalDrawerSheet {
+            DrawerContent()
+        }
+    }, content = {
+        Scaffold(topBar = {
+            TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            ), title = {
+                Text("Top app bar")
+            }, navigationIcon = {
+                IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                    Icon(
+                        Icons.Filled.Home,
+                        contentDescription = ""
+                    )
+                }
+            }, actions = {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        Icons.Filled.AccountCircle,
+                        contentDescription = ""
+                    )
+                }
+            })
+        }, bottomBar = {
+            BottomBar(navController = navController)
+        }, floatingActionButton = {
+            FloatingActionButton(onClick = {}) {
+                IconButton(onClick = {scope.launch{drawerState.open()}}) {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "Add"
+                    )
+                }
             }
-        },
-        content = {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            titleContentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        title = {
-                            Text("Top app bar")
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(
-                                    androidx.compose.material.icons.Icons.Filled.Home,
-                                    contentDescription = ""
-                                )
-                            }
-                        }, actions = {
-                            IconButton(onClick = { /*TODO*/ }) {
-                                Icon(
-                                    androidx.compose.material.icons.Icons.Filled.AccountCircle,
-                                    contentDescription = ""
-                                )
-                            }
-                        })
-                }, bottomBar = {
-                    var selectedItem by remember {
-                        androidx.compose.runtime.mutableIntStateOf(
-                            0
-                        )
-                    }
-                    val items = listOf("MainMenu", "search", "Stats")
-
-                    navController.addOnDestinationChangedListener { _, destination, _ ->
-                        when (destination.route) {
-                            AppScreens.FirstScreen.route -> selectedItem = 0
-                            AppScreens.SecondScreen.route -> selectedItem = 1
-                        }
-                    }
-
-                    NavigationBar {
-                        items.forEachIndexed { index, item ->
-                            NavigationBarItem(
-                                icon = {
-                                    Icon(
-                                        androidx.compose.material.icons.Icons.Filled.Favorite,
-                                        contentDescription = item
-                                    )
-                                },
-                                label = { Text(item) },
-                                selected = selectedItem == index,
-                                onClick = {
-                                    selectedItem = index
-                                    navController.navigate(
-                                        when (index) {
-                                            0 -> AppScreens.FirstScreen.route
-                                            1 -> AppScreens.SecondScreen.route
-                                            else -> AppScreens.FirstScreen.route
-                                        }
-                                    ) {
-                                        // Avoid recreating the screen if it's already on the back stack
-                                        launchSingleTop = true
-                                        // Pop up to the start destination before navigating
-                                        popUpTo(navController.graph.startDestinationId) {
-                                            saveState = true
-                                        }
-                                        // Restore state when reusing a screen
-                                        restoreState = true
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }, floatingActionButton = {
-                    FloatingActionButton(onClick = {}) {
-                        Icon(
-                            androidx.compose.material.icons.Icons.Default.PlayArrow,
-                            contentDescription = "Add"
-                        )
-                    }
-                }) { innerPadding ->
-                androidx.compose.foundation.layout.Column(
-                    modifier = androidx.compose.ui.Modifier.padding(innerPadding),
-                    verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(
-                        16.dp
-                    ),
+        }) { innerPadding ->
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier.padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(
+                    16.dp
+                ),
+            ) {
+                NavHost(
+                    navController = navController, startDestination = AppScreens.FirstScreen.route
                 ) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = AppScreens.FirstScreen.route
-                    ) {
 
-                        composable(route = AppScreens.FirstScreen.route) {
-                            MainMenu(navController)
-                        }
-                        composable(route = AppScreens.SecondScreen.route) {
-                            SearchMenu(navController)
-                        }
+                    composable(route = AppScreens.FirstScreen.route) {
+                        MainMenu(navController)
+                    }
+                    composable(route = AppScreens.SecondScreen.route) {
+                        SearchMenu(navController)
                     }
                 }
             }
         }
+    })
+}
+
+@Composable
+fun DrawerContent(){
+    Text("Drawer title", modifier = Modifier.padding(16.dp))
+    Divider()
+    NavigationDrawerItem(
+        label = { Text(text = "Drawer Item") },
+        selected = false,
+        onClick = { /*TODO*/ }
     )
+}
+
+@Composable
+fun BottomBar(navController: NavController){
+    var selectedItem by remember {
+        androidx.compose.runtime.mutableIntStateOf(
+            0
+        )
+    }
+    val items = listOf("MainMenu", "search", "Stats")
+
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+        when (destination.route) {
+            AppScreens.FirstScreen.route -> selectedItem = 0
+            AppScreens.SecondScreen.route -> selectedItem = 1
+        }
+    }
+
+    NavigationBar {
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(icon = {
+                Icon(
+                    Icons.Filled.Favorite,
+                    contentDescription = item
+                )
+            }, label = { Text(item) }, selected = selectedItem == index, onClick = {
+                selectedItem = index
+                navController.navigate(
+                    when (index) {
+                        0 -> AppScreens.FirstScreen.route
+                        1 -> AppScreens.SecondScreen.route
+                        else -> AppScreens.FirstScreen.route
+                    }
+                ) {
+                    // Avoid recreating the screen if it's already on the back stack
+                    launchSingleTop = true
+                    // Pop up to the start destination before navigating
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    // Restore state when reusing a screen
+                    restoreState = true
+                }
+            })
+        }
+    }
 }
