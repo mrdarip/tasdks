@@ -3,15 +3,15 @@ package com.mrdarip.tasdks.screens
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
-import com.mrdarip.tasdks.data.entity.*
+import com.mrdarip.tasdks.data.entity.Place
+import com.mrdarip.tasdks.data.entity.Object
+import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 class MainMenuViewModel(

@@ -1,6 +1,6 @@
 package com.mrdarip.tasdks.navigation
 
 sealed class AppScreens(val route: String) {
-    object FirstScreen : AppScreens("FirstScreen")
-    object SecondScreen : AppScreens("SecondScreen")
+    data object FirstScreen : AppScreens("FirstScreen")
+    data object SecondScreen : AppScreens("SecondScreen")
 }

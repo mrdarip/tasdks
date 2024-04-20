@@ -1,14 +1,10 @@
 package com.mrdarip.tasdks.data
 
-import android.util.Log
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.LiveData
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 
@@ -50,7 +46,7 @@ class TasdksRepository(
 
     fun getPlaceName(placeId: Long?): Flow<String> {
         if(placeId==null) return emptyFlow()
-        return placeDAO.getPlaceById(placeId).mapNotNull { it?.name ?: "PLACENOTFOUND" }
+        return placeDAO.getPlaceById(placeId).mapNotNull { it?.name ?: "PLACE NOT FOUND" }
     }
 
 }

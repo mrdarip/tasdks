@@ -1,18 +1,11 @@
 package com.mrdarip.tasdks.data.entity
 
 import androidx.room.ColumnInfo
-import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Insert
 import androidx.room.Junction
-import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
-import androidx.room.Query
 import androidx.room.Relation
-import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 
