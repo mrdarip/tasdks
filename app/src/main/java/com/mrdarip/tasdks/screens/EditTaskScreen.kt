@@ -5,6 +5,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -18,8 +20,10 @@ fun EditTaskScreen(navController: NavController, taskId: Long?) {
 
 @Composable
 fun EditTaskBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState, taskId: Long?) {
+    val task by mainMenuViewModel.getTaskById(taskId ?: 0).collectAsState(initial = null)
+
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        Text(text = mainMenuViewModel.getTaskById(taskId?:0).toString())
+        Text(text = task?.name ?: "Task not found")
 
     }
 }

@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -31,10 +32,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.room.CoroutinesRoom
 import com.mrdarip.tasdks.screens.EditTaskScreen
 import com.mrdarip.tasdks.screens.MainMenu
 import com.mrdarip.tasdks.screens.SearchMenu
 import com.mrdarip.tasdks.screens.StatsMenu
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,7 +49,7 @@ fun AppNavigation() {
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {
-            DrawerContent(navController)
+            DrawerContent(navController,drawerState,scope)
         }
     }, content = {
         Scaffold(topBar = {
@@ -97,7 +100,7 @@ fun AppNavigation() {
 }
 
 @Composable
-fun DrawerContent(navController: NavController) {
+fun DrawerContent(navController: NavController, drawerState: DrawerState, scope: CoroutineScope) {
     Text("Manage", modifier = Modifier.padding(16.dp))
     Divider()
     NavigationDrawerItem(
@@ -109,7 +112,11 @@ fun DrawerContent(navController: NavController) {
             )
         },
         selected = false,
-        onClick = {navController.navigate("${AppScreens.EditTask.route}/0") }
+        onClick = {
+            navController.navigate("${AppScreens.EditTask.route}/3")
+            scope.launch { drawerState.close() }
+
+        }
     )
     NavigationDrawerItem(
         label = { Text(text = "Manage Activators") },
@@ -174,7 +181,7 @@ fun DrawerContent(navController: NavController) {
 @Composable
 fun BottomBar(navController: NavController) {
     var selectedItem by remember {
-        androidx.compose.runtime.mutableIntStateOf(
+        mutableIntStateOf(
             0
         )
     }
@@ -185,6 +192,7 @@ fun BottomBar(navController: NavController) {
         when (destination.route) {
             AppScreens.FirstScreen.route -> selectedItem = 0
             AppScreens.SecondScreen.route -> selectedItem = 1
+            AppScreens.ThirdScreen.route -> selectedItem = 2
         }
     }
 
