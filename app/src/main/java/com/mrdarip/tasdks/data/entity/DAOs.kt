@@ -31,7 +31,7 @@ class DAOs {
         fun getAllOrderByUsuallyAtThisTime(): Flow<List<Task>>
 
         @Query("SELECT * FROM tasks WHERE taskId = :taskId")
-        fun getById(taskId: Long): Task
+        fun getById(taskId: Long): Flow<Task>
     }
 
     @Dao

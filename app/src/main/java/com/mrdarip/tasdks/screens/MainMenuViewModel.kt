@@ -78,6 +78,12 @@ class MainMenuViewModel(
         }
     }
 
+    fun getTaskById(taskId: Long): Flow<Task>{
+
+         return repository.getTaskById(taskId)
+
+    }
+
     //TODO oncategorychange,onitemcheckedchange
 }
 

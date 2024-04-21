@@ -26,9 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.mrdarip.tasdks.screens.EditTaskScreen
 import com.mrdarip.tasdks.screens.MainMenu
 import com.mrdarip.tasdks.screens.SearchMenu
 import com.mrdarip.tasdks.screens.StatsMenu
@@ -43,7 +46,7 @@ fun AppNavigation() {
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {
-            DrawerContent()
+            DrawerContent(navController)
         }
     }, content = {
         Scaffold(topBar = {
@@ -94,8 +97,8 @@ fun AppNavigation() {
 }
 
 @Composable
-fun DrawerContent() {
-    Text("Drawer title", modifier = Modifier.padding(16.dp))
+fun DrawerContent(navController: NavController) {
+    Text("Manage", modifier = Modifier.padding(16.dp))
     Divider()
     NavigationDrawerItem(
         label = { Text(text = "Manage Tasks") },
@@ -106,7 +109,7 @@ fun DrawerContent() {
             )
         },
         selected = false,
-        onClick = { /*TODO*/ }
+        onClick = {navController.navigate("${AppScreens.EditTask.route}/0") }
     )
     NavigationDrawerItem(
         label = { Text(text = "Manage Activators") },
@@ -232,6 +235,14 @@ fun MainNavHost(navController: NavHostController) {
         }
         composable(route = AppScreens.ThirdScreen.route) {
             StatsMenu(navController)
+        }
+
+        composable(
+            "${AppScreens.EditTask.route}/{taskId}",
+            arguments = listOf(navArgument("taskId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val taskId = backStackEntry.arguments?.getLong("taskId")
+            EditTaskScreen(navController = navController, taskId = taskId)
         }
     }
 }

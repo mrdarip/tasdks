@@ -29,7 +29,10 @@ class TasdksRepository(
     val resources = resourceDAO.getAllResources()
 
     //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
-    fun getTaskById(taskId: Long) = taskDAO.getById(taskId)
+    fun getTaskById(taskId: Long?): Flow<Task> {
+        if(taskId==null) return emptyFlow()
+        return taskDAO.getById(taskId).mapNotNull {it}
+    }
     suspend fun insertTask(task: Task) {
         taskDAO.insert(task)
     }
