@@ -51,9 +51,7 @@ fun BodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuSta
 
 
 @Composable
-fun TaskCard(task: Task, mainMenuViewModel: MainMenuViewModel, onClick: () -> Unit = {}) {
-    val placeName by mainMenuViewModel.getPlaceName(task.placeId).collectAsState(initial = "")
-
+fun TaskCard(task: Task, placeName: String, onClick: () -> Unit = {}) {
     Box(modifier = Modifier) {
 
         Column(
@@ -116,9 +114,10 @@ fun TasksCardRow(tasks: List<Task>, title: String, mainMenuViewModel: MainMenuVi
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(tasks) { task ->
+            val placeName by mainMenuViewModel.getPlaceName(task.placeId).collectAsState(initial = "")
             TaskCard(
                 task = task,
-                mainMenuViewModel = mainMenuViewModel,
+                placeName = placeName,
                 onClick = {
                     mainMenuViewModel.deleteTask(task)
                 }

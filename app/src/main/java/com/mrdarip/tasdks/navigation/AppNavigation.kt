@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mrdarip.tasdks.screens.EditTaskScreen
 import com.mrdarip.tasdks.screens.MainMenu
+import com.mrdarip.tasdks.screens.ManageTasksScreen
 import com.mrdarip.tasdks.screens.SearchMenu
 import com.mrdarip.tasdks.screens.StatsMenu
 import kotlinx.coroutines.CoroutineScope
@@ -77,14 +78,15 @@ fun AppNavigation() {
             },
             floatingActionButton = {
                 FloatingActionButton(onClick = {}) {
-                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                    IconButton(onClick = { scope.launch { drawerState.open() } }) { //2 on clicks?
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = "Add"
                         )
                     }
                 }
-            }) { innerPadding ->
+            }
+        ){ innerPadding ->
             Column(
                 modifier = Modifier.padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(
@@ -111,7 +113,7 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
         },
         selected = false,
         onClick = {
-            navController.navigate("${AppScreens.EditTask.route}/3")
+            navController.navigate(AppScreens.ManageTasks.route)
             scope.launch { drawerState.close() }
 
         }
@@ -192,7 +194,7 @@ fun BottomBar(navController: NavController) {
     )
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
-            selectedItem = bottomBarScreenRoutes.indexOf(destination.route)
+        selectedItem = bottomBarScreenRoutes.indexOf(destination.route)
     }
 
     NavigationBar {
@@ -209,7 +211,10 @@ fun BottomBar(navController: NavController) {
                 onClick = {
                     selectedItem = index
                     // Check if the current screen is not one of the bottom bar screens
-                    if (!bottomBarScreenRoutes.contains(navController.currentDestination?.route?:"")) {
+                    if (!bottomBarScreenRoutes.contains(
+                            navController.currentDestination?.route ?: ""
+                        )
+                    ) {
                         // If it is, pop the back stack to close the EditTask screen
                         navController.popBackStack()
                     }
@@ -245,12 +250,20 @@ fun MainNavHost(navController: NavHostController) {
             StatsMenu(navController)
         }
 
+
+
         composable(
             "${AppScreens.EditTask.route}/{taskId}",
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
         ) { backStackEntry ->
             val taskId = backStackEntry.arguments?.getLong("taskId")
             EditTaskScreen(navController = navController, taskId = taskId)
+        }
+
+        composable(
+            route = AppScreens.ManageTasks.route,
+        ) {
+            ManageTasksScreen(navController = navController)
         }
     }
 }
