@@ -1,6 +1,5 @@
 package com.mrdarip.tasdks.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -32,7 +31,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.room.CoroutinesRoom
 import com.mrdarip.tasdks.screens.EditTaskScreen
 import com.mrdarip.tasdks.screens.MainMenu
 import com.mrdarip.tasdks.screens.SearchMenu
@@ -187,22 +185,17 @@ fun BottomBar(navController: NavController) {
     }
     val items = listOf("Menu", "Search", "Stats")
     val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.AccountCircle)
+    val bottomBarScreenRoutes = listOf(
+        AppScreens.FirstScreen.route,
+        AppScreens.SecondScreen.route,
+        AppScreens.ThirdScreen.route,
+    )
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
-        when (destination.route) {
-            AppScreens.FirstScreen.route -> selectedItem = 0
-            AppScreens.SecondScreen.route -> selectedItem = 1
-            AppScreens.ThirdScreen.route -> selectedItem = 2
-        }
+            selectedItem = bottomBarScreenRoutes.indexOf(destination.route)
     }
 
     NavigationBar {
-        val bottomBarScreenRoutes = listOf(
-            AppScreens.FirstScreen.route,
-            AppScreens.SecondScreen.route,
-            AppScreens.ThirdScreen.route,
-        )
-
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {
@@ -220,13 +213,9 @@ fun BottomBar(navController: NavController) {
                         // If it is, pop the back stack to close the EditTask screen
                         navController.popBackStack()
                     }
+
                     navController.navigate(
-                        when (index) {
-                            0 -> AppScreens.FirstScreen.route
-                            1 -> AppScreens.SecondScreen.route
-                            2 -> AppScreens.ThirdScreen.route
-                            else -> AppScreens.FirstScreen.route
-                        }
+                        bottomBarScreenRoutes.getOrElse(index) { AppScreens.FirstScreen.route }
                     ) {
                         // Avoid recreating the screen if it's already on the back stack
                         launchSingleTop = true
