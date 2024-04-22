@@ -49,7 +49,7 @@ fun AppNavigation() {
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {
-            DrawerContent(navController,drawerState,scope)
+            DrawerContent(navController, drawerState, scope)
         }
     }, content = {
         Scaffold(topBar = {
@@ -197,6 +197,12 @@ fun BottomBar(navController: NavController) {
     }
 
     NavigationBar {
+        val bottomBarScreenRoutes = listOf(
+            AppScreens.FirstScreen.route,
+            AppScreens.SecondScreen.route,
+            AppScreens.ThirdScreen.route,
+        )
+
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {
@@ -209,6 +215,11 @@ fun BottomBar(navController: NavController) {
                 selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
+                    // Check if the current screen is not one of the bottom bar screens
+                    if (!bottomBarScreenRoutes.contains(navController.currentDestination?.route?:"")) {
+                        // If it is, pop the back stack to close the EditTask screen
+                        navController.popBackStack()
+                    }
                     navController.navigate(
                         when (index) {
                             0 -> AppScreens.FirstScreen.route
