@@ -13,7 +13,7 @@ import java.util.Date
 data class Task(
     @PrimaryKey(autoGenerate = true) val taskId: Long = 0,
     val name: String,
-    val comment: String?,
+    val comment: String?, //iconEmoji can be null so later on you can know what tasks weren't given an emoji
     val iconEmoji: String?,
     val placeId: Long?
 )

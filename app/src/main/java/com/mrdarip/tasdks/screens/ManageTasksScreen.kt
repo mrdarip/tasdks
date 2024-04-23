@@ -30,12 +30,14 @@ fun ManageTasksScreen(navController: NavController) {
 
 @Composable
 fun ManageTasksBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
-    LazyColumn( modifier = Modifier.padding(0.dp, 8.dp),
-    contentPadding = PaddingValues(horizontal = 16.dp),
-    verticalArrangement = Arrangement.spacedBy(16.dp)
+    LazyColumn(
+        modifier = Modifier.padding(0.dp, 8.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(mainMenuState.tasks) { task ->
-            val placeName by mainMenuViewModel.getPlaceName(task.placeId).collectAsState(initial = "")
+            val placeName by mainMenuViewModel.getPlaceName(task.placeId)
+                .collectAsState(initial = "")
             TaskLiItem(
                 task = task,
                 placeName = placeName,
@@ -46,26 +48,39 @@ fun ManageTasksBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: 
         }
     }
 }
+
 @Composable
-fun TaskLiItem(task: Task, placeName:String,onClick: () -> Unit = {}){
-    Row(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick), horizontalArrangement = Arrangement.SpaceBetween){
+fun TaskLiItem(task: Task, placeName: String, onClick: () -> Unit = {}) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Row {
             Text(
                 task.iconEmoji ?: "🤕",
                 style = MaterialTheme.typography.headlineSmall
-            )//TODO Make iconEmoji a NOTNULL column
+            )
             Column {
                 Text(
                     text = task.name,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )//TODO style this texts 💅
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.headlineMedium
+                )
                 Text(
                     text = task.comment ?: "NO DESCRIPTION",
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium
                 )
-                Text(text = placeName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    text = placeName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
 
