@@ -103,65 +103,37 @@ fun AppNavigation() {
 fun DrawerContent(navController: NavController, drawerState: DrawerState, scope: CoroutineScope) {
     Text("Manage", modifier = Modifier.padding(16.dp))
     Divider()
-    NavigationDrawerItem(
-        label = { Text(text = "Manage Tasks") },
-        icon = {
-            Icon(
-                Icons.Filled.Build,
-                contentDescription = "Tasks"
-            )
-        },
-        selected = false,
-        onClick = {
-            navController.navigate(AppScreens.ManageTasks.route)
-            scope.launch { drawerState.close() }
+    val labels = listOf(
+        "Manage Tasks",
+        "Manage Activators",
+        "Manage Objects",
+        "Manage Places",
+        "Manage Resources"
+    )
+    val icons = listOf(
+        Icons.Filled.Build,
+        Icons.Filled.PlayArrow,
+        Icons.Filled.ShoppingCart,
+        Icons.Filled.Place,
+        Icons.Filled.Face
+    )
 
+        labels.forEachIndexed { index, item ->
+            NavigationDrawerItem(
+                label = { Text(item) },
+                icon = {
+                    Icon(
+                        icons[index],
+                        contentDescription = item
+                    )
+                },
+                selected = false,
+                onClick = {
+                    navController.navigate(AppScreens.ManageTasks.route)
+                    scope.launch { drawerState.close() }
+                }
+            )
         }
-    )
-    NavigationDrawerItem(
-        label = { Text(text = "Manage Activators") },
-        icon = {
-            Icon(
-                Icons.Filled.PlayArrow,
-                contentDescription = "Places"
-            )
-        },
-        selected = false,
-        onClick = { /*TODO*/ }
-    )
-    NavigationDrawerItem(
-        label = { Text(text = "Manage Objects") },
-        icon = {
-            Icon(
-                Icons.Filled.ShoppingCart,
-                contentDescription = "Objects"
-            )
-        },
-        selected = false,
-        onClick = { /*TODO*/ }
-    )
-    NavigationDrawerItem(
-        label = { Text(text = "Manage Places") },
-        icon = {
-            Icon(
-                Icons.Filled.Place,
-                contentDescription = "Places"
-            )
-        },
-        selected = false,
-        onClick = { /*TODO*/ }
-    )
-    NavigationDrawerItem(
-        label = { Text(text = "Manage Resources") },
-        icon = {
-            Icon(
-                Icons.Filled.Face,
-                contentDescription = "Resources"
-            )
-        },
-        selected = false,
-        onClick = { /*TODO*/ }
-    )
 
     Divider()
 
