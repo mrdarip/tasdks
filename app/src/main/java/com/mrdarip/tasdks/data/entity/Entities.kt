@@ -32,13 +32,21 @@ data class Object(
     val placeId: Long?
 )
 
+enum class RepetitionType {
+    DATE, MINUTES,HOURS, DAYS, WEEKS, MONTHS, YEARS//TODO Check how to manage time repetition vs date repetition ( a date is millis since epoch...)
+}
+
+data class RepetitionRange(
+    val minRepSec: Int,
+    val optRepSec: Int?,
+    val maxRepSec: Int?,
+    private val repetitionType: RepetitionType
+)
 @Entity(tableName = "activators")
 data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
     val comment: String?,
-    val minRepSec: Int,
-    val optRepSec: Int?,
-    val maxRepSec: Int?,
+    @Embedded val repetitionRange: RepetitionRange,
     val endAfterDate: Date?,
     val endAfterRep: Int?,
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean
