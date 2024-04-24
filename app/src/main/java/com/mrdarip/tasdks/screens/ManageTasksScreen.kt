@@ -23,16 +23,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Task
+import com.mrdarip.tasdks.navigation.AppScreens
 
 @Composable
 fun ManageTasksScreen(navController: NavController) {
     val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
     val mainMenuState = mainMenuViewModel.state
-    ManageTasksBodyContent(mainMenuViewModel = mainMenuViewModel, mainMenuState = mainMenuState)
+    ManageTasksBodyContent(navController = navController, mainMenuViewModel = mainMenuViewModel, mainMenuState = mainMenuState)
 }
 
 @Composable
-fun ManageTasksBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
+fun ManageTasksBodyContent(navController: NavController,mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
     LazyColumn(
         modifier = Modifier.padding(0.dp, 8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -45,7 +46,7 @@ fun ManageTasksBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: 
                 task = task,
                 placeName = placeName,
                 onClick = {
-                    mainMenuViewModel.deleteTask(task)
+                    navController.navigate(AppScreens.EditTask.route +"/"+task.taskId)
                 }
             )
         }
