@@ -11,8 +11,8 @@ import java.util.Date
 
 @Entity(tableName = "tasks")
 data class Task(
-    @PrimaryKey(autoGenerate = true) val taskId: Long = 0,
-    val name: String,
+    @PrimaryKey(autoGenerate = true) val taskId: Long? = null,
+    var name: String,
     val comment: String?, //iconEmoji can be null so later on you can know what tasks weren't given an emoji
     val iconEmoji: String?,
     val placeId: Long?
@@ -20,14 +20,14 @@ data class Task(
 
 @Entity(tableName = "places")
 data class Place(
-    @PrimaryKey(autoGenerate = true) val placeId: Long = 0,
+    @PrimaryKey(autoGenerate = true) val placeId: Long? = null,
     val name: String,
     val parentPlaceId: Long?
 )
 
 @Entity(tableName = "objects")
 data class Object(
-    @PrimaryKey(autoGenerate = true) val objectId: Long = 0,
+    @PrimaryKey(autoGenerate = true) val objectId: Long? = null,
     val name: String,
     val placeId: Long?
 )
@@ -44,7 +44,7 @@ data class RepetitionRange(
 )
 @Entity(tableName = "activators")
 data class Activator(
-    @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
+    @PrimaryKey(autoGenerate = true) val activatorId: Long? = null,
     val comment: String?,
     @Embedded val repetitionRange: RepetitionRange,
     val endAfterDate: Date?,
@@ -54,7 +54,7 @@ data class Activator(
 
 @Entity(tableName = "executions")
 data class Execution(
-    @PrimaryKey(autoGenerate = true) val executionId: Long = 0,
+    @PrimaryKey(autoGenerate = true) val executionId: Long? = null,
     val start: Date,
     val end: Date,
     val successfullyEnded: Boolean,
@@ -68,7 +68,7 @@ enum class ResourceType {
 
 @Entity(tableName = "resources")
 data class Resource(
-    @PrimaryKey(autoGenerate = true) val resourceId: Long = 0,
+    @PrimaryKey(autoGenerate = true) val resourceId: Long? = null,
     val name: String,
     val resourceType: ResourceType
 )

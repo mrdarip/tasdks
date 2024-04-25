@@ -7,16 +7,15 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 class DAOs {
     @Dao
     interface TaskDAO {
-        @Insert
-        suspend fun insert(task: Task)
+        @Upsert
+        suspend fun upsert(task: Task)
 
-        @Update
-        fun update(task: Task)
 
         @Delete
         fun delete(task: Task)

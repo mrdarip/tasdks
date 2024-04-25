@@ -33,13 +33,10 @@ class TasdksRepository(
         if(taskId==null) return emptyFlow()
         return taskDAO.getById(taskId).mapNotNull {it}
     }
-    suspend fun insertTask(task: Task) {
-        taskDAO.insert(task)
+    suspend fun upsertTask(task: Task) {
+        taskDAO.upsert(task)
     }
 
-    suspend fun updateTask(task: Task) {
-        taskDAO.update(task)
-    }
 
     suspend fun deleteTask(task: Task) {
         withContext(Dispatchers.IO) {

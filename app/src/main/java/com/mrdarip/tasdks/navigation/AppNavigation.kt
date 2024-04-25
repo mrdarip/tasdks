@@ -78,7 +78,7 @@ fun AppNavigation() {
             },
             floatingActionButton = {
                 FloatingActionButton(onClick = {}) {
-                    IconButton(onClick = { scope.launch { drawerState.open() } }) { //2 on clicks?
+                    IconButton(onClick = { navController.navigate(AppScreens.EditTask.route+"/-1")}) { //2 on clicks?
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = "Add"
@@ -86,7 +86,7 @@ fun AppNavigation() {
                     }
                 }
             }
-        ){ innerPadding ->
+        ) { innerPadding ->
             Column(
                 modifier = Modifier.padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(
@@ -127,22 +127,22 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
         AppScreens.ManageResources
     )
 
-        labels.forEachIndexed { index, item ->
-            NavigationDrawerItem(
-                label = { Text(item) },
-                icon = {
-                    Icon(
-                        icons[index],
-                        contentDescription = item
-                    )
-                },
-                selected = false,
-                onClick = {
-                    navController.navigate(screens[index].route)
-                    scope.launch { drawerState.close() }
-                }
-            )
-        }
+    labels.forEachIndexed { index, item ->
+        NavigationDrawerItem(
+            label = { Text(item) },
+            icon = {
+                Icon(
+                    icons[index],
+                    contentDescription = item
+                )
+            },
+            selected = false,
+            onClick = {
+                navController.navigate(screens[index].route)
+                scope.launch { drawerState.close() }
+            }
+        )
+    }
 
     Divider()
 
@@ -238,8 +238,7 @@ fun MainNavHost(navController: NavHostController) {
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
         ) { backStackEntry ->
             val taskId = backStackEntry.arguments?.getLong("taskId")
-            EditTaskScreen(navController = navController, taskId = taskId)
-        }
+            EditTaskScreen(navController = navController, taskId = if (taskId != null && taskId >= 0L) taskId else null)        }
 
         composable(
             route = AppScreens.ManageTasks.route,
