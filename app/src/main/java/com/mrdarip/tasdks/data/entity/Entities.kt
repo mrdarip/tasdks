@@ -40,7 +40,7 @@ data class RepetitionRange(
     val minRepSec: Int,
     val optRepSec: Int?,
     val maxRepSec: Int?,
-    private val repetitionType: RepetitionType
+    val repetitionType: RepetitionType
 )
 @Entity(tableName = "activators")
 data class Activator(
