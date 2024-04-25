@@ -31,11 +31,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.mrdarip.tasdks.screens.EditTaskScreen
-import com.mrdarip.tasdks.screens.MainMenu
-import com.mrdarip.tasdks.screens.ManageTasksScreen
-import com.mrdarip.tasdks.screens.SearchMenu
-import com.mrdarip.tasdks.screens.StatsMenu
+import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
+import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
+import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
+import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
+import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -110,6 +110,7 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
         "Manage Places",
         "Manage Resources"
     )
+
     val icons = listOf(
         Icons.Filled.Build,
         Icons.Filled.PlayArrow,

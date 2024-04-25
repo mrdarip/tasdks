@@ -1,4 +1,4 @@
-package com.mrdarip.tasdks.screens
+package com.mrdarip.tasdks.screens.managementScreens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +24,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenuState
+import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenuViewModel
 
 @Composable
 fun ManageTasksScreen(navController: NavController) {
@@ -33,7 +35,7 @@ fun ManageTasksScreen(navController: NavController) {
 }
 
 @Composable
-fun ManageTasksBodyContent(navController: NavController,mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
+fun ManageTasksBodyContent(navController: NavController, mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
     LazyColumn(
         modifier = Modifier.padding(0.dp, 8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),

@@ -1,4 +1,4 @@
-package com.mrdarip.tasdks.screens
+package com.mrdarip.tasdks.screens.bottomBarScreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
