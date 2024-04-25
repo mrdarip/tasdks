@@ -1,4 +1,4 @@
-package com.mrdarip.tasdks.screens.bottomBarScreens
+package com.mrdarip.tasdks.screens.viewModels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

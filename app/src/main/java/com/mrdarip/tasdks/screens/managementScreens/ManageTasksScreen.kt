@@ -24,8 +24,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
-import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenuState
-import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenuViewModel
+import com.mrdarip.tasdks.screens.viewModels.MainMenuState
+import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
 
 @Composable
 fun ManageTasksScreen(navController: NavController) {
