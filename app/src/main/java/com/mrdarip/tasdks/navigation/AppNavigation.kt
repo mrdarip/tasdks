@@ -119,6 +119,14 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
         Icons.Filled.Face
     )
 
+    val screens = listOf(
+        AppScreens.ManageTasks,
+        AppScreens.ManageActivators,
+        AppScreens.ManageObjects,
+        AppScreens.ManagePlaces,
+        AppScreens.ManageResources
+    )
+
         labels.forEachIndexed { index, item ->
             NavigationDrawerItem(
                 label = { Text(item) },
@@ -130,7 +138,7 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
                 },
                 selected = false,
                 onClick = {
-                    navController.navigate(AppScreens.ManageTasks.route)
+                    navController.navigate(screens[index].route)
                     scope.launch { drawerState.close() }
                 }
             )
