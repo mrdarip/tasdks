@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Task
+import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
 
 @Composable
@@ -72,6 +74,12 @@ fun EditTaskBodyContent(
     }
 
     Column(Modifier.verticalScroll(rememberScrollState())) {
+        TasksRow(
+            mainMenuViewModel,
+            tasks = mainMenuViewModel.getParentTasksOfTask(taskId ?: 0)
+                .collectAsState(initial = emptyList()).value,
+            navController
+        )
         Text(text = task.name)
         TextField(
             value = name,
@@ -92,12 +100,12 @@ fun EditTaskBodyContent(
             placeholder = { Text("😃") }
         )
 
-        TasksAndSubTasksList(
+        TasksRow(
             mainMenuViewModel,
             tasks = mainMenuViewModel.getSubTasksOfTask(taskId ?: 0)
                 .collectAsState(initial = emptyList()).value,
-            0
-        )
+            navController
+        ) //subtasks
         Button(
             onClick = {
                 mainMenuViewModel.upsertTask(
@@ -164,5 +172,58 @@ fun TasksAndSubTasksList(mainMenuViewModel: EditTaskViewModel, tasks: List<Task>
                 .collectAsState(initial = emptyList()).value,
             level + 1
         )
+    }
+}
+
+@Composable
+fun TasksRow(mainMenuViewModel: EditTaskViewModel, tasks: List<Task>, navController: NavController) {
+    LazyRow {
+        item {
+            Card(modifier = Modifier.fillMaxWidth().clickable(onClick = {navController.navigate(AppScreens.EditTask.route + "/-1")})) {
+                Row(horizontalArrangement = Arrangement.spacedBy(space = 8.dp), modifier = Modifier.padding(16.dp)){
+                    Icon(Icons.Filled.Add, contentDescription = "Add task")
+                    Column {
+                        Text(
+                            text = "Add new",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+                }
+            }
+        }
+        items(tasks) { task ->
+            Card(modifier = Modifier.fillMaxWidth().clickable(onClick = {navController.navigate(AppScreens.EditTask.route + "/${task.taskId ?: -1}")})) {
+                Row(horizontalArrangement = Arrangement.spacedBy(space = 8.dp), modifier = Modifier.padding(16.dp)){
+                    Text(
+                        task.iconEmoji ?: "🤕",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    Column {
+                        Text(
+                            text = task.name,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                        Text(
+                            text = task.comment ?: "NO DESCRIPTION",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        /*Text(
+                            text = placeName,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyMedium
+                        )*/
+                    }
+                }
+            }
+        }
     }
 }

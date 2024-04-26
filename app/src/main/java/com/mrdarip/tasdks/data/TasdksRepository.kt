@@ -51,4 +51,8 @@ class TasdksRepository(
     fun getSubTasksOfTask(taskId: Long): Flow<List<Task>> {
         return taskDAO.getSubTasks(taskId)
     }
+
+    fun getParentTasksOfTask(taskId: Long): Flow<List<Task>> {
+        return taskDAO.getParentTasks(taskId)
+    }
 }

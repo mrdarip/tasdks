@@ -12,8 +12,6 @@ import com.mrdarip.tasdks.data.entity.Object
 import com.mrdarip.tasdks.data.entity.Task
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 class EditTaskViewModel(
     private val repository: TasdksRepository = Graph.repository
@@ -43,6 +41,10 @@ class EditTaskViewModel(
 
     fun getSubTasksOfTask(taskId: Long): Flow<List<Task>>{
         return repository.getSubTasksOfTask(taskId)
+    }
+
+    fun getParentTasksOfTask(taskId: Long): Flow<List<Task>>{
+        return repository.getParentTasksOfTask(taskId)
     }
 
     //TODO oncategorychange,onitemcheckedchange
