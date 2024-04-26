@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,28 +42,40 @@ fun EditTaskBodyContent(
         initial = Task(
             taskId = null,
             name = "",
-            comment = "",
-            iconEmoji = "",
+            comment = null,
+            iconEmoji = null,
             placeId = null
         )
     )
-    var text by rememberSaveable { mutableStateOf(task.name) }
+    var name by rememberSaveable { mutableStateOf("") }
+    var comment by rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(task) {
+        name = task.name
+        comment = task.comment ?: ""
+    }
 
     Column(Modifier.verticalScroll(rememberScrollState())) {
         Text(text = task.name)
         TextField(
-            value = text,
-            onValueChange = { text = it },
-            label = { Text("Email") },
-            placeholder = { Text("example@gmail.com") }
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Name") },
+            placeholder = { Text("Task name") }
+        )
+        TextField(
+            value = comment,
+            onValueChange = { comment = it },
+            label = { Text("Comment") },
+            placeholder = { Text("Task comment") }
         )
         Button(
             onClick = {
                 mainMenuViewModel.upsertTask(
                     Task(
                         task.taskId,
-                        text,
-                        task.comment,
+                        name,
+                        comment.ifBlank { null },
                         task.iconEmoji,
                         task.placeId
                     )
