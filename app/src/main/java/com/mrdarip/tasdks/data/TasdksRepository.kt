@@ -48,5 +48,7 @@ class TasdksRepository(
         if(placeId==null) return emptyFlow()
         return placeDAO.getPlaceById(placeId).mapNotNull { it?.name ?: "PLACE NOT FOUND" }
     }
-
+    fun getSubTasksOfTask(taskId: Long): Flow<List<Task>> {
+        return taskDAO.getSubTasks(taskId)
+    }
 }

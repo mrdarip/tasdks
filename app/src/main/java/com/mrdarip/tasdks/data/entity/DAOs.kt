@@ -31,6 +31,9 @@ class DAOs {
 
         @Query("SELECT * FROM tasks WHERE taskId = :taskId")
         fun getById(taskId: Long): Flow<Task>
+
+        @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.childTaskId WHERE TaskTaskCr.parentTaskId = :parentId")
+        fun getSubTasks(parentId: Long): Flow<List<Task>>
     }
 
     @Dao

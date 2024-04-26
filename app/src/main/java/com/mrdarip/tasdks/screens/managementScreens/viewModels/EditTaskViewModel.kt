@@ -41,6 +41,10 @@ class EditTaskViewModel(
         return repository.getTaskById(taskId)
     }
 
+    fun getSubTasksOfTask(taskId: Long): Flow<List<Task>>{
+        return repository.getSubTasksOfTask(taskId)
+    }
+
     //TODO oncategorychange,onitemcheckedchange
 }
 

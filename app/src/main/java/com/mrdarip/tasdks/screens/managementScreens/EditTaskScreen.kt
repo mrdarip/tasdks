@@ -49,10 +49,12 @@ fun EditTaskBodyContent(
     )
     var name by rememberSaveable { mutableStateOf("") }
     var comment by rememberSaveable { mutableStateOf("") }
+    var iconEmoji by rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(task) {
         name = task.name
         comment = task.comment ?: ""
+        iconEmoji = task.iconEmoji ?: ""
     }
 
     Column(Modifier.verticalScroll(rememberScrollState())) {
@@ -69,6 +71,19 @@ fun EditTaskBodyContent(
             label = { Text("Comment") },
             placeholder = { Text("Task comment") }
         )
+        TextField(
+            value = iconEmoji,
+            onValueChange = { iconEmoji = it },
+            label = { Text("Emoji") },
+            placeholder = { Text("😃") }
+        )
+
+        TasksAndSubTasksList(
+            mainMenuViewModel,
+            tasks = mainMenuViewModel.getSubTasksOfTask(taskId ?: 0)
+                .collectAsState(initial = emptyList()).value,
+            0
+        )
         Button(
             onClick = {
                 mainMenuViewModel.upsertTask(
@@ -76,7 +91,7 @@ fun EditTaskBodyContent(
                         task.taskId,
                         name,
                         comment.ifBlank { null },
-                        task.iconEmoji,
+                        iconEmoji.ifBlank { null },
                         task.placeId
                     )
                 )
@@ -85,6 +100,21 @@ fun EditTaskBodyContent(
         ) {
             Icon(Icons.Filled.Favorite, contentDescription = "Localized description")
             Text("Like")
+        }
+    }
+}
+
+@Composable
+fun TasksAndSubTasksList(mainMenuViewModel: EditTaskViewModel, tasks: List<Task>, level: Int) {
+    Column {
+        tasks.forEach { task ->
+            Text(task.name + level.toString())
+            TasksAndSubTasksList(
+                mainMenuViewModel,
+                mainMenuViewModel.getSubTasksOfTask(task.taskId ?: 0)
+                    .collectAsState(initial = emptyList()).value,
+                level + 1
+            )
         }
     }
 }
