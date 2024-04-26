@@ -1,22 +1,36 @@
 package com.mrdarip.tasdks.screens.managementScreens
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Task
@@ -106,15 +120,49 @@ fun EditTaskBodyContent(
 
 @Composable
 fun TasksAndSubTasksList(mainMenuViewModel: EditTaskViewModel, tasks: List<Task>, level: Int) {
-    Column {
-        tasks.forEach { task ->
-            Text(task.name + level.toString())
-            TasksAndSubTasksList(
-                mainMenuViewModel,
-                mainMenuViewModel.getSubTasksOfTask(task.taskId ?: 0)
-                    .collectAsState(initial = emptyList()).value,
-                level + 1
-            )
+    var selectedItem by remember { mutableIntStateOf(0) }
+
+    LazyRow {
+        items(tasks) { task ->
+            Card(modifier = Modifier.fillMaxWidth().clickable(onClick = {selectedItem = task.taskId?.toInt() ?: 0})) {
+                Row(horizontalArrangement = Arrangement.spacedBy(space = 8.dp), modifier = Modifier.padding(16.dp)){
+                    Text(
+                        task.iconEmoji ?: "🤕",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    Column {
+                        Text(
+                            text = task.name,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                        Text(
+                            text = task.comment ?: "NO DESCRIPTION",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        /*Text(
+                            text = placeName,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyMedium
+                        )*/
+                    }
+                }
+            }
         }
+    }
+
+    if(selectedItem != 0) {
+        TasksAndSubTasksList(
+            mainMenuViewModel,
+            mainMenuViewModel.getSubTasksOfTask(selectedItem.toLong())
+                .collectAsState(initial = emptyList()).value,
+            level + 1
+        )
     }
 }
