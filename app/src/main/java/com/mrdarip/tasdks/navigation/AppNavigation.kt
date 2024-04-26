@@ -78,7 +78,7 @@ fun AppNavigation() {
             },
             floatingActionButton = {
                 FloatingActionButton(onClick = {}) {
-                    IconButton(onClick = { navController.navigate(AppScreens.EditTask.route+"/-1")}) { //2 on clicks?
+                    IconButton(onClick = { navController.navigate(AppScreens.EditTask.route + "/-1") }) { //2 on clicks?
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = "Add"
@@ -161,11 +161,8 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
 
 @Composable
 fun BottomBar(navController: NavController) {
-    var selectedItem by remember {
-        mutableIntStateOf(
-            0
-        )
-    }
+    var selectedItem by remember { mutableIntStateOf(0) }
+
     val items = listOf("Menu", "Search", "Stats")
     val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.AccountCircle)
     val bottomBarScreenRoutes = listOf(
@@ -238,7 +235,11 @@ fun MainNavHost(navController: NavHostController) {
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
         ) { backStackEntry ->
             val taskId = backStackEntry.arguments?.getLong("taskId")
-            EditTaskScreen(navController = navController, taskId = if (taskId != null && taskId >= 0L) taskId else null)        }
+            EditTaskScreen(
+                navController = navController,
+                taskId = if (taskId != null && taskId >= 0L) taskId else null
+            )
+        }
 
         composable(
             route = AppScreens.ManageTasks.route,
