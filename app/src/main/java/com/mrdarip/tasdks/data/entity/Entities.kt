@@ -80,10 +80,11 @@ data class TaskObjectCR(
     val objectId: Long
 )
 
-@Entity(primaryKeys = ["parentTaskId", "childTaskId"])
+@Entity(primaryKeys = ["parentTaskId", "position"])
 data class TaskTaskCR(
     val parentTaskId: Long,
-    val childTaskId: Long
+    val childTaskId: Long,
+    val position: Long
 )
 
 data class TaskWithTasks(
