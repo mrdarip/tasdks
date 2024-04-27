@@ -15,10 +15,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -276,15 +279,49 @@ fun EditTasksBottomSheet(
                 Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
             }
             items(tasksToShow) { task ->
-                val placeName by mainMenuViewModel.getPlaceName(task.placeId)
-                    .collectAsState(initial = "")
-                TaskLiItem(
-                    task = task,
-                    placeName = placeName,
-                    onClick = {
+                OrderTaskLiItem(task)
+            }
+        }
+    }
+}
 
-                    }
+@Preview
+@Composable
+fun OrderTaskLiItem(task: Task = Task(0, "No task found", "Sample comment", "🐱", null)) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ) {
+            Text(
+                task.iconEmoji ?: "🤕",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowUp,
+                        contentDescription = "Move task order up"
+                    )
+                }
+                Text(
+                    text = task.name,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.weight(1f)
                 )
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = "Move task order down"
+                    )
+                }
             }
         }
     }
