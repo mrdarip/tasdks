@@ -53,14 +53,14 @@ fun EditTaskScreen(navController: NavController, taskId: Long?) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun EditTaskBodyContent(
     navController: NavController,
     mainMenuViewModel: EditTaskViewModel,
     taskId: Long?
 ) {
-    val sheetState = rememberModalBottomSheetState()
+
     var showBottomSheet by remember { mutableStateOf(false) }
     var editSubTasks by remember { mutableStateOf(false) } // true for editing subtasks, false for editing parent tasks
 
@@ -83,14 +83,18 @@ fun EditTaskBodyContent(
         iconEmoji = task.iconEmoji ?: ""
     }
 
+    val parentTasks = mainMenuViewModel.getParentTasksOfTask(taskId ?: 0)
+        .collectAsState(initial = emptyList()).value
+    val subTasks = mainMenuViewModel.getSubTasksOfTask(taskId ?: 0)
+        .collectAsState(initial = emptyList()).value
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)) {
+            .padding(16.dp)
+    ) {
         TasksRow(
             mainMenuViewModel,
-            tasks = mainMenuViewModel.getParentTasksOfTask(taskId ?: 0)
-                .collectAsState(initial = emptyList()).value,
+            tasks = parentTasks,
             navController,
             onClickEdit = {
                 editSubTasks = false
@@ -127,8 +131,7 @@ fun EditTaskBodyContent(
 
         TasksRow(
             mainMenuViewModel,
-            tasks = mainMenuViewModel.getSubTasksOfTask(taskId ?: 0)
-                .collectAsState(initial = emptyList()).value,
+            tasks = subTasks,
             navController,
             onClickEdit = {
                 editSubTasks = true
@@ -137,52 +140,14 @@ fun EditTaskBodyContent(
         ) //subtasks
 
         if (showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = {
-                    showBottomSheet = false
-                },
-                sheetState = sheetState,
-            ) {
-                val tasksToShow = (if (editSubTasks) mainMenuViewModel.getSubTasksOfTask(
-                    taskId ?: 0
-                ) else mainMenuViewModel.getParentTasksOfTask(
-                    taskId ?: 0
-                )).collectAsState(initial = emptyList()).value
-
-
-
-                LazyColumn(
-                    modifier = Modifier.padding(0.dp, 8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    item {//TODO: the add task buttons should be at the end of the list, floating
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            Button(modifier = Modifier.weight(1f), onClick = { }) {
-                                Text("New task")
-                            }
-                            Button(modifier = Modifier.weight(1f), onClick = {}) {
-                                Text("Existing task")
-                            }
-                        }
-                    }
-
-                    items(tasksToShow) { task ->
-                        val placeName by mainMenuViewModel.getPlaceName(task.placeId)
-                            .collectAsState(initial = "")
-                        TaskLiItem(
-                            task = task,
-                            placeName = placeName,
-                            onClick = {
-
-                            }
-                        )
-                    }
-                }
-            }
+            EditTasksBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                editSubTasks = editSubTasks,
+                mainMenuViewModel = mainMenuViewModel,
+                taskId = taskId,
+                subTasks = subTasks,
+                parentTasks = parentTasks
+            )
         }
 
 
@@ -224,7 +189,7 @@ fun TasksRow(
                     horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Icon(Icons.Filled.Edit, contentDescription = "Edit task relation")
+                    Icon(Icons.Filled.Edit, contentDescription = "Edit tasks order")
                     Column {
                         Text(
                             text = "Edit",
@@ -261,6 +226,65 @@ fun TasksRow(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditTasksBottomSheet(
+    onDismissRequest: () -> Unit = {},
+    editSubTasks: Boolean,
+    mainMenuViewModel: EditTaskViewModel,
+    taskId: Long?,
+    subTasks: List<Task>,
+    parentTasks: List<Task>
+) {
+
+    val sheetState = rememberModalBottomSheetState()
+
+    ModalBottomSheet(
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        sheetState = sheetState,
+    ) {
+        val tasksToShow = if (editSubTasks) subTasks else parentTasks
+
+        LazyColumn(
+            modifier = Modifier.padding(0.dp, 8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {//TODO: the add task buttons should be at the end of the list, floating
+                Text("Add task", style = MaterialTheme.typography.headlineMedium)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Button(modifier = Modifier.weight(1f), onClick = { }) {
+                        Text("New task")
+                    }
+                    Button(modifier = Modifier.weight(1f), onClick = {}) {
+                        Text("Existing task")
+                    }
+                }
+            }
+
+            item {
+                Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
+            }
+            items(tasksToShow) { task ->
+                val placeName by mainMenuViewModel.getPlaceName(task.placeId)
+                    .collectAsState(initial = "")
+                TaskLiItem(
+                    task = task,
+                    placeName = placeName,
+                    onClick = {
+
+                    }
+                )
             }
         }
     }
