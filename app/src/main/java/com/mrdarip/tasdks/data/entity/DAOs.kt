@@ -38,7 +38,23 @@ class DAOs {
         @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.parentTaskId WHERE TaskTaskCr.childTaskId = :childId")
         fun getParentTasks(childId: Long): Flow<List<Task>>
 
+        @Query("""
+            UPDATE TaskTaskCR SET position = CASE
+                WHEN childTaskId = :taskId THEN position + 1
+                ELSE position - 1
+            END 
+            WHERE parentTaskId = :parentId AND childTaskId IN ( SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :parentId AND (position IN (SELECT position FROM TaskTaskCR WHERE childTaskId =5 and parentTaskId= 2) OR position IN (SELECT position+1 FROM TaskTaskCR WHERE childTaskId =5 and parentTaskId= 2)))
+            """)
+        fun moveTaskUp(taskId: Long, parentId: Long)
 
+        @Query("""
+            UPDATE TaskTaskCR SET position = CASE
+                WHEN childTaskId = :taskId THEN position - 1
+                ELSE position +1
+            END 
+            WHERE parentTaskId = :parentId AND childTaskId IN ( SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :parentId AND (position IN (SELECT position FROM TaskTaskCR WHERE childTaskId =:taskId and parentTaskId = :parentId) OR position IN (SELECT position-1 FROM TaskTaskCR WHERE childTaskId =:taskId and parentTaskId= :parentId)))
+            """)
+        fun moveTaskDown(taskId: Long, parentId: Long)
     }
 
     @Dao
