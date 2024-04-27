@@ -7,14 +7,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
@@ -23,8 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -32,10 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -48,7 +42,6 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun EditTaskScreen(navController: NavController, taskId: Long?) {
@@ -68,7 +61,6 @@ fun EditTaskBodyContent(
     taskId: Long?
 ) {
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     var editSubTasks by remember { mutableStateOf(false) } // true for editing subtasks, false for editing parent tasks
 
@@ -91,7 +83,10 @@ fun EditTaskBodyContent(
         iconEmoji = task.iconEmoji ?: ""
     }
 
-    Column(Modifier.verticalScroll(rememberScrollState())) {
+    Column(
+        Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)) {
         TasksRow(
             mainMenuViewModel,
             tasks = mainMenuViewModel.getParentTasksOfTask(taskId ?: 0)
@@ -103,25 +98,31 @@ fun EditTaskBodyContent(
             }
         )
         Text(text = task.name)
-        Row {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             TextField(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("Name") },
-                placeholder = { Text("Task name") }
+                placeholder = { Text("Task name") },
+                modifier = Modifier.weight(3f)
             )
             TextField(
                 value = iconEmoji,
                 onValueChange = { iconEmoji = it },
                 label = { Text("Emoji") },
-                placeholder = { Text("😃") }
+                placeholder = { Text("😃") },
+                modifier = Modifier.weight(1f)
             )
         }
         TextField(
             value = comment,
             onValueChange = { comment = it },
             label = { Text("Comment") },
-            placeholder = { Text("Task comment") }
+            placeholder = { Text("Task comment") },
+            modifier = Modifier.fillMaxWidth()
         )
 
         TasksRow(
@@ -148,34 +149,27 @@ fun EditTaskBodyContent(
                     taskId ?: 0
                 )).collectAsState(initial = emptyList()).value
 
-                var showAddTaskOptions by remember { mutableStateOf(false) }
+
 
                 LazyColumn(
                     modifier = Modifier.padding(0.dp, 8.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    item() {//TODO: the add task buttons should be at the end of the list, floating
-                        Column {
-                            Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                                showAddTaskOptions = !showAddTaskOptions
-                            }) {
-                                Text("Add task")
+                    item {//TODO: the add task buttons should be at the end of the list, floating
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Button(modifier = Modifier.weight(1f), onClick = { }) {
+                                Text("New task")
                             }
-
-                            if (showAddTaskOptions) {
-                                Row (modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.spacedBy(16.dp)){
-                                    Button(modifier = Modifier.weight(1f), onClick = { }) {
-                                        Text("New task")
-                                    }
-                                    Button(modifier = Modifier.weight(1f), onClick = {}) {
-                                        Text("Existing task")
-                                    }
-                                }
+                            Button(modifier = Modifier.weight(1f), onClick = {}) {
+                                Text("Existing task")
                             }
                         }
-
                     }
+
                     items(tasksToShow) { task ->
                         val placeName by mainMenuViewModel.getPlaceName(task.placeId)
                             .collectAsState(initial = "")
@@ -188,8 +182,6 @@ fun EditTaskBodyContent(
                         )
                     }
                 }
-
-                // Sheet content
             }
         }
 
@@ -267,18 +259,6 @@ fun TasksRow(
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.headlineSmall
                         )
-                        Text(
-                            text = task.comment ?: "NO DESCRIPTION",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        /*Text(
-                            text = placeName,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodyMedium
-                        )*/
                     }
                 }
             }
@@ -289,8 +269,8 @@ fun TasksRow(
 
 @Preview
 @Composable
-fun preview() {
-    Row (modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.spacedBy(16.dp)){
+fun Preview() {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         Button(modifier = Modifier.weight(1f), onClick = { }) {
             Text("New task")
         }
