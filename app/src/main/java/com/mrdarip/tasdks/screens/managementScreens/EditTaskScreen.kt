@@ -25,7 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -105,32 +104,15 @@ fun EditTaskBodyContent(
                 showBottomSheet = true
             }
         )//parent tasks //TODO: parent tasks order shouldn't be editable
+
         Text(text = task.name)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            TextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Name") },
-                placeholder = { Text("Task name") },
-                modifier = Modifier.weight(3f)
-            )
-            TextField(
-                value = iconEmoji,
-                onValueChange = { iconEmoji = it },
-                label = { Text("Emoji") },
-                placeholder = { Text("😃") },
-                modifier = Modifier.weight(1f)
-            )
-        }
-        TextField(
-            value = comment,
-            onValueChange = { comment = it },
-            label = { Text("Comment") },
-            placeholder = { Text("Task comment") },
-            modifier = Modifier.fillMaxWidth()
+        TaskFields(
+            taskName = name,
+            taskEmoji = iconEmoji,
+            taskComment = comment,
+            onTaskNameChange = { name = it },
+            onTaskEmojiChange = { iconEmoji = it },
+            onTaskCommentChange = { comment = it }
         )
 
         TasksRow(
