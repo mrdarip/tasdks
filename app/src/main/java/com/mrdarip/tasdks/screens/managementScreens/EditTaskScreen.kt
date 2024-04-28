@@ -76,6 +76,7 @@ fun EditTaskBodyContent(
             placeId = null
         )
     )
+
     var name by rememberSaveable { mutableStateOf("") }
     var comment by rememberSaveable { mutableStateOf("") }
     var iconEmoji by rememberSaveable { mutableStateOf("") }
@@ -103,7 +104,7 @@ fun EditTaskBodyContent(
                 editSubTasks = false
                 showBottomSheet = true
             }
-        )
+        )//parent tasks //TODO: parent tasks order shouldn't be editable
         Text(text = task.name)
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -275,23 +276,31 @@ fun EditTasksBottomSheet(
                 }
             }
 
-            item {
-                Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
+            if (tasksToShow.isNotEmpty()) {
+                item {
+                    Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
+                }
             }
+
             items(tasksToShow) { task ->
-                OrderTaskLiItem(task)
+                OrderTaskLiItem(
+                    task,
+                    taskId,
+                    mainMenuViewModel
+                )
             }
         }
     }
 }
 
-@Preview
 @Composable
-fun OrderTaskLiItem(task: Task = Task(0, "No task found", "Sample comment", "🐱", null)) {
+fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTaskViewModel) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
             Text(
                 task.iconEmoji ?: "🤕",

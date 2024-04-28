@@ -36,6 +36,7 @@ import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
+import com.mrdarip.tasdks.screens.managementScreens.CreateTaskScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -228,8 +229,6 @@ fun MainNavHost(navController: NavHostController) {
             StatsMenu(navController)
         }
 
-
-
         composable(
             "${AppScreens.EditTask.route}/{taskId}",
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
@@ -237,7 +236,7 @@ fun MainNavHost(navController: NavHostController) {
             val taskId = backStackEntry.arguments?.getLong("taskId")
             EditTaskScreen(
                 navController = navController,
-                taskId = if (taskId != null && taskId >= 0L) taskId else null
+                taskId =  taskId
             )
         }
 
@@ -245,6 +244,12 @@ fun MainNavHost(navController: NavHostController) {
             route = AppScreens.ManageTasks.route,
         ) {
             ManageTasksScreen(navController = navController)
+        }
+
+        composable(
+            route = AppScreens.CreateTask.route,
+        ) {
+            CreateTaskScreen(navController = navController)
         }
     }
 }

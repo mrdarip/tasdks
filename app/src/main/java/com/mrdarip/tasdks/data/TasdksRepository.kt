@@ -37,6 +37,10 @@ class TasdksRepository(
         taskDAO.upsert(task)
     }
 
+    suspend fun insertTask(task: Task): Long {
+        return taskDAO.insert(task)
+    }
+
 
     suspend fun deleteTask(task: Task) {
         withContext(Dispatchers.IO) {

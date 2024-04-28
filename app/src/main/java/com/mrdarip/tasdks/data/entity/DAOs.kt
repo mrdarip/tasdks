@@ -16,6 +16,9 @@ class DAOs {
         @Upsert
         suspend fun upsert(task: Task)
 
+        @Insert
+        suspend fun insert(task: Task):Long
+
 
         @Delete
         fun delete(task: Task)
