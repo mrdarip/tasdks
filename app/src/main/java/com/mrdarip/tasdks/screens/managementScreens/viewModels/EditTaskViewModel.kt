@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
-import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Object
+import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Task
-
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+
 class EditTaskViewModel(
     private val repository: TasdksRepository = Graph.repository
 ) : ViewModel() {
@@ -29,10 +29,23 @@ class EditTaskViewModel(
         }
     }
 
+    fun addTaskAsLastSubTask(taskId: Long, parentTaskId: Long) {
+        viewModelScope.launch {
+            repository.addTaskAsLastSubTask(taskId, parentTaskId)
+        }
+    }
     fun upsertTask(task: Task) {
         viewModelScope.launch {
             repository.upsertTask(task)
         }
+    }
+
+    fun insertTask(task: Task): Long {
+        var newTaskId = 0L
+        viewModelScope.launch {
+            newTaskId = repository.insertTask(task)
+        }
+        return newTaskId
     }
 
     fun getTaskById(taskId: Long): Flow<Task>{

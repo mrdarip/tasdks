@@ -1,7 +1,7 @@
 package com.mrdarip.tasdks.data
 
 import com.mrdarip.tasdks.data.entity.DAOs
-import com.mrdarip.tasdks.data.entity.*
+import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -58,5 +58,9 @@ class TasdksRepository(
 
     fun getParentTasksOfTask(taskId: Long): Flow<List<Task>> {
         return taskDAO.getParentTasks(taskId)
+    }
+
+    fun addTaskAsLastSubTask(taskId: Long, parentTaskId:Long){
+        taskWithTasksDAO.addTaskAsLastSubTask(taskId, parentTaskId)
     }
 }

@@ -32,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,6 +45,7 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditTaskScreen(navController: NavController, taskId: Long?) {
@@ -238,22 +240,90 @@ fun EditTasksBottomSheet(
     ) {
         val tasksToShow = if (editSubTasks) subTasks else parentTasks
 
+        var addingTask by remember { mutableStateOf(false) }
+        var addingExistingTask by remember { mutableStateOf(false) }
+
         LazyColumn(
             modifier = Modifier.padding(0.dp, 8.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {//TODO: the add task buttons should be at the end of the list, floating
-                Text("Add task", style = MaterialTheme.typography.headlineMedium)
+                Text(
+                    text =
+                    if (!addingTask)
+                        "Add task"
+                    else (
+                            if (addingExistingTask)
+                                "Adding existing task"
+                            else
+                                "Adding new task"
+                            ),
+                    style = MaterialTheme.typography.headlineMedium
+                )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Button(modifier = Modifier.weight(1f), onClick = { }) {
-                        Text("New task")
+                    if (!addingTask || !addingExistingTask) {
+                        Button(
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                addingTask = !addingTask
+                                addingExistingTask = false
+                            }) {
+                            Text(if (!addingTask) "New task" else "Cancel")
+                        }
                     }
-                    Button(modifier = Modifier.weight(1f), onClick = {}) {
-                        Text("Existing task")
+
+                    if (!addingTask || addingExistingTask) {
+                        Button(modifier = Modifier.weight(1f), onClick = {
+                            addingTask = !addingTask
+                            addingExistingTask = true
+                        }) {
+                            Text(if (!addingTask) "Existing task" else "Cancel")
+                        }
+                    }
+                }
+            }
+
+            if (addingTask) {
+                if (addingExistingTask) {
+                } else {
+                    item {
+                        var name by remember { mutableStateOf("") }
+                        var emoji by remember { mutableStateOf("") }
+                        var comment by remember { mutableStateOf("") }
+
+                        val scope = rememberCoroutineScope()
+
+                        TaskFields(
+                            taskName = name,
+                            taskEmoji = emoji,
+                            taskComment = comment,
+                            onTaskNameChange = { name = it },
+                            onTaskEmojiChange = { emoji = it },
+                            onTaskCommentChange = { comment = it }
+                        )
+
+                        Button(onClick = {
+                            scope.launch {
+                                mainMenuViewModel.addTaskAsLastSubTask(
+                                    mainMenuViewModel.insertTask(
+                                        Task(
+                                            taskId = null,
+                                            name = name,
+                                            iconEmoji = emoji.ifBlank { null },
+                                            comment = comment.ifBlank { null },
+                                            placeId = null
+                                        )
+                                    ),
+                                    taskId ?: 0
+                                )
+                            }
+                        }) {
+                            Text("Add task")
+                        }
                     }
                 }
             }
@@ -262,14 +332,13 @@ fun EditTasksBottomSheet(
                 item {
                     Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
                 }
-            }
-
-            items(tasksToShow) { task ->
-                OrderTaskLiItem(
-                    task,
-                    taskId,
-                    mainMenuViewModel
-                )
+                items(tasksToShow) { task ->
+                    OrderTaskLiItem(
+                        task,
+                        taskId,
+                        mainMenuViewModel
+                    )
+                }
             }
         }
     }
@@ -322,7 +391,10 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTask
 @Preview
 @Composable
 fun Preview() {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         Button(modifier = Modifier.weight(1f), onClick = { }) {
             Text("New task")
         }
