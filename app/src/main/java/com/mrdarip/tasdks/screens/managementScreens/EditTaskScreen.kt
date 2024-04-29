@@ -277,7 +277,7 @@ fun EditTasksBottomSheet(
                                     placeId = null
                                 ),
                                 taskId ?: 0
-                            )
+                            )//TODO: fix "database can't be accessed from main thread" exception
                         }) {
                             Text("Add task")
                         }
@@ -318,7 +318,7 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTask
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { editTaskViewModel.moveTaskUp(task.taskId?:0, parentTaskId?:0) }) { //TODO: check button works without launching exceptions, and check query is working
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowUp,
                         contentDescription = "Move task order up"
@@ -331,7 +331,7 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTask
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.weight(1f)
                 )
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { editTaskViewModel.moveTaskDown(task.taskId?:0, parentTaskId?:0) }) { //TODO: check button works without launching exceptions, and check query is working
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = "Move task order down"

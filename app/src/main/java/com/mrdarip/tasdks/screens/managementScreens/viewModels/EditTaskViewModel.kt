@@ -71,6 +71,17 @@ class EditTaskViewModel(
         return repository.getParentTasksOfTask(taskId)
     }
 
+    fun moveTaskUp(taskId: Long, parentId: Long){
+        viewModelScope.launch {
+            repository.moveTaskUp(taskId,parentId)
+        }
+    }
+
+    fun moveTaskDown(taskId: Long, parentId: Long){
+        viewModelScope.launch {
+            repository.moveTaskDown(taskId,parentId)
+        }
+    }
     //TODO oncategorychange,onitemcheckedchange
 }
 
