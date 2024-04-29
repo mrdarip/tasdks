@@ -138,7 +138,7 @@ fun EditTaskBodyContent(
 fun TasksRow(
     tasks: List<Task>, navController: NavController, onClickEdit: () -> Unit = {}
 ) {
-    LazyRow {
+    LazyRow (horizontalArrangement = Arrangement.spacedBy(8.dp)){
         item {
             Card(
                 modifier = Modifier
