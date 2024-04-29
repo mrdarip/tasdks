@@ -49,10 +49,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun EditTaskScreen(navController: NavController, taskId: Long?) {
-    val mainMenuViewModel = viewModel(modelClass = EditTaskViewModel::class.java)
+    val editTaskViewModel = viewModel(modelClass = EditTaskViewModel::class.java)
     EditTaskBodyContent(
         navController = navController,
-        mainMenuViewModel = mainMenuViewModel,
+        editTaskViewModel = editTaskViewModel,
         taskId = taskId
     )
 }
@@ -61,14 +61,14 @@ fun EditTaskScreen(navController: NavController, taskId: Long?) {
 @Composable
 fun EditTaskBodyContent(
     navController: NavController,
-    mainMenuViewModel: EditTaskViewModel,
+    editTaskViewModel: EditTaskViewModel,
     taskId: Long?
 ) {
 
     var showBottomSheet by remember { mutableStateOf(false) }
     var editSubTasks by remember { mutableStateOf(false) } // true for editing subtasks, false for editing parent tasks
 
-    val task by mainMenuViewModel.getTaskById(taskId ?: 0).collectAsState(
+    val task by editTaskViewModel.getTaskById(taskId ?: 0).collectAsState(
         initial = Task(
             taskId = null,
             name = "",
@@ -88,9 +88,9 @@ fun EditTaskBodyContent(
         iconEmoji = task.iconEmoji ?: ""
     }
 
-    val parentTasks = mainMenuViewModel.getParentTasksOfTask(taskId ?: 0)
+    val parentTasks = editTaskViewModel.getParentTasksOfTask(taskId ?: 0)
         .collectAsState(initial = emptyList()).value
-    val subTasks = mainMenuViewModel.getSubTasksOfTask(taskId ?: 0)
+    val subTasks = editTaskViewModel.getSubTasksOfTask(taskId ?: 0)
         .collectAsState(initial = emptyList()).value
     Column(
         Modifier
@@ -98,7 +98,6 @@ fun EditTaskBodyContent(
             .padding(16.dp)
     ) {
         TasksRow(
-            mainMenuViewModel,
             tasks = parentTasks,
             navController,
             onClickEdit = {
@@ -118,7 +117,6 @@ fun EditTaskBodyContent(
         )
 
         TasksRow(
-            mainMenuViewModel,
             tasks = subTasks,
             navController,
             onClickEdit = {
@@ -131,7 +129,7 @@ fun EditTaskBodyContent(
             EditTasksBottomSheet(
                 onDismissRequest = { showBottomSheet = false },
                 editSubTasks = editSubTasks,
-                mainMenuViewModel = mainMenuViewModel,
+                editTaskViewModel = editTaskViewModel,
                 taskId = taskId,
                 subTasks = subTasks,
                 parentTasks = parentTasks
@@ -141,7 +139,7 @@ fun EditTaskBodyContent(
 
         Button(
             onClick = {
-                mainMenuViewModel.upsertTask(
+                editTaskViewModel.upsertTask(
                     Task(
                         task.taskId,
                         name,
@@ -161,7 +159,6 @@ fun EditTaskBodyContent(
 
 @Composable
 fun TasksRow(
-    mainMenuViewModel: EditTaskViewModel,
     tasks: List<Task>,
     navController: NavController,
     onClickEdit: () -> Unit = {}
@@ -224,7 +221,7 @@ fun TasksRow(
 fun EditTasksBottomSheet(
     onDismissRequest: () -> Unit = {},
     editSubTasks: Boolean,
-    mainMenuViewModel: EditTaskViewModel,
+    editTaskViewModel: EditTaskViewModel,
     taskId: Long?,
     subTasks: List<Task>,
     parentTasks: List<Task>
@@ -308,8 +305,8 @@ fun EditTasksBottomSheet(
 
                         Button(onClick = {
                             scope.launch {
-                                mainMenuViewModel.addTaskAsLastSubTask(
-                                    mainMenuViewModel.insertTask(
+                                editTaskViewModel.addTaskAsLastSubTask(
+                                    editTaskViewModel.insertTask(
                                         Task(
                                             taskId = null,
                                             name = name,
@@ -336,7 +333,7 @@ fun EditTasksBottomSheet(
                     OrderTaskLiItem(
                         task,
                         taskId,
-                        mainMenuViewModel
+                        editTaskViewModel
                     )
                 }
             }
