@@ -43,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.screens.bottomBarScreens.TaskCard
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
 
 @Composable
@@ -252,6 +253,9 @@ fun EditTasksBottomSheet(
 
             if (addingTask) {
                 if (addingExistingTask) {
+                    item {
+                        SelectTaskColumn(tasks = listOf(), onTaskClicked = {})//TODO: add all tasks
+                    }
                 } else {
                     item {
                         var name by remember { mutableStateOf("") }
@@ -354,6 +358,15 @@ fun Preview() {
         }
         Button(modifier = Modifier.weight(1f), onClick = {}) {
             Text("Existing task")
+        }
+    }
+}
+
+@Composable
+fun SelectTaskColumn(tasks:List<Task>, onTaskClicked:() -> Unit){//TODO: review this function, adding a searchbar
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        items(tasks){task->
+            TaskCard(task = task, placeName = "", onClick = onTaskClicked)
         }
     }
 }
