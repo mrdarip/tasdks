@@ -34,6 +34,17 @@ class EditTaskViewModel(
             repository.addTaskAsLastSubTask(taskId, parentTaskId)
         }
     }
+
+    fun addTaskAsLastSubTask(task: Task, parentTaskId: Long) {
+        viewModelScope.launch {
+            val id = repository.insertTask(task)
+            repository.addTaskAsLastSubTask(
+                id,
+                parentTaskId
+            )
+        }
+    }
+
     fun upsertTask(task: Task) {
         viewModelScope.launch {
             repository.upsertTask(task)
@@ -48,15 +59,15 @@ class EditTaskViewModel(
         return newTaskId
     }
 
-    fun getTaskById(taskId: Long): Flow<Task>{
+    fun getTaskById(taskId: Long): Flow<Task> {
         return repository.getTaskById(taskId)
     }
 
-    fun getSubTasksOfTask(taskId: Long): Flow<List<Task>>{
+    fun getSubTasksOfTask(taskId: Long): Flow<List<Task>> {
         return repository.getSubTasksOfTask(taskId)
     }
 
-    fun getParentTasksOfTask(taskId: Long): Flow<List<Task>>{
+    fun getParentTasksOfTask(taskId: Long): Flow<List<Task>> {
         return repository.getParentTasksOfTask(taskId)
     }
 

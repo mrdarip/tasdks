@@ -32,7 +32,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,36 +44,26 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun EditTaskScreen(navController: NavController, taskId: Long?) {
     val editTaskViewModel = viewModel(modelClass = EditTaskViewModel::class.java)
     EditTaskBodyContent(
-        navController = navController,
-        editTaskViewModel = editTaskViewModel,
-        taskId = taskId
+        navController = navController, editTaskViewModel = editTaskViewModel, taskId = taskId
     )
 }
 
 
 @Composable
 fun EditTaskBodyContent(
-    navController: NavController,
-    editTaskViewModel: EditTaskViewModel,
-    taskId: Long?
+    navController: NavController, editTaskViewModel: EditTaskViewModel, taskId: Long?
 ) {
-
     var showBottomSheet by remember { mutableStateOf(false) }
     var editSubTasks by remember { mutableStateOf(false) } // true for editing subtasks, false for editing parent tasks
 
     val task by editTaskViewModel.getTaskById(taskId ?: 0).collectAsState(
         initial = Task(
-            taskId = null,
-            name = "",
-            comment = null,
-            iconEmoji = null,
-            placeId = null
+            taskId = null, name = "", comment = null, iconEmoji = null, placeId = null
         )
     )
 
@@ -90,40 +79,30 @@ fun EditTaskBodyContent(
 
     val parentTasks = editTaskViewModel.getParentTasksOfTask(taskId ?: 0)
         .collectAsState(initial = emptyList()).value
-    val subTasks = editTaskViewModel.getSubTasksOfTask(taskId ?: 0)
-        .collectAsState(initial = emptyList()).value
+    val subTasks =
+        editTaskViewModel.getSubTasksOfTask(taskId ?: 0).collectAsState(initial = emptyList()).value
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        TasksRow(
-            tasks = parentTasks,
-            navController,
-            onClickEdit = {
-                editSubTasks = false
-                showBottomSheet = true
-            }
-        )//parent tasks //TODO: parent tasks order shouldn't be editable
+        TasksRow(tasks = parentTasks, navController, onClickEdit = {
+            editSubTasks = false
+            showBottomSheet = true
+        })//parent tasks //TODO: parent tasks order shouldn't be editable
 
         Text(text = task.name)
-        TaskFields(
-            taskName = name,
+        TaskFields(taskName = name,
             taskEmoji = iconEmoji,
             taskComment = comment,
             onTaskNameChange = { name = it },
             onTaskEmojiChange = { iconEmoji = it },
-            onTaskCommentChange = { comment = it }
-        )
+            onTaskCommentChange = { comment = it })
 
-        TasksRow(
-            tasks = subTasks,
-            navController,
-            onClickEdit = {
-                editSubTasks = true
-                showBottomSheet = true
-            }
-        ) //subtasks
+        TasksRow(tasks = subTasks, navController, onClickEdit = {
+            editSubTasks = true
+            showBottomSheet = true
+        }) //subtasks
 
         if (showBottomSheet) {
             EditTasksBottomSheet(
@@ -137,20 +116,18 @@ fun EditTaskBodyContent(
         }
 
 
-        Button(
-            onClick = {
-                editTaskViewModel.upsertTask(
-                    Task(
-                        task.taskId,
-                        name,
-                        comment.ifBlank { null },
-                        iconEmoji.ifBlank { null },
-                        task.placeId
-                    )
+        Button(onClick = {
+            editTaskViewModel.upsertTask(
+                Task(
+                    task.taskId,
+                    name,
+                    comment.ifBlank { null },
+                    iconEmoji.ifBlank { null },
+                    task.placeId
                 )
-                navController.popBackStack()
-            }
-        ) {
+            )
+            navController.popBackStack()
+        }) {
             Icon(Icons.Filled.Favorite, contentDescription = "Localized description")
             Text("Like")
         }
@@ -159,9 +136,7 @@ fun EditTaskBodyContent(
 
 @Composable
 fun TasksRow(
-    tasks: List<Task>,
-    navController: NavController,
-    onClickEdit: () -> Unit = {}
+    tasks: List<Task>, navController: NavController, onClickEdit: () -> Unit = {}
 ) {
     LazyRow {
         item {
@@ -247,28 +222,19 @@ fun EditTasksBottomSheet(
         ) {
             item {//TODO: the add task buttons should be at the end of the list, floating
                 Text(
-                    text =
-                    if (!addingTask)
-                        "Add task"
-                    else (
-                            if (addingExistingTask)
-                                "Adding existing task"
-                            else
-                                "Adding new task"
-                            ),
-                    style = MaterialTheme.typography.headlineMedium
+                    text = if (!addingTask) "Add task"
+                    else (if (addingExistingTask) "Adding existing task"
+                    else "Adding new task"), style = MaterialTheme.typography.headlineMedium
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     if (!addingTask || !addingExistingTask) {
-                        Button(
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                addingTask = !addingTask
-                                addingExistingTask = false
-                            }) {
+                        Button(modifier = Modifier.weight(1f), onClick = {
+                            addingTask = !addingTask
+                            addingExistingTask = false
+                        }) {
                             Text(if (!addingTask) "New task" else "Cancel")
                         }
                     }
@@ -292,8 +258,6 @@ fun EditTasksBottomSheet(
                         var emoji by remember { mutableStateOf("") }
                         var comment by remember { mutableStateOf("") }
 
-                        val scope = rememberCoroutineScope()
-
                         TaskFields(
                             taskName = name,
                             taskEmoji = emoji,
@@ -304,20 +268,16 @@ fun EditTasksBottomSheet(
                         )
 
                         Button(onClick = {
-                            scope.launch {
-                                editTaskViewModel.addTaskAsLastSubTask(
-                                    editTaskViewModel.insertTask(
-                                        Task(
-                                            taskId = null,
-                                            name = name,
-                                            iconEmoji = emoji.ifBlank { null },
-                                            comment = comment.ifBlank { null },
-                                            placeId = null
-                                        )
-                                    ),
-                                    taskId ?: 0
-                                )
-                            }
+                            editTaskViewModel.addTaskAsLastSubTask(
+                                Task(
+                                    taskId = null,
+                                    name = name,
+                                    iconEmoji = emoji.ifBlank { null },
+                                    comment = comment.ifBlank { null },
+                                    placeId = null
+                                ),
+                                taskId ?: 0
+                            )
                         }) {
                             Text("Add task")
                         }
@@ -331,9 +291,7 @@ fun EditTasksBottomSheet(
                 }
                 items(tasksToShow) { task ->
                     OrderTaskLiItem(
-                        task,
-                        taskId,
-                        editTaskViewModel
+                        task, taskId, editTaskViewModel
                     )
                 }
             }
@@ -389,8 +347,7 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTask
 @Composable
 fun Preview() {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(modifier = Modifier.weight(1f), onClick = { }) {
             Text("New task")
