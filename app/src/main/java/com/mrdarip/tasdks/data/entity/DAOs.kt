@@ -17,7 +17,7 @@ class DAOs {
         suspend fun upsert(task: Task)
 
         @Insert
-        suspend fun insert(task: Task):Long
+        suspend fun insert(task: Task): Long
 
 
         @Delete
@@ -41,22 +41,26 @@ class DAOs {
         @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.parentTaskId WHERE TaskTaskCr.childTaskId = :childId")
         fun getParentTasks(childId: Long): Flow<List<Task>>
 
-        @Query("""
+        @Query(
+            """
             UPDATE TaskTaskCR SET position = CASE
                 WHEN childTaskId = :taskId THEN position + 1
                 ELSE position - 1
             END 
             WHERE parentTaskId = :parentId AND childTaskId IN ( SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :parentId AND (position IN (SELECT position FROM TaskTaskCR WHERE childTaskId =5 and parentTaskId= 2) OR position IN (SELECT position+1 FROM TaskTaskCR WHERE childTaskId =5 and parentTaskId= 2)))
-            """)
+            """
+        )
         fun moveTaskUp(taskId: Long, parentId: Long)
 
-        @Query("""
+        @Query(
+            """
             UPDATE TaskTaskCR SET position = CASE
                 WHEN childTaskId = :taskId THEN position - 1
                 ELSE position +1
             END 
             WHERE parentTaskId = :parentId AND childTaskId IN ( SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :parentId AND (position IN (SELECT position FROM TaskTaskCR WHERE childTaskId =:taskId and parentTaskId = :parentId) OR position IN (SELECT position-1 FROM TaskTaskCR WHERE childTaskId =:taskId and parentTaskId= :parentId)))
-            """)
+            """
+        )
         fun moveTaskDown(taskId: Long, parentId: Long)
     }
 
@@ -157,8 +161,8 @@ class DAOs {
         fun getTasksWithParentTasks(): Flow<List<TaskWithTasks>>
 
         @Query("INSERT INTO TaskTaskCR (parentTaskId, childTaskId, position) VALUES (:parentTaskId, :taskId, (SELECT MAX(position) FROM TaskTaskCR WHERE parentTaskId = :parentTaskId) + 1)")
-        fun addTaskAsLastSubTask(taskId: Long, parentTaskId:Long)
-        }
+        fun addTaskAsLastSubTask(taskId: Long, parentTaskId: Long)
+    }
 
     @Dao
     interface TaskWithObjectsDAO {
