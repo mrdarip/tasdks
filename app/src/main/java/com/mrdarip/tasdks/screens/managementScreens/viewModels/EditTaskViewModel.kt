@@ -10,6 +10,7 @@ import com.mrdarip.tasdks.data.TasdksRepository
 import com.mrdarip.tasdks.data.entity.Object
 import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Task
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -30,13 +31,13 @@ class EditTaskViewModel(
     }
 
     fun addTaskAsLastSubTask(taskId: Long, parentTaskId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.addTaskAsLastSubTask(taskId, parentTaskId)
         }
     }
 
     fun addTaskAsLastSubTask(task: Task, parentTaskId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val id = repository.insertTask(task)
             repository.addTaskAsLastSubTask(
                 id,
@@ -72,13 +73,13 @@ class EditTaskViewModel(
     }
 
     fun moveTaskUp(taskId: Long, parentId: Long){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.moveTaskUp(taskId,parentId)
         }
     }
 
     fun moveTaskDown(taskId: Long, parentId: Long){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.moveTaskDown(taskId,parentId)
         }
     }

@@ -281,7 +281,7 @@ fun EditTasksBottomSheet(
                                     placeId = null
                                 ),
                                 taskId ?: 0
-                            )//TODO: fix "database can't be accessed from main thread" exception
+                            )
                         }) {
                             Text("Add task")
                         }
