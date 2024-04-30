@@ -3,7 +3,6 @@ package com.mrdarip.tasdks.screens.managementScreens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
@@ -85,14 +83,10 @@ fun EditTaskBodyContent(
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        TasksRow(tasks = parentTasks, navController, onClickEdit = {
-            editSubTasks = false
-            showBottomSheet = true
-        })//parent tasks //TODO: parent tasks order shouldn't be editable
-
-        Text(text = task.name)
+        Text("Edit task", style = MaterialTheme.typography.headlineMedium)
         TaskFields(taskName = name,
             taskEmoji = iconEmoji,
             taskComment = comment,
@@ -100,6 +94,13 @@ fun EditTaskBodyContent(
             onTaskEmojiChange = { iconEmoji = it },
             onTaskCommentChange = { comment = it })
 
+        Text(text = "Parent tasks", style = MaterialTheme.typography.headlineSmall)
+        TasksRow(tasks = parentTasks, navController, onClickEdit = {
+            editSubTasks = false
+            showBottomSheet = true
+        })//parent tasks //TODO: parent tasks order shouldn't be editable
+
+        Text(text = "Subtasks", style = MaterialTheme.typography.headlineSmall)
         TasksRow(tasks = subTasks, navController, onClickEdit = {
             editSubTasks = true
             showBottomSheet = true
@@ -108,11 +109,9 @@ fun EditTaskBodyContent(
         if (showBottomSheet) {
             EditTasksBottomSheet(
                 onDismissRequest = { showBottomSheet = false },
-                editSubTasks = editSubTasks,
                 editTaskViewModel = editTaskViewModel,
                 taskId = taskId,
-                subTasks = subTasks,
-                parentTasks = parentTasks
+                tasksToShow = subTasks
             )
         }
 
@@ -129,8 +128,8 @@ fun EditTaskBodyContent(
             )
             navController.popBackStack()
         }) {
-            Icon(Icons.Filled.Favorite, contentDescription = "Localized description")
-            Text("Like")
+            Icon(Icons.Filled.Edit, contentDescription = "Localized description")
+            Text("Save")
         }
     }
 }
@@ -139,7 +138,7 @@ fun EditTaskBodyContent(
 fun TasksRow(
     tasks: List<Task>, navController: NavController, onClickEdit: () -> Unit = {}
 ) {
-    LazyRow (horizontalArrangement = Arrangement.spacedBy(8.dp)){
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
             Card(
                 modifier = Modifier
@@ -196,11 +195,9 @@ fun TasksRow(
 @Composable
 fun EditTasksBottomSheet(
     onDismissRequest: () -> Unit = {},
-    editSubTasks: Boolean,
     editTaskViewModel: EditTaskViewModel,
     taskId: Long?,
-    subTasks: List<Task>,
-    parentTasks: List<Task>
+    tasksToShow: List<Task>
 ) {
 
     val sheetState = rememberModalBottomSheetState()
@@ -209,94 +206,92 @@ fun EditTasksBottomSheet(
         onDismissRequest = {
             onDismissRequest()
         },
-        sheetState = sheetState,
+        sheetState = sheetState
     ) {
-        val tasksToShow = if (editSubTasks) subTasks else parentTasks
-
         var addingTask by remember { mutableStateOf(false) }
         var addingExistingTask by remember { mutableStateOf(false) }
 
-        LazyColumn(
-            modifier = Modifier.padding(0.dp, 8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
+        Column(
+            modifier = Modifier.padding(16.dp, 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {//TODO: the add task buttons should be at the end of the list, floating
-                Text(
-                    text = if (!addingTask) "Add task"
-                    else (if (addingExistingTask) "Adding existing task"
-                    else "Adding new task"), style = MaterialTheme.typography.headlineMedium
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    if (!addingTask || !addingExistingTask) {
-                        Button(modifier = Modifier.weight(1f), onClick = {
-                            addingTask = !addingTask
-                            addingExistingTask = false
-                        }) {
-                            Text(if (!addingTask) "New task" else "Cancel")
-                        }
-                    }
-
-                    if (!addingTask || addingExistingTask) {
-                        Button(modifier = Modifier.weight(1f), onClick = {
-                            addingTask = !addingTask
-                            addingExistingTask = true
-                        }) {
-                            Text(if (!addingTask) "Existing task" else "Cancel")
-                        }
+            Text(
+                text = if (!addingTask) "Add task"
+                else (if (addingExistingTask) "Adding existing task"
+                else "Adding new task"), style = MaterialTheme.typography.headlineMedium
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                if (!addingTask || !addingExistingTask) {
+                    Button(modifier = Modifier.weight(1f), onClick = {
+                        addingTask = !addingTask
+                        addingExistingTask = false
+                    }) {
+                        Text(if (!addingTask) "New task" else "Cancel")
                     }
                 }
-            }
+
+                if (!addingTask || addingExistingTask) {
+                    Button(modifier = Modifier.weight(1f), onClick = {
+                        addingTask = !addingTask
+                        addingExistingTask = true
+                    }) {
+                        Text(if (!addingTask) "Existing task" else "Cancel")
+                    }
+                }
+            }//TODO: the add task buttons should be at the end of the list, floating, maybe?
 
             if (addingTask) {
                 if (addingExistingTask) {
-                    item {
-                        SelectTaskColumn(tasks = listOf(), onTaskClicked = {})//TODO: add all tasks
-                    }
+
+                    SelectTaskColumn(
+                        tasks = tasksToShow,
+                        onTaskClicked = {})//TODO: add all tasks list
+
                 } else {
-                    item {
-                        var name by remember { mutableStateOf("") }
-                        var emoji by remember { mutableStateOf("") }
-                        var comment by remember { mutableStateOf("") }
 
-                        TaskFields(
-                            taskName = name,
-                            taskEmoji = emoji,
-                            taskComment = comment,
-                            onTaskNameChange = { name = it },
-                            onTaskEmojiChange = { emoji = it },
-                            onTaskCommentChange = { comment = it }
+                    var name by remember { mutableStateOf("") }
+                    var emoji by remember { mutableStateOf("") }
+                    var comment by remember { mutableStateOf("") }
+
+                    TaskFields(
+                        taskName = name,
+                        taskEmoji = emoji,
+                        taskComment = comment,
+                        onTaskNameChange = { name = it },
+                        onTaskEmojiChange = { emoji = it },
+                        onTaskCommentChange = { comment = it }
+                    )
+
+                    Button(onClick = {
+                        editTaskViewModel.addTaskAsLastSubTask(
+                            Task(
+                                taskId = null,
+                                name = name,
+                                iconEmoji = emoji.ifBlank { null },
+                                comment = comment.ifBlank { null },
+                                placeId = null
+                            ),
+                            taskId ?: 0
                         )
-
-                        Button(onClick = {
-                            editTaskViewModel.addTaskAsLastSubTask(
-                                Task(
-                                    taskId = null,
-                                    name = name,
-                                    iconEmoji = emoji.ifBlank { null },
-                                    comment = comment.ifBlank { null },
-                                    placeId = null
-                                ),
-                                taskId ?: 0
-                            )
-                        }) {
-                            Text("Add task")
-                        }
+                    }) {
+                        Text("Add task")
                     }
                 }
             }
 
-            if (tasksToShow.isNotEmpty()) {
-                item {
-                    Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
-                }
-                items(tasksToShow) { task ->
-                    OrderTaskLiItem(
-                        task, taskId, editTaskViewModel
-                    )
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (tasksToShow.isNotEmpty()) {
+                    item {
+                        Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
+                    }
+                    items(tasksToShow) { task ->
+                        OrderTaskLiItem(
+                            task, taskId, editTaskViewModel
+                        )
+                    }
                 }
             }
         }
@@ -322,7 +317,12 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTask
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { editTaskViewModel.moveTaskUp(task.taskId?:0, parentTaskId?:0) }) { //TODO: check button works without launching exceptions, and check query is working
+                IconButton(onClick = {
+                    editTaskViewModel.moveTaskUp(
+                        task.taskId ?: 0,
+                        parentTaskId ?: 0
+                    )
+                }) { //TODO: check button works without launching exceptions, and check query is working
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowUp,
                         contentDescription = "Move task order up"
@@ -335,7 +335,12 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTask
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.weight(1f)
                 )
-                IconButton(onClick = { editTaskViewModel.moveTaskDown(task.taskId?:0, parentTaskId?:0) }) { //TODO: check button works without launching exceptions, and check query is working
+                IconButton(onClick = {
+                    editTaskViewModel.moveTaskDown(
+                        task.taskId ?: 0,
+                        parentTaskId ?: 0
+                    )
+                }) { //TODO: check button works without launching exceptions, and check query is working
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = "Move task order down"
@@ -363,9 +368,12 @@ fun Preview() {
 }
 
 @Composable
-fun SelectTaskColumn(tasks:List<Task>, onTaskClicked:() -> Unit){//TODO: review this function, adding a searchbar
+fun SelectTaskColumn(
+    tasks: List<Task>,
+    onTaskClicked: () -> Unit
+) {//TODO: review this function, adding a searchbar
     LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        items(tasks){task->
+        items(tasks) { task ->
             TaskCard(task = task, placeName = "", onClick = onTaskClicked)
         }
     }
