@@ -64,11 +64,11 @@ class TasdksRepository(
         taskWithTasksDAO.addTaskAsLastSubTask(taskId, parentTaskId)
     }
 
-    fun moveTaskUp(taskId: Long, parentId: Long){
-        taskDAO.moveTaskUp(taskId,parentId)
+    fun increaseTaskPosition(position: Long, parentId: Long){
+        taskDAO.increaseTaskPosition(position,parentId)
     }
 
-    fun moveTaskDown(taskId: Long, parentId: Long){
-        taskDAO.moveTaskDown(taskId,parentId)
+    fun decreaseTaskPosition(position: Long, parentId: Long){
+        taskDAO.decreaseTaskPosition(position,parentId)
     }
 }

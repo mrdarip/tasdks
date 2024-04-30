@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -287,9 +288,9 @@ fun EditTasksBottomSheet(
                     item {
                         Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
                     }
-                    items(tasksToShow) { task ->
+                    itemsIndexed(tasksToShow) { i,task->
                         OrderTaskLiItem(
-                            task, taskId, editTaskViewModel
+                            task, taskId,i.toLong(), editTaskViewModel
                         )
                     }
                 }
@@ -299,7 +300,7 @@ fun EditTasksBottomSheet(
 }
 
 @Composable
-fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTaskViewModel) {
+fun OrderTaskLiItem(task: Task, parentTaskId: Long?, position:Long,editTaskViewModel: EditTaskViewModel) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
@@ -318,8 +319,8 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTask
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = {
-                    editTaskViewModel.moveTaskUp(
-                        task.taskId ?: 0,
+                    editTaskViewModel.decreaseTaskPosition(
+                        position,
                         parentTaskId ?: 0
                     )
                 }) { //TODO: check button works without launching exceptions, and check query is working
@@ -336,8 +337,8 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, editTaskViewModel: EditTask
                     modifier = Modifier.weight(1f)
                 )
                 IconButton(onClick = {
-                    editTaskViewModel.moveTaskDown(
-                        task.taskId ?: 0,
+                    editTaskViewModel.increaseTaskPosition(
+                        position,
                         parentTaskId ?: 0
                     )
                 }) { //TODO: check button works without launching exceptions, and check query is working

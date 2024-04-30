@@ -131,27 +131,33 @@ class DAOs {
 */
 
         @Transaction
-        fun moveTaskUp(taskId: Long, parentId: Long){
-            operateTaskPositionmxn(taskId, parentId, -1,0)
-            decrementNextNegatedTaskPosition(taskId, parentId)
-            operateTaskPositionmxn(taskId, parentId, -1,1)
+        fun increaseTaskPosition(position: Long, parentId: Long) {
+            setTaskPosition(parentId,position,-position-1)
+            setTaskPosition(parentId,position+1,position)
+            setTaskPosition(parentId,-position-1,position+1)
         }
 
         @Transaction
-        fun moveTaskDown(taskId: Long, parentId: Long){
-            operateTaskPositionmxn(taskId, parentId, -1,0)
-            incrementPreviousNegatedTaskPosition(taskId, parentId)
-            operateTaskPositionmxn(taskId, parentId, -1,-1)
+        fun decreaseTaskPosition(position: Long, parentId: Long) {
+            setTaskPosition(parentId,position,-position-1)
+            setTaskPosition(parentId,position-1,position)
+            setTaskPosition(parentId,-position-1,position-1)
         }
 
-        @Query("UPDATE TaskTaskCR SET position = position + 1 WHERE parentTaskId = :parentTaskId AND childTaskId IN (SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :parentTaskId AND position = -(SELECT position FROM TaskTaskCR WHERE childTaskId = :taskId AND parentTaskId = :parentTaskId)-1)")
-        fun incrementPreviousNegatedTaskPosition(taskId: Long, parentTaskId: Long)
-
-        @Query("UPDATE TaskTaskCR SET position = position - 1 WHERE parentTaskId = :parentTaskId AND childTaskId IN (SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :parentTaskId AND position = -(SELECT position FROM TaskTaskCR WHERE childTaskId = :taskId AND parentTaskId = :parentTaskId)+1)")
-        fun decrementNextNegatedTaskPosition(taskId: Long, parentTaskId: Long)
+        @Query("UPDATE TaskTaskCR SET position = :newPosition WHERE parentTaskId = :parentTaskId AND position = :position")
+        fun setTaskPosition(parentTaskId: Long, position: Long, newPosition: Long)
 
         @Query("UPDATE TaskTaskCR SET position = :m * position + :n WHERE parentTaskId = :parentTaskId AND childTaskId = :taskId")
-        fun operateTaskPositionmxn(taskId: Long, parentTaskId: Long, m: Int, n: Int)
+        fun operateTaskPositionmxn(parentTaskId: Long, taskId: Long, m: Int, n: Int)
+
+        @Query("UPDATE TaskTaskCR SET position = :m * position + :n WHERE parentTaskId = :parentTaskId AND childTaskId = (SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :parentTaskId AND position = (SELECT position FROM TaskTaskCR WHERE parentTaskId = :parentTaskId AND childTaskId = :taskId)+:relative) ")
+        fun operateTaskPositionmxnRelative(
+            taskId: Long,
+            parentTaskId: Long,
+            m: Int,
+            n: Int,
+            relative: Int
+        )
     }
 
     @Dao
