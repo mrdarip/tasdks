@@ -132,32 +132,27 @@ class DAOs {
 
         @Transaction
         fun increaseTaskPosition(position: Long, parentId: Long) {
-            setTaskPosition(parentId,position,-position-1)
-            setTaskPosition(parentId,position+1,position)
-            setTaskPosition(parentId,-position-1,position+1)
+            if(position<taskLength(parentId)) {
+                setTaskPosition(parentId, position, -position - 1)
+                setTaskPosition(parentId, position + 1, position)
+                setTaskPosition(parentId, -position - 1, position + 1)
+            }
         }
 
         @Transaction
         fun decreaseTaskPosition(position: Long, parentId: Long) {
-            setTaskPosition(parentId,position,-position-1)
-            setTaskPosition(parentId,position-1,position)
-            setTaskPosition(parentId,-position-1,position-1)
+            if(position>0) {
+                setTaskPosition(parentId, position, -position - 1)
+                setTaskPosition(parentId, position - 1, position)
+                setTaskPosition(parentId, -position - 1, position - 1)
+            }
         }
 
         @Query("UPDATE TaskTaskCR SET position = :newPosition WHERE parentTaskId = :parentTaskId AND position = :position")
         fun setTaskPosition(parentTaskId: Long, position: Long, newPosition: Long)
 
-        @Query("UPDATE TaskTaskCR SET position = :m * position + :n WHERE parentTaskId = :parentTaskId AND childTaskId = :taskId")
-        fun operateTaskPositionmxn(parentTaskId: Long, taskId: Long, m: Int, n: Int)
-
-        @Query("UPDATE TaskTaskCR SET position = :m * position + :n WHERE parentTaskId = :parentTaskId AND childTaskId = (SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :parentTaskId AND position = (SELECT position FROM TaskTaskCR WHERE parentTaskId = :parentTaskId AND childTaskId = :taskId)+:relative) ")
-        fun operateTaskPositionmxnRelative(
-            taskId: Long,
-            parentTaskId: Long,
-            m: Int,
-            n: Int,
-            relative: Int
-        )
+        @Query("SELECT COUNT(*) FROM TaskTaskCR WHERE parentTaskId = :taskId")
+        fun taskLength(taskId: Long):Long
     }
 
     @Dao
