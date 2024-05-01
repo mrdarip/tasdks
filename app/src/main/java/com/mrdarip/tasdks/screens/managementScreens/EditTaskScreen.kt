@@ -277,6 +277,7 @@ fun EditTasksBottomSheet(
                             ),
                             taskId ?: 0
                         )
+                        addingTask = false
                     }) {
                         Text("Add task")
                     }
@@ -290,9 +291,9 @@ fun EditTasksBottomSheet(
                         Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
                     }
 
-                    itemsIndexed(tasksToShow) { i,task->
+                    itemsIndexed(tasksToShow) { i, task ->
                         OrderTaskLiItem(
-                            task, taskId,i.toLong(),tasksToShow.size.toLong(), editTaskViewModel
+                            task, taskId, i.toLong(), tasksToShow.size.toLong(), editTaskViewModel
                         )
                     }
                 }
@@ -302,7 +303,13 @@ fun EditTasksBottomSheet(
 }
 
 @Composable
-fun OrderTaskLiItem(task: Task, parentTaskId: Long?, position:Long,maxPosition:Long,editTaskViewModel: EditTaskViewModel) {
+fun OrderTaskLiItem(
+    task: Task,
+    parentTaskId: Long?,
+    position: Long,
+    maxPosition: Long,
+    editTaskViewModel: EditTaskViewModel
+) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
@@ -325,7 +332,7 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, position:Long,maxPosition:L
                         position,
                         parentTaskId ?: 0
                     )//TODO: move onclick as parameter
-                }, enabled = position>0) {
+                }, enabled = position > 0) {
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowUp,
                         contentDescription = "Move task order up"
@@ -338,12 +345,15 @@ fun OrderTaskLiItem(task: Task, parentTaskId: Long?, position:Long,maxPosition:L
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.weight(1f)
                 )
-                IconButton(onClick = {
-                    editTaskViewModel.increaseTaskPosition(
-                        position,
-                        parentTaskId ?: 0
-                    )
-                }, enabled = position<maxPosition-1) { //TODO: check button works without launching exceptions, and check query is working
+                IconButton(
+                    onClick = {
+                        editTaskViewModel.increaseTaskPosition(
+                            position,
+                            parentTaskId ?: 0
+                        )
+                    },
+                    enabled = position < maxPosition - 1
+                ) { //TODO: check button works without launching exceptions, and check query is working
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = "Move task order down"
