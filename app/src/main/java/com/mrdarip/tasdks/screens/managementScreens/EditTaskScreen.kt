@@ -59,7 +59,6 @@ fun EditTaskBodyContent(
     navController: NavController, editTaskViewModel: EditTaskViewModel, taskId: Long?
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    var editSubTasks by remember { mutableStateOf(false) } // true for editing subtasks, false for editing parent tasks
 
     val task by editTaskViewModel.getTaskById(taskId ?: 0).collectAsState(
         initial = Task(
@@ -95,15 +94,15 @@ fun EditTaskBodyContent(
             onTaskEmojiChange = { iconEmoji = it },
             onTaskCommentChange = { comment = it })
 
-        Text(text = "Parent tasks", style = MaterialTheme.typography.headlineSmall)
-        TasksRow(tasks = parentTasks, navController, onClickEdit = {
-            editSubTasks = false
-            showBottomSheet = true
-        })//parent tasks //TODO: parent tasks order shouldn't be editable
+        if (parentTasks.isNotEmpty()) {
+            Text(text = "Parent tasks", style = MaterialTheme.typography.headlineSmall)
+            TasksRow(tasks = parentTasks, navController, showEditButton = false, onClickEdit = {
+                showBottomSheet = true
+            })//parent tasks
+        }
 
         Text(text = "Subtasks", style = MaterialTheme.typography.headlineSmall)
-        TasksRow(tasks = subTasks, navController, onClickEdit = {
-            editSubTasks = true
+        TasksRow(tasks = subTasks, navController, showEditButton = true, onClickEdit = {
             showBottomSheet = true
         }) //subtasks
 
@@ -137,27 +136,32 @@ fun EditTaskBodyContent(
 
 @Composable
 fun TasksRow(
-    tasks: List<Task>, navController: NavController, onClickEdit: () -> Unit = {}
+    tasks: List<Task>,
+    navController: NavController,
+    showEditButton: Boolean,
+    onClickEdit: () -> Unit = {}
 ) {
     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        item {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = { onClickEdit() })
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-                    modifier = Modifier.padding(16.dp)
+        if (showEditButton) {
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(onClick = { onClickEdit() })
                 ) {
-                    Icon(Icons.Filled.Edit, contentDescription = "Edit tasks order")
-                    Column {
-                        Text(
-                            text = "Edit",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.headlineSmall
-                        )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Icon(Icons.Filled.Edit, contentDescription = "Edit tasks order")
+                        Column {
+                            Text(
+                                text = "Edit",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                        }
                     }
                 }
             }
