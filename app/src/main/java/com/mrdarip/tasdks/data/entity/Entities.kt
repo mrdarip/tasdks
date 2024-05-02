@@ -49,17 +49,20 @@ data class Activator(
     @Embedded val repetitionRange: RepetitionRange,
     val endAfterDate: Date?,
     val endAfterRep: Int?,
-    @ColumnInfo(defaultValue = "0") val userCancelled: Boolean
+    @ColumnInfo(defaultValue = "0") val userCancelled: Boolean,
+    val taskToActivateId: Long
 )
 
 @Entity(tableName = "executions")
 data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long? = null,
-    val start: Date,
-    val end: Date,
+    val start: Date?,
+    val end: Date?,
     val successfullyEnded: Boolean,
     val activatorId: Long,
-    val resourceId: Long?
+    val resourceId: Long?,
+    val parentExecution: Long?,
+    val taskId: Long
 )
 
 enum class ResourceType {
