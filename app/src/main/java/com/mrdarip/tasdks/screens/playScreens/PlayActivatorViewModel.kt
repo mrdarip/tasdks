@@ -58,19 +58,19 @@ class PlayActivatorViewModel(
         _runningExecutionsIds.value = _runningExecutionsIds.value.dropLast(1)
     }
 
-    private val _taskPositions = MutableStateFlow<List<Int>>(emptyList())
-    val taskPositions = _taskPositions.asStateFlow()
-    fun addTaskPosition(position: Int) {
-        _taskPositions.value += position
+    private val _positions = MutableStateFlow<List<Int>>(emptyList())
+    val positions = _positions.asStateFlow()
+    fun appendPosition(position: Int) {
+        _positions.value += position
     }
 
-    fun removeLastTaskPositionId() {
-        _taskPositions.value = _taskPositions.value.dropLast(1)
+    fun removeLastPosition() {
+        _positions.value = _positions.value.dropLast(1)
     }
 
-    fun addOneToLastTaskPosition() {
-        val lastPosition = _taskPositions.value.last()
-        _taskPositions.value = _taskPositions.value.dropLast(1) + (lastPosition + 1)
+    fun addOneToLastPosition() {
+        val lastPosition = _positions.value.last()
+        _positions.value = _positions.value.dropLast(1) + (lastPosition + 1)
     }
 
     var state by mutableStateOf(PlayActivatorState())
