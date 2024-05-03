@@ -68,71 +68,61 @@ fun PlayActivatorBodyContent(
 
 
 fun start(newTask: Task, parentExecution: Execution?, vm: PlayActivatorViewModel) {
-    vm.addStartedTaskName(newTask.name)
+    vm.setCurrentTask(newTask)
 
-    vm.setCurrentTask(newTask) //not used??
     val currentExecutionId = vm.insertExecution(
         Execution(
             executionId = null, // for autoincrement
             start = unixEpochTime(),
             end = unixEpochTime(),
             successfullyEnded = false,
-            activatorId = vm.topActivatorId.value,
+            activatorId = vm.topActivatorId.value, //TODO: Check is read only
             resourceId = null, //by now we don't implement resources
             parentExecution = parentExecution?.executionId,
             taskId = newTask.taskId ?: 0
         )
     )
-    vm.setCurrentExecutionId(currentExecutionId)
-    vm.addRunningExecutionsId(currentExecutionId)
-    vm.addTaskPosition(0)
 
     val currentTaskSubtasks = vm.getSubTasksOfTaskAsList(newTask.taskId ?: 0)
     if (currentTaskSubtasks.isNotEmpty()) {
+        positions.append(0)
         start(currentTaskSubtasks[0], vm.getExecutionById(currentExecutionId), vm)
     }
 }
 
 
-fun check(viewModel: PlayActivatorViewModel) {
-    viewModel.removeLastStartedTaskName()
-
+fun checkExecution(execution: Execution, viewModel: PlayActivatorViewModel) {
     viewModel.updateExecution(
         executionId = viewModel.currentExecutionId.value,
         end = unixEpochTime(),
         successfullyEnded = true
     )
-    viewModel.removeLastRunningExecutionId()
 
-    val currentExecution = viewModel.getExecutionById(
-        viewModel.currentExecutionId.value //can't be null (-1) as checked can only be called if started has been run before
-    )
-
-    val currentExeParentExe = currentExecution.parentExecution?.let {
-        viewModel.getExecutionById(it)
-    }
-
-    if (currentExeParentExe != null) {
-        val currentTaskBrothers = viewModel.getSubTasksOfTaskAsList(
-            currentExeParentExe.taskId
-        )
-
-        if (viewModel.taskPositions.value.last() >= currentTaskBrothers.size - 1) {
-            // if there is no more subTasks
-            viewModel.removeLastTaskPositionId()
-        }
-
-        viewModel.addOneToLastTaskPosition()
-
-        start(
-            currentTaskBrothers[viewModel.taskPositions.value.last()],
-            currentExeParentExe,
-            viewModel
-        )
+    val hasBrothers = viewModel.getSubTasksOfTaskAsList(
+        viewModel.getExecutionById(
+            execution.parentExecution ?: 0
+        ).taskId
+    ).isNotEmpty()
+    val hasNextBrother = parenttask.subtasks.size - 1 > positions.last
+    if (hasBrothers && hasNextBrother) {
+        positions.last++
+        start(NextBrother)
     } else {
-        //Todo: implement the exit case
+        positions.removeLast()
+
+        val hasParent = execution.parentExecution != null
+        if (hasParent) {
+            val parentExecution = viewModel.getExecutionById(execution.parentExecution)
+            checkExecution(
+                parentExecution,
+                viewModel
+            )
+        } else {
+            //FINNISH!!!
+        }
     }
 }
+
 
 fun exit(viewModel: PlayActivatorViewModel) {
     for (executionId in viewModel.runningExecutionsIds.value) {
