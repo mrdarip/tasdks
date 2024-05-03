@@ -61,7 +61,7 @@ class EditTaskViewModel(
     }
 
     fun getTaskById(taskId: Long): Flow<Task> {
-        return repository.getTaskById(taskId)
+        return repository.getTaskByIdAsFlow(taskId)
     }
 
     fun getSubTasksOfTask(taskId: Long): Flow<List<Task>> {

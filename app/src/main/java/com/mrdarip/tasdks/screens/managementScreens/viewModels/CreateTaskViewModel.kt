@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
-import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Object
+import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Task
-
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+
 class CreateTaskViewModel(
     private val repository: TasdksRepository = Graph.repository
 ) : ViewModel() {
@@ -44,7 +44,7 @@ class CreateTaskViewModel(
     }
 
     fun getTaskById(taskId: Long): Flow<Task>{
-        return repository.getTaskById(taskId)
+        return repository.getTaskByIdAsFlow(taskId)
     }
 
     fun getSubTasksOfTask(taskId: Long): Flow<List<Task>>{

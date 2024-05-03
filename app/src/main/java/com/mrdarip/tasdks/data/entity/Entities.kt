@@ -37,7 +37,7 @@ enum class RepetitionType {
 }
 
 data class RepetitionRange(
-    val minRepSec: Int,
+    val minRepSec: Int,//TODO: Change to Long and remove "Sec" from name for them all
     val optRepSec: Int?,
     val maxRepSec: Int?,
     val repetitionType: RepetitionType
@@ -56,8 +56,8 @@ data class Activator(
 @Entity(tableName = "executions")
 data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long? = null,
-    val start: Date?,
-    val end: Date?,
+    val start: Int?, //In seconds since epoch
+    val end: Int?,//In seconds since epoch
     val successfullyEnded: Boolean,
     val activatorId: Long,
     val resourceId: Long?,

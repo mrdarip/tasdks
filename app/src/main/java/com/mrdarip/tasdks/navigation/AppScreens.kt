@@ -17,5 +17,5 @@ sealed class AppScreens(val route: String) {
     data object EditTask : AppScreens("EditTask")
     data object ManageTasks : AppScreens("ManageTasks")
     data object CreateTask : AppScreens("CreateTask")
-
+    data object PlayActivator : AppScreens("PlayActivator")
 }

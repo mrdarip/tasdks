@@ -1,6 +1,8 @@
 package com.mrdarip.tasdks.data
 
+import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.DAOs
+import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -29,10 +31,17 @@ class TasdksRepository(
     val resources = resourceDAO.getAllResources()
 
     //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
-    fun getTaskById(taskId: Long?): Flow<Task> {
-        if(taskId==null) return emptyFlow()
-        return taskDAO.getById(taskId).mapNotNull {it}
+
+
+    fun getTaskByIdAsFlow(taskId: Long?): Flow<Task> {
+        if (taskId == null) return emptyFlow()
+        return taskDAO.getByIdAsFlow(taskId).mapNotNull { it }
     }
+
+    fun getTaskById(taskId: Long): Task {
+        return taskDAO.getById(taskId)
+    }
+
     suspend fun upsertTask(task: Task) {
         taskDAO.upsert(task)
     }
@@ -49,26 +58,55 @@ class TasdksRepository(
     }
 
     fun getPlaceName(placeId: Long?): Flow<String> {
-        if(placeId==null) return emptyFlow()
-        return placeDAO.getPlaceById(placeId).mapNotNull { it?.name ?: "PLACE NOT FOUND" }
+        if (placeId == null) return emptyFlow()
+        return placeDAO.getPlaceById(placeId).mapNotNull { it.name }
     }
+
     fun getSubTasksOfTask(taskId: Long): Flow<List<Task>> {
         return taskDAO.getSubTasks(taskId)
+    }
+
+    fun getSubTasksOfTaskAsList(taskId: Long): List<Task> {
+        return taskDAO.getSubTasksAsList(taskId)
     }
 
     fun getParentTasksOfTask(taskId: Long): Flow<List<Task>> {
         return taskDAO.getParentTasks(taskId)
     }
 
-    fun addTaskAsLastSubTask(taskId: Long, parentTaskId:Long){
+    fun addTaskAsLastSubTask(taskId: Long, parentTaskId: Long) {
         taskWithTasksDAO.addTaskAsLastSubTask(taskId, parentTaskId)
     }
 
-    fun increaseTaskPosition(position: Long, parentId: Long){
-        taskDAO.increaseTaskPosition(position,parentId)
+    fun increaseTaskPosition(position: Long, parentId: Long) {
+        taskDAO.increaseTaskPosition(position, parentId)
     }
 
-    fun decreaseTaskPosition(position: Long, parentId: Long){
-        taskDAO.decreaseTaskPosition(position,parentId)
+    fun decreaseTaskPosition(position: Long, parentId: Long) {
+        taskDAO.decreaseTaskPosition(position, parentId)
+    }
+
+    fun getActivatorById(activatorId: Long): Activator {
+        return activatorDAO.getActivatorById(activatorId)
+    }
+
+    fun insertExecution(execution: Execution): Long {
+        return executionDAO.insert(execution)
+    }
+
+    fun getExecutionById(executionId: Long): Execution {
+        return executionDAO.getById(executionId)
+    }
+
+    fun updateExecution(execution: Execution) {
+        executionDAO.update(execution)
+    }
+
+    fun updateExecution(
+        executionId: Long,
+        end: Int,
+        successfullyEnded: Boolean
+    ) {
+        executionDAO.update(executionId, end, successfullyEnded)
     }
 }

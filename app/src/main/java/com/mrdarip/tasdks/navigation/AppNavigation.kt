@@ -14,11 +14,11 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +53,7 @@ import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
 import com.mrdarip.tasdks.screens.managementScreens.CreateTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
+import com.mrdarip.tasdks.screens.playScreens.PlayActivatorScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -94,7 +95,7 @@ fun AppNavigation() {
                 BottomBar(navController = navController)
             },
             floatingActionButton = {
-                FloatingActionButton(onClick = { navController.navigate(AppScreens.CreateTask.route) }) {
+                FloatingActionButton(onClick = { navController.navigate(AppScreens.PlayActivator.route) }) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Add"
@@ -117,7 +118,7 @@ fun AppNavigation() {
 @Composable
 fun DrawerContent(navController: NavController, drawerState: DrawerState, scope: CoroutineScope) {
     Text("Manage", modifier = Modifier.padding(16.dp))
-    Divider()
+    HorizontalDivider()
     val labels = listOf(
         "Manage Tasks",
         "Manage Activators",
@@ -159,7 +160,7 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
         )
     }
 
-    Divider()
+    HorizontalDivider()
 
     NavigationDrawerItem(
         label = { Text(text = "Settings") },
@@ -264,6 +265,12 @@ fun MainNavHost(navController: NavHostController) {
             route = AppScreens.CreateTask.route,
         ) {
             CreateTaskScreen(navController = navController)
+        }
+
+        composable(
+            route = AppScreens.PlayActivator.route
+        ) {
+            PlayActivatorScreen(1)
         }
     }
 }

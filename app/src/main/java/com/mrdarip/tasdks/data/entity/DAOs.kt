@@ -33,106 +33,23 @@ class DAOs {
         fun getAllOrderByUsuallyAtThisTime(): Flow<List<Task>>
 
         @Query("SELECT * FROM tasks WHERE taskId = :taskId")
-        fun getById(taskId: Long): Flow<Task>
+        fun getByIdAsFlow(taskId: Long): Flow<Task>
+
+        @Query("SELECT * FROM tasks WHERE taskId = :taskId")
+        fun getById(taskId: Long): Task
 
         @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.childTaskId WHERE TaskTaskCr.parentTaskId = :parentId ORDER BY TaskTaskCR.position ASC")
         fun getSubTasks(parentId: Long): Flow<List<Task>>
 
+        @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.childTaskId WHERE TaskTaskCr.parentTaskId = :parentId ORDER BY TaskTaskCR.position ASC")
+        fun getSubTasksAsList(parentId: Long): List<Task>
+
         @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.parentTaskId WHERE TaskTaskCr.childTaskId = :childId")
         fun getParentTasks(childId: Long): Flow<List<Task>>
-        /*
-        @Transaction
-        @Query(
-            """
-            UPDATE
-                TaskTaskCR
-            SET
-                position = CASE
-                    WHEN childTaskId = :taskId THEN position + 1
-                    ELSE position - 1
-                END
-            WHERE
-                parentTaskId = :parentId
-                AND childTaskId IN (
-                    SELECT
-                        childTaskId
-                    FROM
-                        TaskTaskCR
-                    WHERE
-                        parentTaskId = :parentId
-                        AND (
-                            position IN (
-                                SELECT
-                                    position
-                                FROM
-                                    TaskTaskCR
-                                WHERE
-                                    childTaskId = :taskId
-                                    AND parentTaskId = :parentId
-                            )
-                            OR position IN (
-                                SELECT
-                                    position + 1
-                                FROM
-                                    TaskTaskCR
-                                WHERE
-                                    childTaskId = :taskId
-                                    AND parentTaskId = :parentId
-                            )
-                        )
-                )
-            """
-        )
-        fun moveTaskUp(taskId: Long, parentId: Long)
-
-        @Transaction
-        @Query(
-            """
-            UPDATE
-                TaskTaskCR
-            SET
-                position = CASE
-                    WHEN childTaskId = :taskId THEN position - 1
-                    ELSE position + 1
-                END
-            WHERE
-                parentTaskId = :parentId
-                AND childTaskId IN (
-                    SELECT
-                        childTaskId
-                    FROM
-                        TaskTaskCR
-                    WHERE
-                       parentTaskId = :parentId
-                        AND (
-                            position IN (
-                                SELECT
-                                    position
-                                FROM
-                                    TaskTaskCR
-                                WHERE
-                                    childTaskId = :taskId
-                                    AND parentTaskId = :parentId
-                           )
-                            OR position IN (
-                                SELECT
-                                    position - 1
-                                FROM
-                                    TaskTaskCR
-                                WHERE
-                                    childTaskId = :taskId
-                                    AND parentTaskId = :parentId
-                            )
-                        )
-            )
-            """
-        )
-        fun moveTaskDown(taskId: Long, parentId: Long)
-*/
 
         @Transaction
         fun increaseTaskPosition(position: Long, parentId: Long) {
-            if(position<taskLength(parentId)) {
+            if (position < taskLength(parentId)) {
                 setTaskPosition(parentId, position, -position - 1)
                 setTaskPosition(parentId, position + 1, position)
                 setTaskPosition(parentId, -position - 1, position + 1)
@@ -141,7 +58,7 @@ class DAOs {
 
         @Transaction
         fun decreaseTaskPosition(position: Long, parentId: Long) {
-            if(position>0) {
+            if (position > 0) {
                 setTaskPosition(parentId, position, -position - 1)
                 setTaskPosition(parentId, position - 1, position)
                 setTaskPosition(parentId, -position - 1, position - 1)
@@ -152,7 +69,7 @@ class DAOs {
         fun setTaskPosition(parentTaskId: Long, position: Long, newPosition: Long)
 
         @Query("SELECT COUNT(*) FROM TaskTaskCR WHERE parentTaskId = :taskId")
-        fun taskLength(taskId: Long):Long
+        fun taskLength(taskId: Long): Long
     }
 
     @Dao
@@ -212,10 +129,20 @@ class DAOs {
     @Dao
     interface ExecutionDAO {
         @Insert
-        fun insert(execution: Execution)
+        fun insert(execution: Execution): Long
 
         @Update
         fun update(execution: Execution)
+
+        @Query("SELECT * FROM executions WHERE executionId = :executionId")
+        fun getById(executionId: Long): Execution
+
+        @Query("UPDATE executions SET 'end' = :end, successfullyEnded = :successfullyEnded WHERE executionId = :executionId")
+        fun update(
+            executionId: Long,
+            end: Int,
+            successfullyEnded: Boolean
+        )
 
         @Delete
         fun delete(execution: Execution)
