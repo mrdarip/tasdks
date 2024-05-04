@@ -1,26 +1,19 @@
 package com.mrdarip.tasdks.screens.managementScreens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -33,16 +26,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.composables.OrderTaskLiItem
+import com.mrdarip.tasdks.composables.SelectTaskColumn
+import com.mrdarip.tasdks.composables.TaskFields
+import com.mrdarip.tasdks.composables.TasksRow
 import com.mrdarip.tasdks.data.entity.Task
-import com.mrdarip.tasdks.navigation.AppScreens
-import com.mrdarip.tasdks.screens.bottomBarScreens.TaskCard
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
 
 @Composable
@@ -134,67 +127,6 @@ fun EditTaskBodyContent(
     }
 }
 
-@Composable
-fun TasksRow(
-    tasks: List<Task>,
-    navController: NavController,
-    showEditButton: Boolean,
-    onClickEdit: () -> Unit = {}
-) {
-    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        if (showEditButton) {
-            item {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(onClick = { onClickEdit() })
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Icon(Icons.Filled.Edit, contentDescription = "Edit tasks order")
-                        Column {
-                            Text(
-                                text = "Edit",
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.headlineSmall
-                            )
-                        }
-                    }
-                }
-            }
-        }
-        items(tasks) { task ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = { navController.navigate(AppScreens.EditTask.route + "/${task.taskId ?: -1}") })
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        task.iconEmoji ?: "🤕",
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
-                    Column {
-                        Text(
-                            text = task.name,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.headlineSmall
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -250,10 +182,9 @@ fun EditTasksBottomSheet(
 
             if (addingTask) {
                 if (addingExistingTask) {
-
                     SelectTaskColumn(
-                        tasks = tasksToShow,
-                        onTaskClicked = {})//TODO: add all tasks list
+                        tasks = tasksToShow,//TODO: add all tasks list
+                        onTaskClicked = {})//TODO: add task as subtasks
 
                 } else {
 
@@ -306,69 +237,6 @@ fun EditTasksBottomSheet(
     }
 }
 
-@Composable
-fun OrderTaskLiItem(
-    task: Task,
-    parentTaskId: Long?,
-    position: Long,
-    maxPosition: Long,
-    editTaskViewModel: EditTaskViewModel
-) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                task.iconEmoji ?: "🤕",
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = {
-                    editTaskViewModel.decreaseTaskPosition(
-                        position,
-                        parentTaskId ?: 0
-                    )//TODO: move onclick as parameter
-                }, enabled = position > 0) {
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowUp,
-                        contentDescription = "Move task order up"
-                    )
-                }
-                Text(
-                    text = task.name,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(
-                    onClick = {
-                        editTaskViewModel.increaseTaskPosition(
-                            position,
-                            parentTaskId ?: 0
-                        )
-                    },
-                    enabled = position < maxPosition - 1
-                ) { //TODO: check button works without launching exceptions, and check query is working
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowDown,
-                        contentDescription = "Move task order down"
-                    )
-                }
-            }
-        }
-    }
-}
-
-
 @Preview
 @Composable
 fun Preview() {
@@ -384,14 +252,3 @@ fun Preview() {
     }
 }
 
-@Composable
-fun SelectTaskColumn(
-    tasks: List<Task>,
-    onTaskClicked: () -> Unit
-) {//TODO: review this function, adding a searchbar
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        items(tasks) { task ->
-            TaskCard(task = task, placeName = "", onClick = onTaskClicked)
-        }
-    }
-}

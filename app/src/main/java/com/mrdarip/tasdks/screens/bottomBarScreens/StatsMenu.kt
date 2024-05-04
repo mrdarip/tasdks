@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.composables.TasksCardRow
 import com.mrdarip.tasdks.screens.viewModels.MainMenuState
 import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
 
