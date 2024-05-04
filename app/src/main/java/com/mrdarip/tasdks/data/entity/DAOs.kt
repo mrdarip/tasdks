@@ -178,7 +178,10 @@ class DAOs {
         @Query("SELECT * FROM tasks")
         fun getTasksWithParentTasks(): Flow<List<TaskWithTasks>>
 
-        @Query("INSERT INTO TaskTaskCR (parentTaskId, childTaskId, position) VALUES (:parentTaskId, :taskId, (SELECT MAX(position) FROM TaskTaskCR WHERE parentTaskId = :parentTaskId) + 1)")
+        @Query(
+            "INSERT INTO TaskTaskCR (parentTaskId, childTaskId, position) VALUES " +
+                    "(:parentTaskId, :taskId, COALESCE(((SELECT MAX(position) FROM TaskTaskCR WHERE parentTaskId = :parentTaskId) + 1),0))"
+        )
         fun addTaskAsLastSubTask(taskId: Long, parentTaskId: Long)
     }
 

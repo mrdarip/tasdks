@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 class PlayActivatorViewModel(
     private val repository: TasdksRepository = Graph.repository
 ) : ViewModel() {
+    /*
     private val _startedTasksName = MutableStateFlow<MutableList<String>>(mutableListOf())
     val startedTasksName = _startedTasksName.asStateFlow()
     fun addStartedTaskName(taskName: String) {
@@ -29,6 +30,8 @@ class PlayActivatorViewModel(
     fun removeLastStartedTaskName() {
         _startedTasksName.value.removeLast()
     }
+
+     */
 
     private val _topActivatorId = MutableStateFlow<Long>(-1)
     val topActivatorId = _topActivatorId.asStateFlow()

@@ -29,13 +29,14 @@ fun PlayActivatorScreen(activatorId: Long) {
 fun PlayActivatorBodyContent(
     topActivatorId: Long, viewModel: PlayActivatorViewModel
 ) {
-    val startedTasksNames = viewModel.startedTasksName.collectAsState().value
+    val startedTasksNames = viewModel.currentTask.collectAsState().value?.name
+        ?: "No task started" //TODO: change to a list of active executions tasks or something
     var started by remember { mutableStateOf(false) }
 
     Column {
 
         if (started) {
-            Text(text = "Current Task: ${viewModel.currentTask.collectAsState().value?.name}")
+            Text(text = "Current Task: $startedTasksNames")
             Button(onClick = {
                 Log.i("PlayActivatorScreen", "Check!")
                 viewModel.viewModelScope.launch(Dispatchers.IO) {
@@ -121,7 +122,9 @@ fun checkExecution(execution: Execution, viewModel: PlayActivatorViewModel) {
         val nextBrother =
             viewModel.getSubTasksOfTaskAsList(viewModel.getExecutionById(execution.parentExecution).taskId)[viewModel.positions.value.last()]
 
-        start(nextBrother, execution, viewModel)
+        val parentExecution = viewModel.getExecutionById(execution.parentExecution)
+
+        start(nextBrother, parentExecution, viewModel)
     } else {
         viewModel.removeLastPosition()
 
