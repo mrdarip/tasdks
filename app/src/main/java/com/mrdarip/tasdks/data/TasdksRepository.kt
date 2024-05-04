@@ -109,4 +109,8 @@ class TasdksRepository(
     ) {
         executionDAO.update(executionId, end, successfullyEnded)
     }
+
+    fun insertActivator(activator: Activator): Long {
+        return activatorDAO.insert(activator)
+    }
 }

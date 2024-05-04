@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
+import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Object
 import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Task
@@ -78,11 +79,13 @@ class MainMenuViewModel(
         }
     }
 
-    fun getTaskById(taskId: Long): Flow<Task>{
+    fun getTaskById(taskId: Long): Flow<Task> {
         return repository.getTaskByIdAsFlow(taskId)
     }
 
-    //TODO oncategorychange,onitemcheckedchange
+    fun insertActivator(activator: Activator): Long {
+        return repository.insertActivator(activator)
+    }
 }
 
 data class MainMenuState(

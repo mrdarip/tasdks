@@ -111,7 +111,7 @@ class DAOs {
     @Dao
     interface ActivatorDAO {
         @Insert
-        fun insert(activator: Activator)
+        fun insert(activator: Activator): Long
 
         @Update
         fun update(activator: Activator)

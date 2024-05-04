@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.composables
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,11 +35,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.data.entity.Activator
+import com.mrdarip.tasdks.data.entity.RepetitionRange
+import com.mrdarip.tasdks.data.entity.RepetitionType
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
 import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun TaskCard(task: Task, placeName: String, onClick: () -> Unit = {}) {
@@ -87,7 +95,12 @@ fun TaskCard(task: Task, placeName: String, onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun TasksCardRow(tasks: List<Task>, title: String, mainMenuViewModel: MainMenuViewModel) {
+fun TasksCardRow(
+    tasks: List<Task>,
+    title: String,
+    mainMenuViewModel: MainMenuViewModel,
+    navController: NavController
+) {
     Text(
         text = title,
         style = MaterialTheme.typography.headlineMedium,
@@ -101,7 +114,7 @@ fun TasksCardRow(tasks: List<Task>, title: String, mainMenuViewModel: MainMenuVi
     LazyRow(
         modifier = Modifier.padding(0.dp, 8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(tasks) { task ->
             val placeName by mainMenuViewModel.getPlaceName(task.placeId)
@@ -110,7 +123,28 @@ fun TasksCardRow(tasks: List<Task>, title: String, mainMenuViewModel: MainMenuVi
                 task = task,
                 placeName = placeName,
                 onClick = {
-                    mainMenuViewModel.deleteTask(task)
+                    mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
+                        val activatorId = mainMenuViewModel.insertActivator(
+                            Activator(
+                                activatorId = null,
+                                comment = "created fon one time execution",
+                                repetitionRange = RepetitionRange(
+                                    minRepSec = 0,
+                                    optRepSec = 0,
+                                    maxRepSec = 0,
+                                    repetitionType = RepetitionType.DATE
+                                ),
+                                endAfterDate = null,
+                                endAfterRep = 1,
+                                userCancelled = false,
+                                taskToActivateId = task.taskId ?: -1
+                            )
+                        )
+                        Log.d("FYI", "Activator id: $activatorId")
+                        withContext(Dispatchers.Main) {
+                            navController.navigate("${AppScreens.PlayActivator.route}/$activatorId")
+                        }
+                    }
                 }
             )
         }

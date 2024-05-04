@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.composables.TasksCardRow
 import com.mrdarip.tasdks.screens.viewModels.MainMenuState
 import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
 
@@ -22,7 +21,7 @@ fun StatsMenu(navController: NavController) {
 @Composable
 fun StatsMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        TasksCardRow(mainMenuState.tasks, "Sample Text", mainMenuViewModel)
+        //TasksCardRow(mainMenuState.tasks, "Sample Text", mainMenuViewModel)
 
     }
 }

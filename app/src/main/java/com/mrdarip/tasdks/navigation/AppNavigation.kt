@@ -259,9 +259,11 @@ fun MainNavHost(navController: NavHostController) {
         }
 
         composable(
-            route = AppScreens.PlayActivator.route
-        ) {
-            PlayActivatorScreen(1)
+            "${AppScreens.PlayActivator.route}/{activatorId}",
+            arguments = listOf(navArgument("activatorId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val activatorId = backStackEntry.arguments?.getLong("activatorId")
+            PlayActivatorScreen(activatorId ?: 0)
         }
     }
 }

@@ -15,18 +15,32 @@ import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
 fun MainMenu(navController: NavController) {
     val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
     val mainMenuState = mainMenuViewModel.state
-    BodyContent(mainMenuViewModel = mainMenuViewModel, mainMenuState = mainMenuState)
+    BodyContent(
+        mainMenuViewModel = mainMenuViewModel,
+        mainMenuState = mainMenuState,
+        navController = navController
+    )
 }
 
 @Composable
-fun BodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
+fun BodyContent(
+    mainMenuViewModel: MainMenuViewModel,
+    mainMenuState: MainMenuState,
+    navController: NavController
+) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        TasksCardRow(mainMenuState.tasks, "All tasks", mainMenuViewModel)
-        TasksCardRow(mainMenuState.tasksOrderedByLastDone, "Last done", mainMenuViewModel)
+        TasksCardRow(mainMenuState.tasks, "All tasks", mainMenuViewModel, navController)
+        TasksCardRow(
+            mainMenuState.tasksOrderedByLastDone,
+            "Last done",
+            mainMenuViewModel,
+            navController
+        )
         TasksCardRow(
             mainMenuState.tasksOrderedByUsuallyAtThisTime,
             "Usually at this time",
-            mainMenuViewModel
+            mainMenuViewModel,
+            navController
         )
     }
 }
