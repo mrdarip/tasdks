@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -93,14 +92,6 @@ fun AppNavigation() {
         },
             bottomBar = {
                 BottomBar(navController = navController)
-            },
-            floatingActionButton = {
-                FloatingActionButton(onClick = { navController.navigate(AppScreens.PlayActivator.route) }) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Add"
-                    )
-                }
             }
         ) { innerPadding ->
             Column(

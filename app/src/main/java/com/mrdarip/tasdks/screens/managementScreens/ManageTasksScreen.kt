@@ -2,13 +2,16 @@ package com.mrdarip.tasdks.screens.managementScreens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,28 +39,41 @@ fun ManageTasksScreen(navController: NavController) {
 
 @Composable
 fun ManageTasksBodyContent(navController: NavController, mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
-    LazyColumn(
-        modifier = Modifier.padding(0.dp, 8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(mainMenuState.tasks) { task ->
-            val placeName by mainMenuViewModel.getPlaceName(task.placeId)
-                .collectAsState(initial = "")
-            TaskLiItem(
-                task = task,
-                placeName = placeName,
-                onClick = {
-                    navController.navigate(AppScreens.EditTask.route +"/"+task.taskId)
-                }
-            )
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.padding(0.dp, 8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(mainMenuState.tasks) { task ->
+                val placeName by mainMenuViewModel.getPlaceName(task.placeId)
+                    .collectAsState(initial = "")
+                TaskLiItem(
+                    task = task,
+                    placeName = placeName,
+                    onClick = {
+                        navController.navigate(AppScreens.EditTask.route + "/" + task.taskId)
+                    }
+                )
+            }
+        }
+
+        Button(
+            onClick = { navController.navigate(AppScreens.CreateTask.route) },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        ) {
+            Text(text = "New Task")
         }
     }
 }
 
 @Composable
 fun TaskLiItem(task: Task, placeName: String, onClick: () -> Unit = {}) {
-    Card(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)) {// TODO: Add task min/opt/max
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = onClick)) {// TODO: Add task min/opt/max
         Row(horizontalArrangement = Arrangement.spacedBy(space = 8.dp), modifier = Modifier.padding(16.dp)){
             Text(
                 task.iconEmoji ?: "🤕",
