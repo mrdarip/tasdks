@@ -237,11 +237,11 @@ fun TasksRow(
 @Composable
 fun SelectTaskColumn(
     tasks: List<Task>,
-    onTaskClicked: () -> Unit
+    onTaskClicked: (Task) -> Unit
 ) {//TODO: review this function, adding a searchbar
     LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         items(tasks) { task ->
-            TaskCard(task = task, placeName = "", onClick = onTaskClicked)
+            TaskCard(task = task, placeName = "", onClick = { onTaskClicked(task) })
         }
     }
 }

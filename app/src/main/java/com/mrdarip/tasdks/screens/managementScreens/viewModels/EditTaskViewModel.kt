@@ -12,6 +12,7 @@ import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class EditTaskViewModel(
@@ -19,6 +20,18 @@ class EditTaskViewModel(
 ) : ViewModel() {
     var state by mutableStateOf(EditTaskState())
         private set
+
+    init {
+        getTasks()
+    }
+
+    private fun getTasks() {
+        viewModelScope.launch {
+            repository.tasks.collectLatest {
+                state = state.copy(tasks = it)
+            }
+        }
+    }
 
     fun getPlaceName(placeId: Long?): Flow<String> {
         return repository.getPlaceName(placeId)

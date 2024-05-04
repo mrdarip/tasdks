@@ -104,7 +104,7 @@ fun EditTaskBodyContent(
                 onDismissRequest = { showBottomSheet = false },
                 editTaskViewModel = editTaskViewModel,
                 taskId = taskId,
-                tasksToShow = subTasks
+                subTasks = subTasks
             )
         }
 
@@ -134,7 +134,7 @@ fun EditTasksBottomSheet(
     onDismissRequest: () -> Unit = {},
     editTaskViewModel: EditTaskViewModel,
     taskId: Long?,
-    tasksToShow: List<Task>
+    subTasks: List<Task>
 ) {
 
     val sheetState = rememberModalBottomSheetState()
@@ -183,9 +183,13 @@ fun EditTasksBottomSheet(
             if (addingTask) {
                 if (addingExistingTask) {
                     SelectTaskColumn(
-                        tasks = tasksToShow,//TODO: add all tasks list
-                        onTaskClicked = {})//TODO: add task as subtasks
-
+                        tasks = editTaskViewModel.state.tasks,
+                        onTaskClicked = {
+                            editTaskViewModel.addTaskAsLastSubTask(
+                                taskId ?: 0,
+                                it.taskId ?: 0
+                            )
+                        })
                 } else {
 
                     var name by remember { mutableStateOf("") }
@@ -221,15 +225,19 @@ fun EditTasksBottomSheet(
 
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (tasksToShow.isNotEmpty()) {
+                if (subTasks.isNotEmpty() && !addingTask) {
                     item {
                         Text("Order tasks", style = MaterialTheme.typography.headlineMedium)
                     }
 
-                    itemsIndexed(tasksToShow) { i, task ->
+                    itemsIndexed(subTasks) { i, task ->
                         OrderTaskLiItem(
-                            task, taskId, i.toLong(), tasksToShow.size.toLong(), editTaskViewModel
-                        )
+                            task = task,
+                            parentTaskId = taskId,
+                            position = i.toLong(),
+                            maxPosition = subTasks.size.toLong(),
+                            editTaskViewModel = editTaskViewModel
+                        ) //TODO: Implement removing subtask
                     }
                 }
             }
