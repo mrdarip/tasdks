@@ -12,22 +12,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.Task
+import com.mrdarip.tasdks.navigation.AppScreens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
-fun PlayActivatorScreen(activatorId: Long) {
+fun PlayActivatorScreen(activatorId: Long, navController: NavController) {
     val editTaskViewModel = viewModel(modelClass = PlayActivatorViewModel::class.java)
     PlayActivatorBodyContent(
-        topActivatorId = activatorId, viewModel = editTaskViewModel
+        topActivatorId = activatorId, viewModel = editTaskViewModel, navController = navController
     )
 }
 
 @Composable
 fun PlayActivatorBodyContent(
-    topActivatorId: Long, viewModel: PlayActivatorViewModel
+    topActivatorId: Long, viewModel: PlayActivatorViewModel, navController: NavController
 ) {
     val startedTasksNames = viewModel.currentTask.collectAsState().value?.name
         ?: "No task started" //TODO: change to a list of active executions tasks or something
@@ -42,19 +45,30 @@ fun PlayActivatorBodyContent(
                 viewModel.viewModelScope.launch(Dispatchers.IO) {
                     checkExecution(
                         viewModel.getExecutionById(viewModel.currentExecutionId.value),
-                        viewModel
+                        viewModel,
+                        onEnd = {
+                            viewModel.viewModelScope.launch {
+                                withContext(Dispatchers.Main) {
+                                    navController.navigate(AppScreens.FirstScreen.route)
+                                }
+                            }
+                        }
                     )
                 }
             }) {
                 Text("Mark as Done")
             }
-        }
 
-        Button(onClick = {
-            viewModel.viewModelScope.launch(Dispatchers.IO) {
-                if (started) {
+            Button(onClick = {
+                viewModel.viewModelScope.launch(Dispatchers.IO) {
                     exit(viewModel)
-                } else {
+                }
+            }) {
+                Text("Exit")
+            }
+        } else {
+            Button(onClick = {
+                viewModel.viewModelScope.launch(Dispatchers.IO) {
                     started = true
                     start(
                         viewModel.getTaskById(viewModel.getActivatorById(topActivatorId).taskToActivateId),
@@ -62,9 +76,9 @@ fun PlayActivatorBodyContent(
                         viewModel
                     )
                 }
+            }) {
+                Text("Start")
             }
-        }) {
-            Text(if (started) "Exit" else "Start")
         }
     }
 }
@@ -96,7 +110,7 @@ fun start(newTask: Task, parentExecution: Execution?, vm: PlayActivatorViewModel
 }
 
 
-fun checkExecution(execution: Execution, viewModel: PlayActivatorViewModel) {
+fun checkExecution(execution: Execution, viewModel: PlayActivatorViewModel, onEnd: () -> Unit) {
     Log.i("PlayActivatorScreen", "Entramos con la lista en ${viewModel.positions.value}")
     viewModel.updateExecution(
         executionId = viewModel.currentExecutionId.value,
@@ -111,8 +125,9 @@ fun checkExecution(execution: Execution, viewModel: PlayActivatorViewModel) {
     ).size > 1
 
     val hasNextBrother =
-        execution.parentExecution != null && viewModel.positions.value.isNotEmpty() &&
-                viewModel.getSubTasksOfTaskAsList(viewModel.getExecutionById(execution.parentExecution).taskId).size - 1 > viewModel.positions.value.last()
+        execution.parentExecution != null && viewModel.positions.value.isNotEmpty() && viewModel.getSubTasksOfTaskAsList(
+            viewModel.getExecutionById(execution.parentExecution).taskId
+        ).size - 1 > viewModel.positions.value.last()
 
     //TODO: try removing execution.parentExecution != null by the Distributive property
 
@@ -131,10 +146,10 @@ fun checkExecution(execution: Execution, viewModel: PlayActivatorViewModel) {
         if (execution.parentExecution != null) { //has parent
             val parentExecution = viewModel.getExecutionById(execution.parentExecution)
             checkExecution(
-                parentExecution, viewModel
+                parentExecution, viewModel, onEnd
             )
         } else {
-            Log.d("PlayActivatorScreen", "All tasks are done")
+            onEnd()
         }
     }
 

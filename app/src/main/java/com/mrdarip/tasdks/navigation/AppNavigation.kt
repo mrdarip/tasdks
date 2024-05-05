@@ -263,7 +263,7 @@ fun MainNavHost(navController: NavHostController) {
             arguments = listOf(navArgument("activatorId") { type = NavType.LongType })
         ) { backStackEntry ->
             val activatorId = backStackEntry.arguments?.getLong("activatorId")
-            PlayActivatorScreen(activatorId ?: 0)
+            PlayActivatorScreen(activatorId ?: 0, navController)
         }
     }
 }
