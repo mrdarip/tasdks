@@ -39,12 +39,15 @@ class PlayActivatorViewModel(
         _topActivatorId.value = activatorId
     }
 
-    private val _currentTask = MutableStateFlow<Task?>(null)
-    val currentTask = _currentTask.asStateFlow()
-    fun setCurrentTask(task: Task) {
-        _currentTask.value = task
+    private val _taskList = MutableStateFlow<List<Task>>(emptyList())
+    val taskList = _taskList.asStateFlow()
+    fun addToTaksList(task: Task) {
+        _taskList.value += task
     }
 
+    fun removeFromTaskList() {
+        _taskList.value = _taskList.value.dropLast(1)
+    }
     private val _currentExecutionId = MutableStateFlow<Long>(-1)
     val currentExecutionId = _currentExecutionId.asStateFlow()
     fun setCurrentExecutionId(executionId: Long) {
