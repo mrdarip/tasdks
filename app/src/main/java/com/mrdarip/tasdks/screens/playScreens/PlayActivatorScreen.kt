@@ -22,7 +22,9 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun PlayActivatorScreen(activatorId: Long, navController: NavController) {
+    Log.i("PlayActivatorScreen", "ActivatorId: $activatorId")
     val editTaskViewModel = viewModel(modelClass = PlayActivatorViewModel::class.java)
+    editTaskViewModel.setTopActivatorId(activatorId)
     PlayActivatorBodyContent(
         topActivatorId = activatorId, viewModel = editTaskViewModel, navController = navController
     )
@@ -111,9 +113,11 @@ fun start(newTask: Task, parentExecution: Execution?, vm: PlayActivatorViewModel
 
 
 fun checkExecution(execution: Execution, viewModel: PlayActivatorViewModel, onEnd: () -> Unit) {
+    Log.i("PlayActivatorScreen", "Check ${execution.taskId} with id ${execution.executionId}")
     Log.i("PlayActivatorScreen", "Entramos con la lista en ${viewModel.positions.value}")
+
     viewModel.updateExecution(
-        executionId = viewModel.currentExecutionId.value,
+        executionId = execution.executionId ?: 0,
         end = unixEpochTime(),
         successfullyEnded = true
     )
