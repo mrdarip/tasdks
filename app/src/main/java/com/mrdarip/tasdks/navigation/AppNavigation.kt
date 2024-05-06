@@ -51,6 +51,7 @@ import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
 import com.mrdarip.tasdks.screens.managementScreens.CreateTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
+import com.mrdarip.tasdks.screens.managementScreens.ManageActivatorsScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
 import com.mrdarip.tasdks.screens.playScreens.PlayActivatorScreen
 import kotlinx.coroutines.CoroutineScope
@@ -264,6 +265,12 @@ fun MainNavHost(navController: NavHostController) {
         ) { backStackEntry ->
             val activatorId = backStackEntry.arguments?.getLong("activatorId")
             PlayActivatorScreen(activatorId ?: 0, navController)
+        }
+
+        composable(
+            AppScreens.ManageActivators.route,
+        ) {
+            ManageActivatorsScreen(navController = navController)
         }
     }
 }
