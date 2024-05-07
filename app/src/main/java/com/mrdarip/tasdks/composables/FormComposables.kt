@@ -2,14 +2,19 @@ package com.mrdarip.tasdks.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mrdarip.tasdks.data.entity.Task
 
 @Preview
 @Composable
@@ -50,3 +55,36 @@ fun TaskFields(
         )
     }
 }
+
+@Preview
+@Composable
+fun ActivatorFields(
+    activatorComment: String = "test",
+    possibleTasksToActivate: List<Task> = listOf(Task(0, "hey", "", null, null),Task(0, "hey", "", null, null),Task(0, "hey", "", null, null)),
+    taskToActivate: Task? = Task(0, "hey", "", null, null),
+    onCommentChange: (String) -> Unit = {},
+    onTaskToActivateChange: (Task) -> Unit = {},
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        TextField(
+            value = activatorComment,
+            onValueChange = { onCommentChange(it) },
+            label = { Text("Name") },
+            placeholder = { Text("Task name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        LazyRow(
+            modifier = Modifier.padding(0.dp, 8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            items(possibleTasksToActivate) { task ->
+                TaskCard(task = task, placeName = "changeme", onClick = {
+                    onTaskToActivateChange(task)
+                })
+            }
+        }
+    }
+}
+

@@ -57,7 +57,7 @@ fun ManageActivatorsBodyContent(
         }
 
         Button(
-            onClick = { navController.navigate(AppScreens.CreateTask.route) },
+            onClick = { navController.navigate(AppScreens.CreateActivator.route) },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)

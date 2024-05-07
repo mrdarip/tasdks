@@ -49,6 +49,7 @@ import androidx.navigation.navArgument
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
+import com.mrdarip.tasdks.screens.managementScreens.CreateActivatorScreen
 import com.mrdarip.tasdks.screens.managementScreens.CreateTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageActivatorsScreen
@@ -271,6 +272,10 @@ fun MainNavHost(navController: NavHostController) {
             AppScreens.ManageActivators.route,
         ) {
             ManageActivatorsScreen(navController = navController)
+        }
+
+        composable( AppScreens.CreateActivator.route) {
+            CreateActivatorScreen(navController)
         }
     }
 }
