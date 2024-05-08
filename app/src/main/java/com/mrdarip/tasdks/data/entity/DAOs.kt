@@ -65,6 +65,16 @@ class DAOs {
             }
         }
 
+        @Transaction
+        fun removeSubTask(parentTaskId: Long,position: Long){
+            deleteTaskTaskCR(parentTaskId, position)
+            decreasePositionGreaterThan(parentTaskId, position)
+        }
+        @Query("UPDATE TaskTaskCR SET position = position-1 WHERE parentTaskId = :parentTaskId AND position>:position")
+        fun decreasePositionGreaterThan(parentTaskId: Long,position: Long)
+
+        @Query("DELETE FROM TaskTaskCR WHERE parentTaskId = :parentTaskId AND position = :position")
+        fun deleteTaskTaskCR(parentTaskId: Long,position: Long)
         @Query("UPDATE TaskTaskCR SET position = :newPosition WHERE parentTaskId = :parentTaskId AND position = :position")
         fun setTaskPosition(parentTaskId: Long, position: Long, newPosition: Long)
 

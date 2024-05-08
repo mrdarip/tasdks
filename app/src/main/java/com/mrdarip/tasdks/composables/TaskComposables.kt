@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -323,6 +324,22 @@ fun OrderTaskLiItem(
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.weight(1f)
                 )
+
+                IconButton(
+                    onClick = {
+                        editTaskViewModel.removeSubTask(
+                            parentTaskId = parentTaskId ?: 0,
+                            position = position
+                        )
+                    },
+
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Clear,
+                        contentDescription = "Remove Task"
+                    )
+                }
+
                 IconButton(
                     onClick = {
                         editTaskViewModel.increaseTaskPosition(
@@ -331,7 +348,7 @@ fun OrderTaskLiItem(
                         )
                     },
                     enabled = position < maxPosition - 1
-                ) { //TODO: check button works without launching exceptions, and check query is working
+                ) {
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = "Move task order down"

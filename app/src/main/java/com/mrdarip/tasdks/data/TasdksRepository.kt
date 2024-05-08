@@ -90,6 +90,9 @@ class TasdksRepository(
         taskDAO.decreaseTaskPosition(position, parentId)
     }
 
+    fun removeSubTask(parentTaskId: Long,position: Long){
+        taskDAO.removeSubTask(parentTaskId,position)
+    }
     fun getActivatorById(activatorId: Long): Activator {
         return activatorDAO.getActivatorById(activatorId)
     }

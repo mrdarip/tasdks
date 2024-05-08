@@ -96,6 +96,12 @@ class EditTaskViewModel(
             repository.decreaseTaskPosition(position,parentId)
         }
     }
+
+    fun removeSubTask(parentTaskId: Long,position: Long){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.removeSubTask(parentTaskId,position)
+        }
+    }
     //TODO oncategorychange,onitemcheckedchange
 }
 
