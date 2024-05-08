@@ -186,8 +186,8 @@ fun EditTasksBottomSheet(
                         tasks = editTaskViewModel.state.tasks,
                         onTaskClicked = {
                             editTaskViewModel.addTaskAsLastSubTask(
-                                taskId ?: 0,
-                                it.taskId ?: 0
+                                it.taskId ?: 0,
+                                taskId ?: 0
                             )
                         })
                 } else {
