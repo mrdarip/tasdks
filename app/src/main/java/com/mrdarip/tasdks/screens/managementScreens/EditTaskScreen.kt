@@ -39,7 +39,7 @@ import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
 
 @Composable
-fun EditTaskScreen(navController: NavController, taskId: Long?) {
+fun EditTaskScreen(navController: NavController, taskId: Long) {
     val editTaskViewModel = viewModel(modelClass = EditTaskViewModel::class.java)
     EditTaskBodyContent(
         navController = navController, editTaskViewModel = editTaskViewModel, taskId = taskId
@@ -49,13 +49,13 @@ fun EditTaskScreen(navController: NavController, taskId: Long?) {
 
 @Composable
 fun EditTaskBodyContent(
-    navController: NavController, editTaskViewModel: EditTaskViewModel, taskId: Long?
+    navController: NavController, editTaskViewModel: EditTaskViewModel, taskId: Long
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    val task by editTaskViewModel.getTaskById(taskId ?: 0).collectAsState(
+    val task by editTaskViewModel.getTaskById(taskId).collectAsState(
         initial = Task(
-            taskId = null, name = "", comment = null, iconEmoji = null, placeId = null
+            name = "", comment = null, iconEmoji = null, placeId = null
         )
     )
 
@@ -69,10 +69,10 @@ fun EditTaskBodyContent(
         iconEmoji = task.iconEmoji ?: ""
     }
 
-    val parentTasks = editTaskViewModel.getParentTasksOfTask(taskId ?: 0)
+    val parentTasks = editTaskViewModel.getParentTasksOfTask(taskId)
         .collectAsState(initial = emptyList()).value
     val subTasks =
-        editTaskViewModel.getSubTasksOfTask(taskId ?: 0).collectAsState(initial = emptyList()).value
+        editTaskViewModel.getSubTasksOfTask(taskId).collectAsState(initial = emptyList()).value
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
@@ -133,7 +133,7 @@ fun EditTaskBodyContent(
 fun EditTasksBottomSheet(
     onDismissRequest: () -> Unit = {},
     editTaskViewModel: EditTaskViewModel,
-    taskId: Long?,
+    taskId: Long,
     subTasks: List<Task>
 ) {
 
@@ -186,8 +186,8 @@ fun EditTasksBottomSheet(
                         tasks = editTaskViewModel.state.tasks,
                         onTaskClicked = {
                             editTaskViewModel.addTaskAsLastSubTask(
-                                it.taskId ?: 0,
-                                taskId ?: 0
+                                it.taskId,
+                                taskId
                             )
                         })
                 } else {
@@ -208,13 +208,12 @@ fun EditTasksBottomSheet(
                     Button(onClick = {
                         editTaskViewModel.addTaskAsLastSubTask(
                             Task(
-                                taskId = null,
                                 name = name,
                                 iconEmoji = emoji.ifBlank { null },
                                 comment = comment.ifBlank { null },
                                 placeId = null
                             ),
-                            taskId ?: 0
+                            taskId
                         )
                         addingTask = false
                     }) {

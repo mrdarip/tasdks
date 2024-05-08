@@ -90,19 +90,18 @@ fun start(newTask: Task, parentExecution: Execution?, vm: PlayActivatorViewModel
     Log.i("PlayActivatorScreen", "Tarea actual: ${newTask.name}")
     val currentExecutionId = vm.insertExecution(
         Execution(
-            executionId = null, // for autoincrement
             start = unixEpochTime(),
             end = unixEpochTime(),
             successfullyEnded = false,
             activatorId = vm.topActivatorId.value, //TODO: Check is read only
             resourceId = null, //by now we don't implement resources
             parentExecution = parentExecution?.executionId,
-            taskId = newTask.taskId ?: 0
+            taskId = newTask.taskId
         )
     )
     vm.setCurrentExecutionId(currentExecutionId)
 
-    val currentTaskSubtasks = vm.getSubTasksOfTaskAsList(newTask.taskId ?: 0)
+    val currentTaskSubtasks = vm.getSubTasksOfTaskAsList(newTask.taskId)
     if (currentTaskSubtasks.isNotEmpty()) {
         Log.i("PlayActivatorScreen", "Tenía hijos!")
         vm.appendPosition(0)
@@ -119,7 +118,7 @@ fun checkExecution(execution: Execution, viewModel: PlayActivatorViewModel, onEn
     viewModel.removeFromTaskList()
 
     viewModel.updateExecution(
-        executionId = execution.executionId ?: 0,
+        executionId = execution.executionId,
         end = unixEpochTime(),
         successfullyEnded = true
     )

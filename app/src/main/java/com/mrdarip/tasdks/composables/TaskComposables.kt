@@ -127,7 +127,6 @@ fun TasksCardRow(
                     mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
                         val activatorId = mainMenuViewModel.insertActivator(
                             Activator(
-                                activatorId = null,
                                 comment = "created fon one time execution",
                                 repetitionRange = RepetitionRange(
                                     minRepSec = 0,
@@ -138,7 +137,7 @@ fun TasksCardRow(
                                 endAfterDate = null,
                                 endAfterRep = 1,
                                 userCancelled = false,
-                                taskToActivateId = task.taskId ?: -1
+                                taskToActivateId = task.taskId
                             )
                         )
                         Log.d("FYI", "Activator id: $activatorId")
@@ -243,7 +242,7 @@ fun TasksRow(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(onClick = { navController.navigate(AppScreens.EditTask.route + "/${task.taskId ?: -1}") })
+                    .clickable(onClick = { navController.navigate(AppScreens.EditTask.route + "/${task.taskId}") })
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(space = 8.dp),

@@ -38,7 +38,7 @@ fun EditActivatorBodyContent(
     viewModel: EditActivatorViewModel,
     activatorId: Long
 ) {
-    val activator by viewModel.getActivatorById(activatorId ?: 0).collectAsState(
+    val activator by viewModel.getActivatorById(activatorId).collectAsState(
         initial = Activator(
             activatorId,
             null,
@@ -65,7 +65,7 @@ fun EditActivatorBodyContent(
             viewModel.state.tasks,
             viewModel.getTaskById(taskToActivateId).collectAsState(initial = null).value,
             onCommentChange = { comment = it },
-            onTaskToActivateChange = { taskToActivateId = it.taskId ?: 0L }
+            onTaskToActivateChange = { taskToActivateId = it.taskId }
         )
 
         Button(onClick = {
