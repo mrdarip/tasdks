@@ -175,7 +175,7 @@ fun EditTasksBottomSheet(
                         addingTask = !addingTask
                         addingExistingTask = true
                     }) {
-                        Text(if (!addingTask) "Existing task" else "Cancel")
+                        Text(if (!addingTask) "Existing task" else "Close")
                     }
                 }
             }//TODO: the add task buttons should be at the end of the list, floating, maybe?
