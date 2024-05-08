@@ -116,6 +116,9 @@ class DAOs {
         @Update
         fun update(activator: Activator)
 
+        @Upsert
+        fun upsert(activator: Activator)
+
         @Delete
         fun delete(activator: Activator)
 
@@ -124,6 +127,9 @@ class DAOs {
 
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
         fun getActivatorById(activatorId: Long): Activator
+
+        @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
+        fun getActivatorByIdAsFlow(activatorId: Long): Flow<Activator>
     }
 
     @Dao

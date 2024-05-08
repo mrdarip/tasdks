@@ -51,6 +51,7 @@ import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
 import com.mrdarip.tasdks.screens.managementScreens.CreateActivatorScreen
 import com.mrdarip.tasdks.screens.managementScreens.CreateTaskScreen
+import com.mrdarip.tasdks.screens.managementScreens.EditActivatorScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageActivatorsScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
@@ -276,6 +277,14 @@ fun MainNavHost(navController: NavHostController) {
 
         composable( AppScreens.CreateActivator.route) {
             CreateActivatorScreen(navController)
+        }
+
+        composable(
+            "${AppScreens.EditActivator.route}/{activatorId}",
+            arguments = listOf(navArgument("activatorId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val activatorId = backStackEntry.arguments?.getLong("activatorId")
+            EditActivatorScreen(navController = navController, activatorId = activatorId ?: 0)
         }
     }
 }

@@ -57,6 +57,10 @@ class TasdksRepository(
         }
     }
 
+    fun upsertActivator(activator: Activator) {
+        activatorDAO.upsert(activator)
+    }
+
     fun getPlaceName(placeId: Long?): Flow<String> {
         if (placeId == null) return emptyFlow()
         return placeDAO.getPlaceById(placeId).mapNotNull { it.name }
@@ -88,6 +92,10 @@ class TasdksRepository(
 
     fun getActivatorById(activatorId: Long): Activator {
         return activatorDAO.getActivatorById(activatorId)
+    }
+
+    fun getActivatorByIdAsFlow(activatorId: Long): Flow<Activator> {
+        return activatorDAO.getActivatorByIdAsFlow(activatorId)
     }
 
     fun insertExecution(execution: Execution): Long {
