@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.composables.ActivatorLiItem
+import com.mrdarip.tasdks.composables.EditActivatorListItem
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageActivatorsState
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageActivatorsViewModel
@@ -48,9 +48,13 @@ fun ManageActivatorsBodyContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(mainMenuState.activators) { activator ->
-                ActivatorLiItem(
+                EditActivatorListItem(
                     activator = activator,
-                    onClick = {
+                    onPlayClick = {
+                        navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
+                    },
+                    onEditClick = {
+                        navController.navigate("${AppScreens.EditActivator.route}/${activator.activatorId}")
                     }
                 )
             }
