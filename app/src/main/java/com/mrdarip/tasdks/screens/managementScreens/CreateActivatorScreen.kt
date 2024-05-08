@@ -58,7 +58,6 @@ fun CreateActivatorBodyContent(
             createActivatorViewModel.viewModelScope.launch(Dispatchers.IO) {
                 createActivatorViewModel.insertActivator(
                     Activator(
-                        activatorId = null,
                         comment = comment.ifBlank { null },
                         taskToActivateId = task?.taskId ?: 0,
                         endAfterDate = null,

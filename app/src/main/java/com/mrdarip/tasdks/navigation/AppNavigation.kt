@@ -252,7 +252,7 @@ fun MainNavHost(navController: NavHostController) {
             val taskId = backStackEntry.arguments?.getLong("taskId")
             EditTaskScreen(
                 navController = navController,
-                taskId = taskId
+                taskId = taskId?:0
             )
         }
 

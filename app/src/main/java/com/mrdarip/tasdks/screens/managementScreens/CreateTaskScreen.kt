@@ -49,7 +49,6 @@ fun CreateTaskBodyContent(navController: NavController, createTaskViewModel: Cre
         Button(onClick = {
             createTaskViewModel.insertTask(
                 Task(
-                    taskId = null,
                     name = name,
                     comment = comment.ifBlank { null },
                     iconEmoji = emoji.ifBlank { null },
