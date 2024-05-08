@@ -34,8 +34,10 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -66,6 +68,11 @@ fun AppNavigation() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    var currentRoute by rememberSaveable { mutableStateOf("Default Screen") }
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+        currentRoute = destination.route ?: "Default Screen"
+    }
+
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {
             DrawerContent(navController, drawerState, scope)
@@ -76,7 +83,7 @@ fun AppNavigation() {
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ), title = {
-                Text("Top app bar")
+                Text(currentRoute)
             }, navigationIcon = {
                 IconButton(onClick = { scope.launch { drawerState.open() } }) {
                     Icon(
