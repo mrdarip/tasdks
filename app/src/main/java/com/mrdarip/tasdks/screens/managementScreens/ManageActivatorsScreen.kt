@@ -24,26 +24,22 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.EditActivatorListItem
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
-import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageActivatorsState
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageActivatorsViewModel
 
 
 @Composable
 fun ManageActivatorsScreen(navController: NavController) {
     val mainMenuViewModel = viewModel(modelClass = ManageActivatorsViewModel::class.java)
-    val mainMenuState = mainMenuViewModel.state
     ManageActivatorsBodyContent(
         navController = navController,
         viewModel = mainMenuViewModel,
-        mainMenuState = mainMenuState
     )
 }
 
 @Composable
 fun ManageActivatorsBodyContent(
     navController: NavController,
-    viewModel: ManageActivatorsViewModel,
-    mainMenuState: ManageActivatorsState
+    viewModel: ManageActivatorsViewModel
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -51,7 +47,7 @@ fun ManageActivatorsBodyContent(
             contentPadding = PaddingValues(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(mainMenuState.activators) { activator ->
+            items(viewModel.state.activeActivators) { activator ->
                 val taskToActivate = viewModel.getTaskById(activator.taskToActivateId).collectAsState(initial = Task(name = "...", comment = null, iconEmoji = null, placeId = null)).value
                 EditActivatorListItem(
                     title = taskToActivate.name,

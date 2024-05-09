@@ -27,7 +27,7 @@ class TasdksRepository(
     val places = placeDAO.getAllPlaces()
     val objects = objectDAO.getAllObjects()
     val activators = activatorDAO.getAllActivators()
-    val executions = executionDAO.getAllExecutions()
+    val activeActivators = activatorDAO.getActiveActivators()
     val resources = resourceDAO.getAllResources()
 
     //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
