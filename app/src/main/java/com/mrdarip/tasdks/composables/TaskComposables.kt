@@ -127,7 +127,7 @@ fun TasksCardRow(
                     mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
                         val activatorId = mainMenuViewModel.insertActivator(
                             Activator(
-                                comment = "created fon one time execution",
+                                comment = "created for one time execution",
                                 repetitionRange = RepetitionRange(
                                     minRepSec = 0,
                                     optRepSec = 0,

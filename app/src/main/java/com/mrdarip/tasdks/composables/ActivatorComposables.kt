@@ -17,18 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mrdarip.tasdks.data.entity.Activator
-import com.mrdarip.tasdks.data.entity.RepetitionRange
-import com.mrdarip.tasdks.data.entity.RepetitionType
 
-@Preview
+
 @Composable
 fun EditActivatorListItem(
-    activator: Activator = Activator(
-        0, "ah carajoooo", RepetitionRange(0, 0, 0, RepetitionType.YEARS), null, 1, true, 2
-    ), onEditClick: () -> Unit = {}, onPlayClick: () -> Unit = {}
+    title:String, subTitle: String, emoji:String, onEditClick: () -> Unit = {}, onPlayClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
@@ -42,30 +36,30 @@ fun EditActivatorListItem(
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-
+                modifier = Modifier.weight(1f), // This row will occupy the left space
                 ) {
                 Text(
-                    "😎",
+                    emoji,
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
                 Column {
                     Text(
-                        text = activator.taskToActivateId.toString(),
+                        text = title,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Text(
-                        text = activator.comment ?: "NO DESCRIPTION",
+                        text = subTitle,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
-            Row {
+            Row() {
                 IconButton(onClick = { onEditClick() }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,

@@ -13,12 +13,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.EditActivatorListItem
+import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageActivatorsState
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageActivatorsViewModel
@@ -48,8 +50,11 @@ fun ManageActivatorsBodyContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(mainMenuState.activators) { activator ->
+                val taskToActivate = viewModel.getTaskById(activator.taskToActivateId).collectAsState(initial = Task(name = "...", comment = null, iconEmoji = null, placeId = null)).value
                 EditActivatorListItem(
-                    activator = activator,
+                    title = taskToActivate.name,
+                    subTitle = activator.comment?:"No comment provided",
+                    emoji = taskToActivate.iconEmoji?:"🔨",
                     onPlayClick = {
                         navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
                     },
