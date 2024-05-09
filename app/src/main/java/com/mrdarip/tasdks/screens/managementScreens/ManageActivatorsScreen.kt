@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -55,12 +57,14 @@ fun ManageActivatorsBodyContent(
                     title = taskToActivate.name,
                     subTitle = activator.comment?:"No comment provided",
                     emoji = taskToActivate.iconEmoji?:"🔨",
-                    onPlayClick = {
+                    onPrimaryClick = {
                         navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
                     },
-                    onEditClick = {
+                    primaryIcon = Icons.Filled.PlayArrow,
+                    onSecondaryClick = {
                         navController.navigate("${AppScreens.EditActivator.route}/${activator.activatorId}")
-                    }
+                    },
+                    secondaryIcon = Icons.Filled.Edit
                 )
             }
         }
