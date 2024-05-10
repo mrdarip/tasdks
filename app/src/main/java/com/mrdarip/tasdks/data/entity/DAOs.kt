@@ -78,6 +78,8 @@ class DAOs {
         @Query("UPDATE TaskTaskCR SET position = :newPosition WHERE parentTaskId = :parentTaskId AND position = :position")
         fun setTaskPosition(parentTaskId: Long, position: Long, newPosition: Long)
 
+
+
         @Query("SELECT COUNT(*) FROM TaskTaskCR WHERE parentTaskId = :taskId")
         fun taskLength(taskId: Long): Long
     }
@@ -193,9 +195,31 @@ class DAOs {
 
     @Dao
     interface TaskWithTasksDAO {
+
+        @Query("""
+    WITH RECURSIVE all_subtasks(taskId) AS (
+        SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :taskId
+        UNION ALL
+        SELECT TaskTaskCR.childTaskId FROM TaskTaskCR JOIN all_subtasks ON TaskTaskCR.parentTaskId = all_subtasks.taskId
+    )
+    SELECT * FROM tasks WHERE taskId NOT IN (SELECT taskId FROM all_subtasks)
+""")//fixme: this isnt working
+        fun getTasksNotSubTasks(taskId: Long): Flow<List<Task>>
+
         @Transaction
         @Query("SELECT * FROM tasks")
         fun getTasksWithParentTasks(): Flow<List<TaskWithTasks>>
+
+        @Query("""
+    WITH RECURSIVE subtasks(taskId, path) AS (
+        SELECT childTaskId, ',' || childTaskId || ',' FROM TaskTaskCR WHERE parentTaskId = :taskId
+        UNION ALL
+        SELECT TaskTaskCR.childTaskId, path || TaskTaskCR.childTaskId || ',' FROM TaskTaskCR JOIN subtasks ON TaskTaskCR.parentTaskId = subtasks.taskId WHERE path NOT LIKE '%' || TaskTaskCR.childTaskId || '%'
+    )
+    SELECT * FROM tasks WHERE taskId IN (SELECT taskId FROM subtasks)
+""")
+        fun getAllSubTasks(taskId: Long): List<Task>
+
 
         @Query(
             "INSERT INTO TaskTaskCR (parentTaskId, childTaskId, position) VALUES " +

@@ -183,7 +183,7 @@ fun EditTasksBottomSheet(
             if (addingTask) {
                 if (addingExistingTask) {
                     SelectTaskColumn(
-                        tasks = editTaskViewModel.state.tasks,
+                        tasks = editTaskViewModel.notSubtasksOfTask(taskId).collectAsState(initial = emptyList()).value,
                         onTaskClicked = {
                             editTaskViewModel.addTaskAsLastSubTask(
                                 it.taskId,

@@ -38,6 +38,10 @@ class TasdksRepository(
         return taskDAO.getByIdAsFlow(taskId).mapNotNull { it }
     }
 
+    fun getNotSubtasksOfTask(taskId:Long): Flow<List<Task>> {
+        return taskWithTasksDAO.getTasksNotSubTasks(taskId)
+    }
+
     fun getTaskById(taskId: Long): Task {
         return taskDAO.getById(taskId)
     }

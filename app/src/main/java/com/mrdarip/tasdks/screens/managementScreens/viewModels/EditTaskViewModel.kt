@@ -103,6 +103,11 @@ class EditTaskViewModel(
         }
     }
     //TODO oncategorychange,onitemcheckedchange
+
+
+    fun notSubtasksOfTask(taskId: Long): Flow<List<Task>> {
+        return repository.getNotSubtasksOfTask(taskId)
+    }
 }
 
 data class EditTaskState(
