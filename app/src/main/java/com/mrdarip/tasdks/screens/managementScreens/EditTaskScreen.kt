@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.OrderTaskLiItem
-import com.mrdarip.tasdks.composables.SelectTaskColumn
+import com.mrdarip.tasdks.composables.SelectTaskRow
 import com.mrdarip.tasdks.composables.TaskFields
 import com.mrdarip.tasdks.composables.TasksRow
 import com.mrdarip.tasdks.data.entity.Task
@@ -182,7 +182,7 @@ fun EditTasksBottomSheet(
 
             if (addingTask) {
                 if (addingExistingTask) {
-                    SelectTaskColumn(
+                    SelectTaskRow(
                         tasks = editTaskViewModel.notSubtasksOfTask(taskId).collectAsState(initial = emptyList()).value,
                         onTaskClicked = {
                             editTaskViewModel.addTaskAsLastSubTask(

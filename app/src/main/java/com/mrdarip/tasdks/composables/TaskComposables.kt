@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -269,11 +268,11 @@ fun TasksRow(
 }
 
 @Composable
-fun SelectTaskColumn(
+fun SelectTaskRow(
     tasks: List<Task>,
     onTaskClicked: (Task) -> Unit
 ) {//TODO: review this function, adding a searchbar
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         items(tasks) { task ->
             TaskCard(task = task, placeName = "", onClick = { onTaskClicked(task) })
         }
