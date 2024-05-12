@@ -42,7 +42,6 @@ import com.mrdarip.tasdks.data.entity.RepetitionRange
 import com.mrdarip.tasdks.data.entity.RepetitionType
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
-import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
 import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -282,10 +281,11 @@ fun SelectTaskRow(
 @Composable
 fun OrderTaskLiItem(
     task: Task,
-    parentTaskId: Long?,
     position: Long,
     maxPosition: Long,
-    editTaskViewModel: EditTaskViewModel
+    onMoveUpClicked: () -> Unit,
+    onMoveDownClicked: () -> Unit,
+    onXclicked: () -> Unit,
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -305,10 +305,7 @@ fun OrderTaskLiItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = {
-                    editTaskViewModel.decreaseTaskPosition(
-                        position,
-                        parentTaskId ?: 0
-                    )//TODO: move onclick as parameter
+                    onMoveUpClicked()
                 }, enabled = position > 0) {
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowUp,
@@ -325,10 +322,7 @@ fun OrderTaskLiItem(
 
                 IconButton(
                     onClick = {
-                        editTaskViewModel.removeSubTask(
-                            parentTaskId = parentTaskId ?: 0,
-                            position = position
-                        )
+                        onXclicked()
                     },
 
                 ) {
@@ -340,10 +334,7 @@ fun OrderTaskLiItem(
 
                 IconButton(
                     onClick = {
-                        editTaskViewModel.increaseTaskPosition(
-                            position,
-                            parentTaskId ?: 0
-                        )
+                        onMoveDownClicked()
                     },
                     enabled = position < maxPosition - 1
                 ) {

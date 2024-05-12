@@ -232,11 +232,27 @@ fun EditTasksBottomSheet(
                     itemsIndexed(subTasks) { i, task ->
                         OrderTaskLiItem(
                             task = task,
-                            parentTaskId = taskId,
                             position = i.toLong(),
                             maxPosition = subTasks.size.toLong(),
-                            editTaskViewModel = editTaskViewModel
-                        ) //TODO: Implement removing subtask
+                            onMoveUpClicked = {
+                                editTaskViewModel.decreaseTaskPosition(
+                                    i.toLong(),
+                                    taskId
+                                )
+                            },
+                            onXclicked = {
+                                editTaskViewModel.removeSubTask(
+                                    parentTaskId = taskId,
+                                    position = i.toLong()
+                                )
+                            },
+                            onMoveDownClicked = {
+                                editTaskViewModel.increaseTaskPosition(
+                                    i.toLong(),
+                                    taskId
+                                )
+                            }
+                        )
                     }
                 }
             }
