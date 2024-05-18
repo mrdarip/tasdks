@@ -197,13 +197,13 @@ class DAOs {
     interface TaskWithTasksDAO {
 
         @Query("""
-    WITH RECURSIVE all_subtasks(taskId) AS (
-        SELECT childTaskId FROM TaskTaskCR WHERE parentTaskId = :taskId
-        UNION ALL
-        SELECT TaskTaskCR.childTaskId FROM TaskTaskCR JOIN all_subtasks ON TaskTaskCR.parentTaskId = all_subtasks.taskId
-    )
-    SELECT * FROM tasks WHERE taskId NOT IN (SELECT taskId FROM all_subtasks)
-""")//fixme: this isnt working
+            WITH RECURSIVE idk(taskId) AS (
+                SELECT :taskId
+            UNION ALL
+                SELECT TaskTaskCR.parentTaskId FROM TaskTaskCR JOIN idk ON TaskTaskCR.childTaskId = idk.taskId
+            )
+            SELECT * FROM tasks WHERE taskId NOT IN (SELECT taskId FROM idk)
+        """)
         fun getTasksNotSubTasks(taskId: Long): Flow<List<Task>>
 
         @Transaction
