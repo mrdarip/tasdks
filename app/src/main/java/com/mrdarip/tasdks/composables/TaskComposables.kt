@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -272,6 +275,18 @@ fun SelectTaskRow(
     onTaskClicked: (Task) -> Unit
 ) {//TODO: review this function, adding a searchbar
     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        items(tasks) { task ->
+            TaskCard(task = task, placeName = "", onClick = { onTaskClicked(task) })
+        }
+    }
+}
+
+@Composable
+fun SelectTaskGrid(
+    tasks: List<Task>,
+    onTaskClicked: (Task) -> Unit
+) {//TODO: review this, adding a searchbar, fix padding...
+    LazyVerticalGrid(horizontalArrangement = Arrangement.spacedBy(16.dp), columns = GridCells.Adaptive(minSize = 128.dp)) {
         items(tasks) { task ->
             TaskCard(task = task, placeName = "", onClick = { onTaskClicked(task) })
         }
