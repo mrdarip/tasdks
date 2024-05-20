@@ -25,9 +25,19 @@ class DAOs {
 
         @Query("SELECT * FROM tasks")
         fun getAll(): Flow<List<Task>>
-
-        @Query("SELECT * FROM tasks")//TODO: Implement query
+        @Query("""
+        SELECT * FROM tasks 
+        JOIN (
+            SELECT taskId, MAX(`end`) as MaxEnd 
+            FROM executions 
+            GROUP BY taskId
+        ) latestExecutions 
+        ON tasks.taskId = latestExecutions.taskId 
+        ORDER BY latestExecutions.MaxEnd DESC
+        """)
         fun getAllOrderByLastDone(): Flow<List<Task>>
+        @Query("SELECT * FROM tasks JOIN executions on tasks.taskId = executions.taskId ORDER BY executions.`end` desc")
+        fun getAllOrderByHistory(): Flow<List<Task>>
 
         @Query("SELECT * FROM tasks")//TODO: Implement query
         fun getAllOrderByUsuallyAtThisTime(): Flow<List<Task>>
