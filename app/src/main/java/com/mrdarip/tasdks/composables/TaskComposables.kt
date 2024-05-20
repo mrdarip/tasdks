@@ -52,8 +52,7 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun TaskCard(task: Task, placeName: String, onClick: () -> Unit = {}) {
-    Box(modifier = Modifier) {
-
+    Box{
         Column(
             verticalArrangement = Arrangement.Top, modifier = Modifier
                 .width(150.dp)
@@ -93,7 +92,6 @@ fun TaskCard(task: Task, placeName: String, onClick: () -> Unit = {}) {
             modifier = Modifier.absoluteOffset(12.dp, (-14).dp)
         )
     }
-
 }
 
 @Composable
