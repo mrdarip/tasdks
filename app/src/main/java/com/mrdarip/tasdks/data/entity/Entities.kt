@@ -33,27 +33,21 @@ data class Object(
 )
 
 enum class RepetitionType {
-    DATE, MINUTES,HOURS, DAYS, WEEKS, MONTHS, YEARS//TODO Check how to manage time repetition vs date repetition ( a date is millis since epoch...)
+    DATE, MINUTES, HOURS, DAYS, WEEKS, MONTHS, YEARS//TODO Check how to manage time repetition vs date repetition ( a date is millis since epoch...)
 }
 
-data class RepetitionRange(
+data class RepetitionRange( //default is no start, no deadline
     val startDate: Date, //when will the first repetition happen, when is MinRep
-    val minRep: Int,//TODO: Change to Long?
-    val optRep: Int?,//TODO: define logic of variables
-    val maxRep: Int?,
-    val repetitionType: RepetitionType
+    val minRep: Int? = null,// when can it start to be done, default is no way for doing it before you should start doing it//TODO: Change to Long?
+    val optRep: Int? = 0,//when should it start to be done, default is no start
+    val maxRep: Int? = null,//deadline for doing it, default is no deadline
+    val repetitionType: RepetitionType = RepetitionType.DAYS
 )
 @Entity(tableName = "activators")
 data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
     val comment: String? = "Activator " + Date(System.currentTimeMillis()).toString(),
-    @Embedded val repetitionRange: RepetitionRange = RepetitionRange(
-        Date(System.currentTimeMillis()),
-        7,
-        null,
-        null,
-        RepetitionType.DAYS
-    ), //todo: move default values to repetitionRange
+    @Embedded val repetitionRange: RepetitionRange,
     val endAfterDate: Date? = null,
     val endAfterRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
