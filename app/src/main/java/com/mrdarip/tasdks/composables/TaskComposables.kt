@@ -41,8 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
-import com.mrdarip.tasdks.data.entity.RepetitionRange
-import com.mrdarip.tasdks.data.entity.RepetitionType
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
@@ -127,17 +125,8 @@ fun TasksCardRow(
                         val activatorId = mainMenuViewModel.insertActivator(
                             Activator(
                                 comment = "created for one time execution",
-                                repetitionRange = RepetitionRange(
-                                    minRepSec = 0,
-                                    optRepSec = 0,
-                                    maxRepSec = 0,
-                                    repetitionType = RepetitionType.DATE
-                                ),
-                                endAfterDate = null,
-                                endAfterRep = 1,
-                                userCancelled = false,
                                 taskToActivateId = task.taskId
-                            )
+                            ) //TODO: check RepetitionRange for one time repetition
                         )
                         Log.d("FYI", "Activator id: $activatorId")
                         withContext(Dispatchers.Main) {

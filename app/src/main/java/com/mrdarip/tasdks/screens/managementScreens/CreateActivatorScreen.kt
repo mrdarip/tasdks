@@ -25,6 +25,7 @@ import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateActivatorViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Date
 
 @Composable
 fun CreateActivatorScreen(navController: NavController) {
@@ -62,10 +63,15 @@ fun CreateActivatorBodyContent(
                         taskToActivateId = task?.taskId ?: 0,
                         endAfterDate = null,
                         userCancelled = false,
-                        repetitionRange = RepetitionRange(0, 0, 0, RepetitionType.YEARS),
-                        endAfterRep = 0
-
-                    )
+                        repetitionRange = RepetitionRange(
+                            Date(System.currentTimeMillis()),
+                            0,
+                            0,
+                            0,
+                            RepetitionType.YEARS
+                        ),
+                        endAfterRep = 3
+                    ) //TODO: Implement input of all values
                 )
             }
         }

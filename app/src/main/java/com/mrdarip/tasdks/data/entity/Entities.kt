@@ -12,24 +12,24 @@ import java.util.Date
 @Entity(tableName = "tasks")
 data class Task(
     @PrimaryKey(autoGenerate = true) val taskId: Long = 0,
-    var name: String,
-    val comment: String?, //iconEmoji can be null so later on you can know what tasks weren't given an emoji
-    val iconEmoji: String?,
-    val placeId: Long?
+    var name: String = "Task " + Date(System.currentTimeMillis()).toString(),
+    val comment: String? = null, //iconEmoji can be null so later on you can know what tasks weren't given an emoji
+    val iconEmoji: String? = null,
+    val placeId: Long? = null
 )
 
 @Entity(tableName = "places")
 data class Place(
     @PrimaryKey(autoGenerate = true) val placeId: Long = 0,
-    val name: String,
-    val parentPlaceId: Long?
+    val name: String = "Place " + Date(System.currentTimeMillis()).toString(),
+    val parentPlaceId: Long? = null
 )
 
 @Entity(tableName = "objects")
 data class Object(
     @PrimaryKey(autoGenerate = true) val objectId: Long = 0,
-    val name: String,
-    val placeId: Long?
+    val name: String = "Object " + Date(System.currentTimeMillis()).toString(),
+    val placeId: Long? = null
 )
 
 enum class RepetitionType {
@@ -37,30 +37,37 @@ enum class RepetitionType {
 }
 
 data class RepetitionRange(
-    val minRepSec: Int,//TODO: Change to Long and remove "Sec" from name for them all
-    val optRepSec: Int?,
-    val maxRepSec: Int?,
+    val startDate: Date, //when will the first repetition happen, when is MinRep
+    val minRep: Int,//TODO: Change to Long?
+    val optRep: Int?,//TODO: define logic of variables
+    val maxRep: Int?,
     val repetitionType: RepetitionType
 )
 @Entity(tableName = "activators")
 data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
-    val comment: String?,
-    @Embedded val repetitionRange: RepetitionRange,
-    val endAfterDate: Date?,
-    val endAfterRep: Int?,
-    @ColumnInfo(defaultValue = "0") val userCancelled: Boolean,
+    val comment: String? = "Activator " + Date(System.currentTimeMillis()).toString(),
+    @Embedded val repetitionRange: RepetitionRange = RepetitionRange(
+        Date(System.currentTimeMillis()),
+        7,
+        null,
+        null,
+        RepetitionType.DAYS
+    ), //todo: move default values to repetitionRange
+    val endAfterDate: Date? = null,
+    val endAfterRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
+    @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
     val taskToActivateId: Long
 )
 
 @Entity(tableName = "executions")
 data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long = 0,
-    val start: Int?, //In seconds since epoch
-    val end: Int?,//In seconds since epoch
-    val successfullyEnded: Boolean,
+    val start: Int? = null, //In seconds since epoch
+    val end: Int? = null,//In seconds since epoch
+    val successfullyEnded: Boolean = false,
     val activatorId: Long,
-    val resourceId: Long?,
+    val resourceId: Long? = null,
     val parentExecution: Long?,
     val taskId: Long
 )
@@ -72,7 +79,7 @@ enum class ResourceType {
 @Entity(tableName = "resources")
 data class Resource(
     @PrimaryKey(autoGenerate = true) val resourceId: Long = 0,
-    val name: String,
+    val name: String = "Resource " + Date(System.currentTimeMillis()).toString(),
     val resourceType: ResourceType
 )
 

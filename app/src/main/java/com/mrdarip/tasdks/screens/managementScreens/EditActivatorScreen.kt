@@ -18,8 +18,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.ActivatorFields
 import com.mrdarip.tasdks.data.entity.Activator
-import com.mrdarip.tasdks.data.entity.RepetitionRange
-import com.mrdarip.tasdks.data.entity.RepetitionType
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditActivatorViewModel
 
 @Composable
@@ -40,13 +38,7 @@ fun EditActivatorBodyContent(
 ) {
     val activator by viewModel.getActivatorById(activatorId).collectAsState(
         initial = Activator(
-            activatorId,
-            null,
-            repetitionRange = RepetitionRange(0, null, null, RepetitionType.DAYS),
-            null,
-            null,
-            false,
-            -1
+            taskToActivateId = -1
         )
     )
 
