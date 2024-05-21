@@ -1,6 +1,5 @@
 package com.mrdarip.tasdks.composables
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -125,10 +124,11 @@ fun TasksCardRow(
                         val activatorId = mainMenuViewModel.insertActivator(
                             Activator(
                                 comment = "created for one time execution",
-                                taskToActivateId = task.taskId
+                                taskToActivateId = task.taskId,
+                                endAfterRep = 1
                             ) //TODO: check RepetitionRange for one time repetition
                         )
-                        Log.d("FYI", "Activator id: $activatorId")
+
                         withContext(Dispatchers.Main) {
                             navController.navigate("${AppScreens.PlayActivator.route}/$activatorId")
                         }

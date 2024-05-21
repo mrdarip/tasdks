@@ -64,7 +64,7 @@ fun CreateActivatorBodyContent(
                         endAfterDate = null,
                         userCancelled = false,
                         repetitionRange = RepetitionRange(
-                            Date(System.currentTimeMillis()),
+                            startDate = (Date().time / 1000).toInt(),
                             0,
                             0,
                             0,

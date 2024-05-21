@@ -37,7 +37,7 @@ enum class RepetitionType {
 }
 
 data class RepetitionRange( //default is no start, no deadline
-    val startDate: Date, //when will the first repetition happen, when is MinRep
+    val startDate: Int = 0, //when will the first repetition happen, when is MinRep //In seconds since epoch
     val minRep: Int? = null,// when can it start to be done, default is no way for doing it before you should start doing it//TODO: Change to Long?
     val optRep: Int? = 0,//when should it start to be done, default is no start
     val maxRep: Int? = null,//deadline for doing it, default is no deadline
@@ -47,8 +47,8 @@ data class RepetitionRange( //default is no start, no deadline
 data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
     val comment: String? = "Activator " + Date(System.currentTimeMillis()).toString(),
-    @Embedded val repetitionRange: RepetitionRange,
-    val endAfterDate: Date? = null,
+    @Embedded val repetitionRange: RepetitionRange = RepetitionRange(startDate = unixEpochTime()),
+    val endAfterDate: Int? = null, //In seconds since epoch
     val endAfterRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
     val taskToActivateId: Long
@@ -115,3 +115,7 @@ data class TaskWithObjects(
     )
     val objects: List<Object>
 )
+
+fun unixEpochTime(): Int {
+    return (System.currentTimeMillis() / 1000).toInt()
+}
