@@ -1,21 +1,19 @@
 package com.mrdarip.tasdks.composables
 
+import android.icu.text.BreakIterator
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,8 +38,7 @@ fun TaskFields(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TextField(
                 value = taskName,
@@ -56,7 +53,8 @@ fun TaskFields(
                 onValueChange = { onTaskEmojiChange(it) },
                 label = { Text("Emoji") },
                 placeholder = { Text("😃") },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isError = isValidEmoji(taskEmoji)
             )
         }
         TextField(
@@ -69,11 +67,33 @@ fun TaskFields(
     }
 }
 
+fun isValidEmoji(emoji: String): Boolean {
+    return getLength(emoji) <= 1
+}
+
+fun getLength(emoji: String?): Int {
+    val it: BreakIterator = BreakIterator.getCharacterInstance()
+    it.setText(emoji)
+    var count = 0
+    while (it.next() != BreakIterator.DONE) {
+        count++
+    }
+    return count
+}
+
 @Preview
 @Composable
 fun ActivatorFields(
     activatorComment: String = "test",
-    possibleTasksToActivate: List<Task> = listOf(Task(0, "hey", "", null, null),Task(0, "hey", "", null, null),Task(0, "hey", "", null, null),Task(0, "hey", "", null, null),Task(0, "hey", "", null, null),Task(0, "hey", "", null, null),Task(0, "hey", "", null, null)),
+    possibleTasksToActivate: List<Task> = listOf(
+        Task(0, "hey", "", null, null),
+        Task(0, "hey", "", null, null),
+        Task(0, "hey", "", null, null),
+        Task(0, "hey", "", null, null),
+        Task(0, "hey", "", null, null),
+        Task(0, "hey", "", null, null),
+        Task(0, "hey", "", null, null)
+    ),
     taskToActivate: Task? = Task(0, "hey", "", null, null),
     onCommentChange: (String) -> Unit = {},
     onTaskToActivateChange: (Task) -> Unit = {},
@@ -95,11 +115,12 @@ fun ActivatorFields(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             rows = GridCells.Adaptive(128.dp),
 
-        ) {
-            item{
+            ) {
+            item {
                 Column(
                     verticalArrangement = Arrangement.Top,
-                    modifier = Modifier.width(150.dp)
+                    modifier = Modifier
+                        .width(150.dp)
                         .height(10.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(MaterialTheme.colorScheme.secondaryContainer)

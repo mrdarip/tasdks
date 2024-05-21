@@ -111,12 +111,10 @@ fun EditTaskBodyContent(
 
         Button(onClick = {
             editTaskViewModel.upsertTask(
-                Task(
-                    task.taskId,
-                    name,
-                    comment.ifBlank { null },
-                    iconEmoji.ifBlank { null },
-                    task.placeId
+                task.copy(
+                    name = name,
+                    comment = comment.ifBlank { null },
+                    iconEmoji = iconEmoji.ifBlank { null },
                 )
             )
             navController.popBackStack()
