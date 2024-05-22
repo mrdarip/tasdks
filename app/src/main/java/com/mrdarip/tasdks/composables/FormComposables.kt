@@ -6,9 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mrdarip.tasdks.data.entity.Task
 
-@Preview
+
 @Composable
 fun TaskFields(
     taskName: String = "test",
@@ -85,20 +85,17 @@ fun getLength(emoji: String?): Int {
 @Composable
 fun ActivatorFields(
     activatorComment: String = "test",
-    possibleTasksToActivate: List<Task> = listOf(
-        Task(0, "hey", "", null, null),
-        Task(0, "hey", "", null, null),
-        Task(0, "hey", "", null, null),
-        Task(0, "hey", "", null, null),
-        Task(0, "hey", "", null, null),
-        Task(0, "hey", "", null, null),
-        Task(0, "hey", "", null, null)
-    ),
+    possibleTasksToActivate: List<Task> = listOf(Task(), Task(), Task(), Task(), Task()),
     taskToActivate: Task? = Task(0, "hey", "", null, null),
     onCommentChange: (String) -> Unit = {},
     onTaskToActivateChange: (Task) -> Unit = {},
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 200.dp)
+
+    ) {
         TextField(
             value = activatorComment,
             onValueChange = { onCommentChange(it) },
@@ -108,20 +105,16 @@ fun ActivatorFields(
         )
 
         LazyHorizontalGrid(
-            modifier = Modifier
-                .padding(8.dp, 8.dp)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            rows = GridCells.Adaptive(128.dp),
-
+            modifier = Modifier.height(400.dp), // This will make the LazyHorizontalGrid fill the remaining height
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            rows = GridCells.Adaptive(128.dp)
             ) {
             item {
                 Column(
                     verticalArrangement = Arrangement.Top,
                     modifier = Modifier
                         .width(150.dp)
-                        .height(10.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(MaterialTheme.colorScheme.secondaryContainer)
                         .clickable(onClick = { /*TODO*/ })
@@ -138,7 +131,7 @@ fun ActivatorFields(
             }//TODO implement search. Card based on TaskCard
 
             items(possibleTasksToActivate) { task ->
-                TaskCard(task = task, placeName = "changeme", onClick = {
+                TaskCardGrid(task = task, placeName = "changeme", onClick = {
                     onTaskToActivateChange(task)
                 })
             }

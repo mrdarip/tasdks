@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,9 +48,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@Preview
 @Composable
-fun TaskCard(task: Task, placeName: String, onClick: () -> Unit = {}) {
-    Box{
+fun TaskCard(task: Task = Task(), placeName: String? = null, onClick: () -> Unit = {}) {
+    Box {
         Column(
             verticalArrangement = Arrangement.Top, modifier = Modifier
                 .width(150.dp)
@@ -73,14 +75,61 @@ fun TaskCard(task: Task, placeName: String, onClick: () -> Unit = {}) {
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
+            if (placeName != null) {
+                Text(
+                    text = placeName,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
+        }
+        Text(
+            text = task.iconEmoji ?: "🗒️",
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.absoluteOffset(12.dp, (-14).dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun TaskCardGrid(task: Task = Task(), placeName: String? = null, onClick: () -> Unit = {}) {
+    Box {
+        Column(
+            verticalArrangement = Arrangement.Top, modifier = Modifier
+                .width(150.dp)
+                .fillMaxHeight()
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .clickable(onClick = onClick)
+                .padding(16.dp)
+        ) {
             Text(
-                text = placeName,
+                text = task.name,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
+            Text(
+                text = task.comment ?: "",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
-
+            if (placeName != null) {
+                Text(
+                    text = placeName,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
         }
         Text(
             text = task.iconEmoji ?: "🗒️",
@@ -273,7 +322,10 @@ fun SelectTaskGrid(
     tasks: List<Task>,
     onTaskClicked: (Task) -> Unit
 ) {//TODO: review this, adding a searchbar, fix padding...
-    LazyVerticalGrid(horizontalArrangement = Arrangement.spacedBy(16.dp), columns = GridCells.Adaptive(minSize = 128.dp)) {
+    LazyVerticalGrid(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        columns = GridCells.Adaptive(minSize = 128.dp)
+    ) {
         items(tasks) { task ->
             TaskCard(task = task, placeName = "", onClick = { onTaskClicked(task) })
         }
@@ -327,7 +379,7 @@ fun OrderTaskLiItem(
                         onXclicked()
                     },
 
-                ) {
+                    ) {
                     Icon(
                         imageVector = Icons.Filled.Clear,
                         contentDescription = "Remove Task"
