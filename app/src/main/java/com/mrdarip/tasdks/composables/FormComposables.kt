@@ -15,15 +15,20 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DisplayMode
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mrdarip.tasdks.data.entity.RepetitionRange
 import com.mrdarip.tasdks.data.entity.Task
 
 
@@ -81,20 +86,30 @@ fun getLength(emoji: String?): Int {
     return count
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun ActivatorFields(
     activatorComment: String = "test",
+    repetition: RepetitionRange = RepetitionRange(),
     possibleTasksToActivate: List<Task> = listOf(Task(), Task(), Task(), Task(), Task()),
     taskToActivate: Task? = Task(0, "hey", "", null, null),
     onCommentChange: (String) -> Unit = {},
+    onMinRepChange: (Int?) -> Unit = {},
+    onOptRepChange: (Int?) -> Unit = {},
+    onMaxRepChange: (String) -> Unit = {},
     onTaskToActivateChange: (Task) -> Unit = {},
 ) {
+    val dateState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis(),
+        initialDisplayMode = DisplayMode.Input
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 200.dp)
-
+            .heightIn(min = 200.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TextField(
             value = activatorComment,
@@ -104,12 +119,41 @@ fun ActivatorFields(
             modifier = Modifier.fillMaxWidth()
         )
 
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            TextField(
+                value = if (repetition.minRep == null) "" else repetition.minRep.toString(),
+                onValueChange = { onMinRepChange(it.toIntOrNull()) },
+                label = { Text("Min Repetitions") },
+                placeholder = { Text("Activator Description") },
+                modifier = Modifier.weight(1f)
+            )
+            TextField(
+                value = repetition.optRep?.toString() ?: "",
+                onValueChange = { onOptRepChange(it.toIntOrNull()) },
+                label = { Text("Opt Repetitions") },
+                placeholder = { Text("Activator Description") },
+
+                modifier = Modifier.weight(1f)
+            )
+            TextField(
+                value = repetition.maxRep?.toString() ?: "",
+                onValueChange = { onMaxRepChange(it) },
+                label = { Text("Max Repetitions") },
+                placeholder = { Text("Activator Description") },
+                modifier = Modifier.weight(1f)
+            )
+        }
+        DatePicker(state = dateState, showModeToggle = true)
+
         LazyHorizontalGrid(
-            modifier = Modifier.height(400.dp), // This will make the LazyHorizontalGrid fill the remaining height
+            modifier = Modifier.height(200.dp), // This will make the LazyHorizontalGrid fill the remaining height
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             rows = GridCells.Adaptive(128.dp)
-            ) {
+        ) {
             item {
                 Column(
                     verticalArrangement = Arrangement.Top,

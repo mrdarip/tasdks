@@ -21,12 +21,10 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.ActivatorFields
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.RepetitionRange
-import com.mrdarip.tasdks.data.entity.RepetitionType
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateActivatorViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Date
 
 @Composable
 fun CreateActivatorScreen(navController: NavController) {
@@ -44,6 +42,7 @@ fun CreateActivatorBodyContent(
 ) {
     var comment by remember { mutableStateOf("") }
     var task by remember { mutableStateOf<Task?>(null) }
+    var repetitionRange by remember { mutableStateOf(RepetitionRange()) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -59,7 +58,13 @@ fun CreateActivatorBodyContent(
                 possibleTasksToActivate = createActivatorViewModel.state.tasks,
                 onCommentChange = { comment = it },
                 taskToActivate = task,
-                onTaskToActivateChange = { task = it }
+                onTaskToActivateChange = { task = it },
+                onMinRepChange = { repetitionRange = repetitionRange.copy(minRep = it) },
+                onOptRepChange = { repetitionRange = repetitionRange.copy(optRep = it) },
+                onMaxRepChange = {
+                    repetitionRange = repetitionRange.copy(maxRep = it.toIntOrNull())
+                },
+                repetition = repetitionRange
             )
 
             Button(onClick = {
@@ -70,13 +75,7 @@ fun CreateActivatorBodyContent(
                             taskToActivateId = task?.taskId ?: 0,
                             endAfterDate = null,
                             userCancelled = false,
-                            repetitionRange = RepetitionRange(
-                                startDate = (Date().time / 1000).toInt(),
-                                0,
-                                0,
-                                0,
-                                RepetitionType.YEARS
-                            ),
+                            repetitionRange = repetitionRange,
                             endAfterRep = 3
                         ) //TODO: Implement input of all values
                     )

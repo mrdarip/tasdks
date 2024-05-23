@@ -42,23 +42,29 @@ fun EditActivatorBodyContent(
         )
     )
 
-
+    var repetitionRange by rememberSaveable { mutableStateOf(activator.repetitionRange) }
     var comment by rememberSaveable { mutableStateOf("") }
     var taskToActivateId by rememberSaveable { mutableLongStateOf(0L) }
 
     LaunchedEffect(activator) {
         comment = activator.comment ?: ""
+        repetitionRange = activator.repetitionRange
         taskToActivateId = activator.taskToActivateId
     }
 
     Column {
         ActivatorFields(
             comment,
+            repetitionRange,
             viewModel.state.tasks,
             viewModel.getTaskById(taskToActivateId).collectAsState(initial = null).value,
             onCommentChange = { comment = it },
-            onTaskToActivateChange = { taskToActivateId = it.taskId }
+            onTaskToActivateChange = { taskToActivateId = it.taskId },
+            onMaxRepChange = { repetitionRange = repetitionRange.copy(maxRep = it.toInt()) },
+            onMinRepChange = { repetitionRange = repetitionRange.copy(minRep = it) },
+            onOptRepChange = { repetitionRange = repetitionRange.copy(optRep = it) }
         )
+
 
         Button(onClick = {
             viewModel.upsertActivator(
