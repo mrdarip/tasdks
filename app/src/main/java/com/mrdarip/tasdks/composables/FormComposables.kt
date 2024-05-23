@@ -186,6 +186,52 @@ fun ActivatorFields(
             }
         }
 
+        Text("END")
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            val openSelectEndAfterDateDialog = remember { mutableStateOf(false) }
+            Button(
+                onClick = { openSelectEndAfterDateDialog.value = true },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "Select Date")
+            }
+
+            if (openSelectEndAfterDateDialog.value) {
+                val datePickerState = rememberDatePickerState()
+                val confirmEnabled = remember {
+                    derivedStateOf { datePickerState.selectedDateMillis != null }
+                }
+                DatePickerDialog(
+                    onDismissRequest = {
+                        openSelectEndAfterDateDialog.value = false
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                openSelectEndAfterDateDialog.value = false
+                                onStartDateChange((datePickerState.selectedDateMillis!! / 1000).toInt())
+                            },
+                            enabled = confirmEnabled.value
+                        ) {
+                            Text("OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                openSelectEndAfterDateDialog.value = false
+                            }
+                        ) {
+                            Text("Cancel")
+                        }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            }
+            TextField(value = "repetitions", onValueChange = {}, modifier = Modifier.weight(1f))
+        }
+
 
 
         LazyHorizontalGrid(

@@ -54,10 +54,11 @@ fun EditActivatorBodyContent(
 
     Column {
         ActivatorFields(
-            comment,
-            repetitionRange,
-            viewModel.state.tasks,
-            viewModel.getTaskById(taskToActivateId).collectAsState(initial = null).value,
+            activatorComment = comment,
+            repetition = repetitionRange,
+            possibleTasksToActivate = viewModel.state.tasks,
+            taskToActivate = viewModel.getTaskById(taskToActivateId)
+                .collectAsState(initial = null).value,
             onCommentChange = { comment = it },
             onTaskToActivateChange = { taskToActivateId = it.taskId },
             onMaxRepChange = { repetitionRange = repetitionRange.copy(maxRep = it.toInt()) },
