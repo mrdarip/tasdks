@@ -64,6 +64,7 @@ fun CreateActivatorBodyContent(
                 onMaxRepChange = {
                     repetitionRange = repetitionRange.copy(maxRep = it.toIntOrNull())
                 },
+                onStartDateChange = { repetitionRange = repetitionRange.copy(startDate = it) },
                 repetition = repetitionRange
             )
 

@@ -62,7 +62,8 @@ fun EditActivatorBodyContent(
             onTaskToActivateChange = { taskToActivateId = it.taskId },
             onMaxRepChange = { repetitionRange = repetitionRange.copy(maxRep = it.toInt()) },
             onMinRepChange = { repetitionRange = repetitionRange.copy(minRep = it) },
-            onOptRepChange = { repetitionRange = repetitionRange.copy(optRep = it) }
+            onOptRepChange = { repetitionRange = repetitionRange.copy(optRep = it) },
+            onStartDateChange = { repetitionRange = repetitionRange.copy(startDate = it) }
         )
 
 

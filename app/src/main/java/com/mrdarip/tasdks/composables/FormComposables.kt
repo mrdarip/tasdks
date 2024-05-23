@@ -15,14 +15,19 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DisplayMode
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
@@ -98,13 +103,9 @@ fun ActivatorFields(
     onMinRepChange: (Int?) -> Unit = {},
     onOptRepChange: (Int?) -> Unit = {},
     onMaxRepChange: (String) -> Unit = {},
+    onStartDateChange: (Int) -> Unit = {},
     onTaskToActivateChange: (Task) -> Unit = {},
 ) {
-    val dateState = rememberDatePickerState(
-        initialSelectedDateMillis = System.currentTimeMillis(),
-        initialDisplayMode = DisplayMode.Input
-    )
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -146,7 +147,46 @@ fun ActivatorFields(
                 modifier = Modifier.weight(1f)
             )
         }
-        DatePicker(state = dateState, showModeToggle = true)
+        val openDialog = remember { mutableStateOf(false) }
+        Button(onClick = { openDialog.value = true }) {
+            Text(text = "Select Date")
+        }
+
+        if (openDialog.value) {
+            val datePickerState = rememberDatePickerState()
+            val confirmEnabled = remember {
+                derivedStateOf { datePickerState.selectedDateMillis != null }
+            }
+            DatePickerDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            openDialog.value = false
+                            onStartDateChange((datePickerState.selectedDateMillis!! / 1000).toInt())
+                        },
+                        enabled = confirmEnabled.value
+                    ) {
+                        Text("OK")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            openDialog.value = false
+                        }
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            ) {
+                DatePicker(state = datePickerState)
+            }
+        }
+
+
 
         LazyHorizontalGrid(
             modifier = Modifier.height(200.dp), // This will make the LazyHorizontalGrid fill the remaining height
