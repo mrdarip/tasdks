@@ -54,10 +54,16 @@ fun CreateActivatorBodyContent(
             modifier = Modifier.weight(1f) // This will make the Column fill the remaining height
         ) {
             ActivatorFields(
-                activatorComment = comment,
+                activator = Activator(
+                    comment = comment,
+                    taskToActivateId = task?.taskId ?: 0,
+                    endAfterDate = null,
+                    userCancelled = false,
+                    repetitionRange = repetitionRange,
+                    endAfterRep = 3
+                ),
                 possibleTasksToActivate = createActivatorViewModel.state.tasks,
                 onCommentChange = { comment = it },
-                taskToActivate = task,
                 onTaskToActivateChange = { task = it },
                 onMinRepChange = { repetitionRange = repetitionRange.copy(minRep = it) },
                 onOptRepChange = { repetitionRange = repetitionRange.copy(optRep = it) },
@@ -65,7 +71,6 @@ fun CreateActivatorBodyContent(
                     repetitionRange = repetitionRange.copy(maxRep = it.toIntOrNull())
                 },
                 onStartDateChange = { repetitionRange = repetitionRange.copy(startDate = it) },
-                repetition = repetitionRange
             )
 
             Button(onClick = {

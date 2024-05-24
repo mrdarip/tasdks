@@ -33,7 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mrdarip.tasdks.data.entity.RepetitionRange
+import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Task
 
 
@@ -95,10 +95,8 @@ fun getLength(emoji: String?): Int {
 @Preview
 @Composable
 fun ActivatorFields(
-    activatorComment: String = "test",
-    repetition: RepetitionRange = RepetitionRange(),
+    activator: Activator = Activator(taskToActivateId = -1),
     possibleTasksToActivate: List<Task> = listOf(Task(), Task(), Task(), Task(), Task()),
-    taskToActivate: Task? = Task(0, "hey", "", null, null),
     onCommentChange: (String) -> Unit = {},
     onMinRepChange: (Int?) -> Unit = {},
     onOptRepChange: (Int?) -> Unit = {},
@@ -113,7 +111,7 @@ fun ActivatorFields(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TextField(
-            value = activatorComment,
+            value = activator.comment ?: "",
             onValueChange = { onCommentChange(it) },
             label = { Text("Description") },
             placeholder = { Text("Activator Description") },
@@ -125,14 +123,14 @@ fun ActivatorFields(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TextField(
-                value = if (repetition.minRep == null) "" else repetition.minRep.toString(),
+                value = if (activator.repetitionRange.minRep == null) "" else activator.repetitionRange.minRep.toString(),
                 onValueChange = { onMinRepChange(it.toIntOrNull()) },
                 label = { Text("Min Repetitions") },
                 placeholder = { Text("Activator Description") },
                 modifier = Modifier.weight(1f)
             )
             TextField(
-                value = repetition.optRep?.toString() ?: "",
+                value = activator.repetitionRange.optRep?.toString() ?: "",
                 onValueChange = { onOptRepChange(it.toIntOrNull()) },
                 label = { Text("Opt Repetitions") },
                 placeholder = { Text("Activator Description") },
@@ -140,7 +138,7 @@ fun ActivatorFields(
                 modifier = Modifier.weight(1f)
             )
             TextField(
-                value = repetition.maxRep?.toString() ?: "",
+                value = activator.repetitionRange.maxRep?.toString() ?: "",
                 onValueChange = { onMaxRepChange(it) },
                 label = { Text("Max Repetitions") },
                 placeholder = { Text("Activator Description") },
