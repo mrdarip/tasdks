@@ -8,13 +8,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -102,7 +103,7 @@ fun ActivatorFields(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 200.dp),
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TextField(
@@ -110,11 +111,15 @@ fun ActivatorFields(
             onValueChange = { onActivatorChanged(activator.copy(comment = it)) },
             label = { Text("Description") },
             placeholder = { Text("Activator Description") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         )
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TextField(
@@ -165,8 +170,13 @@ fun ActivatorFields(
             )
         }
         val openDialog = remember { mutableStateOf(false) }
-        Button(onClick = { openDialog.value = true }) {
-            Text(text = "Select Date")
+        Button(
+            onClick = { openDialog.value = true },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = "Select Start Date")
         }
 
         if (openDialog.value) {
@@ -209,14 +219,14 @@ fun ActivatorFields(
             }
         }
 
-        Text("END")
+        Text("END", modifier = Modifier.padding(16.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             val openSelectEndAfterDateDialog = remember { mutableStateOf(false) }
             Button(
                 onClick = { openSelectEndAfterDateDialog.value = true },
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Select Date")
+                Text(text = "Select End Date")
             }
 
             if (openSelectEndAfterDateDialog.value) {
@@ -252,13 +262,17 @@ fun ActivatorFields(
                     DatePicker(state = datePickerState)
                 }
             }
-            TextField(value = "repetitions", onValueChange = {}, modifier = Modifier.weight(1f))
+            TextField(
+                value = "repetitions",
+                onValueChange = { onActivatorChanged(activator.copy(endAfterRep = it.toIntOrNull())) },
+                modifier = Modifier.weight(1f)
+            )
         }
 
 
 
         LazyHorizontalGrid(
-            modifier = Modifier.height(200.dp), // This will make the LazyHorizontalGrid fill the remaining height
+            modifier = Modifier.height(200.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             rows = GridCells.Adaptive(128.dp)
