@@ -97,12 +97,7 @@ fun getLength(emoji: String?): Int {
 fun ActivatorFields(
     activator: Activator = Activator(taskToActivateId = -1),
     possibleTasksToActivate: List<Task> = listOf(Task(), Task(), Task(), Task(), Task()),
-    onCommentChange: (String) -> Unit = {},
-    onMinRepChange: (Int?) -> Unit = {},
-    onOptRepChange: (Int?) -> Unit = {},
-    onMaxRepChange: (String) -> Unit = {},
-    onStartDateChange: (Int) -> Unit = {},
-    onTaskToActivateChange: (Task) -> Unit = {},
+    onActivatorChanged: (Activator) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -112,7 +107,7 @@ fun ActivatorFields(
     ) {
         TextField(
             value = activator.comment ?: "",
-            onValueChange = { onCommentChange(it) },
+            onValueChange = { onActivatorChanged(activator.copy(comment = it)) },
             label = { Text("Description") },
             placeholder = { Text("Activator Description") },
             modifier = Modifier.fillMaxWidth()
@@ -124,14 +119,30 @@ fun ActivatorFields(
         ) {
             TextField(
                 value = if (activator.repetitionRange.minRep == null) "" else activator.repetitionRange.minRep.toString(),
-                onValueChange = { onMinRepChange(it.toIntOrNull()) },
+                onValueChange = {
+                    onActivatorChanged(
+                        activator.copy(
+                            repetitionRange = activator.repetitionRange.copy(
+                                minRep = it.toIntOrNull()
+                            )
+                        )
+                    )
+                },
                 label = { Text("Min Repetitions") },
                 placeholder = { Text("Activator Description") },
                 modifier = Modifier.weight(1f)
             )
             TextField(
                 value = activator.repetitionRange.optRep?.toString() ?: "",
-                onValueChange = { onOptRepChange(it.toIntOrNull()) },
+                onValueChange = {
+                    onActivatorChanged(
+                        activator.copy(
+                            repetitionRange = activator.repetitionRange.copy(
+                                optRep = it.toIntOrNull()
+                            )
+                        )
+                    )
+                },
                 label = { Text("Opt Repetitions") },
                 placeholder = { Text("Activator Description") },
 
@@ -139,7 +150,15 @@ fun ActivatorFields(
             )
             TextField(
                 value = activator.repetitionRange.maxRep?.toString() ?: "",
-                onValueChange = { onMaxRepChange(it) },
+                onValueChange = {
+                    onActivatorChanged(
+                        activator.copy(
+                            repetitionRange = activator.repetitionRange.copy(
+                                maxRep = it.toIntOrNull()
+                            )
+                        )
+                    )
+                },
                 label = { Text("Max Repetitions") },
                 placeholder = { Text("Activator Description") },
                 modifier = Modifier.weight(1f)
@@ -163,7 +182,13 @@ fun ActivatorFields(
                     TextButton(
                         onClick = {
                             openDialog.value = false
-                            onStartDateChange((datePickerState.selectedDateMillis!! / 1000).toInt())
+                            onActivatorChanged(
+                                activator.copy(
+                                    repetitionRange = activator.repetitionRange.copy(
+                                        startDate = ((datePickerState.selectedDateMillis!! / 1000).toInt())
+                                    )
+                                )
+                            )
                         },
                         enabled = confirmEnabled.value
                     ) {
@@ -207,7 +232,7 @@ fun ActivatorFields(
                         TextButton(
                             onClick = {
                                 openSelectEndAfterDateDialog.value = false
-                                onStartDateChange((datePickerState.selectedDateMillis!! / 1000).toInt())
+                                onActivatorChanged(activator.copy(endAfterDate = (datePickerState.selectedDateMillis!! / 1000).toInt()))
                             },
                             enabled = confirmEnabled.value
                         ) {
@@ -260,7 +285,7 @@ fun ActivatorFields(
 
             items(possibleTasksToActivate) { task ->
                 TaskCardGrid(task = task, placeName = "changeme", onClick = {
-                    onTaskToActivateChange(task)
+                    onActivatorChanged(activator.copy(taskToActivateId = task.taskId))
                 })
             }
         }

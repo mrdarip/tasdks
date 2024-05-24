@@ -21,7 +21,6 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.ActivatorFields
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.RepetitionRange
-import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateActivatorViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,51 +39,40 @@ fun CreateActivatorBodyContent(
     navController: NavController,
     createActivatorViewModel: CreateActivatorViewModel
 ) {
-    var comment by remember { mutableStateOf("") }
-    var task by remember { mutableStateOf<Task?>(null) }
-    var repetitionRange by remember { mutableStateOf(RepetitionRange()) }
-
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
+        var newActivator by remember {
+            mutableStateOf(
+                Activator(
+                    comment = null,
+                    taskToActivateId = -1,
+                    endAfterDate = null,
+                    userCancelled = false,
+                    repetitionRange = RepetitionRange(),
+                    endAfterRep = null
+                )
+            )
+        }
         Text(text = "Create task", style = MaterialTheme.typography.headlineLarge)
 
         Column(
             modifier = Modifier.weight(1f) // This will make the Column fill the remaining height
         ) {
             ActivatorFields(
-                activator = Activator(
-                    comment = comment,
-                    taskToActivateId = task?.taskId ?: 0,
-                    endAfterDate = null,
-                    userCancelled = false,
-                    repetitionRange = repetitionRange,
-                    endAfterRep = 3
-                ),
+                activator = newActivator,
                 possibleTasksToActivate = createActivatorViewModel.state.tasks,
-                onCommentChange = { comment = it },
-                onTaskToActivateChange = { task = it },
-                onMinRepChange = { repetitionRange = repetitionRange.copy(minRep = it) },
-                onOptRepChange = { repetitionRange = repetitionRange.copy(optRep = it) },
-                onMaxRepChange = {
-                    repetitionRange = repetitionRange.copy(maxRep = it.toIntOrNull())
-                },
-                onStartDateChange = { repetitionRange = repetitionRange.copy(startDate = it) },
+                onActivatorChanged = { newActivator = it }
             )
 
             Button(onClick = {
-                createActivatorViewModel.viewModelScope.launch(Dispatchers.IO) {
-                    createActivatorViewModel.insertActivator(
-                        Activator(
-                            comment = comment.ifBlank { null },
-                            taskToActivateId = task?.taskId ?: 0,
-                            endAfterDate = null,
-                            userCancelled = false,
-                            repetitionRange = repetitionRange,
-                            endAfterRep = 3
-                        ) //TODO: Implement input of all values
-                    )
+                //TODO: Tell user why it can't submit
+                //TODO: Move check to ActivatorFields
+                if (newActivator.taskToActivateId != -1L) {//if task to activate is -1 it means that no task was selected
+                    createActivatorViewModel.viewModelScope.launch(Dispatchers.IO) {
+                        createActivatorViewModel.insertActivator(newActivator)
+                    }
                 }
             }
             ) {
