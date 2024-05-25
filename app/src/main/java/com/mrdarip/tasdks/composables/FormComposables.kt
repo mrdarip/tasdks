@@ -179,7 +179,7 @@ fun ActivatorFields(
 
         if (openDialog.value) {
             val datePickerState =
-                rememberDatePickerState(activator.repetitionRange.startDate * 1000L)
+                rememberDatePickerState(if (activator.repetitionRange.startDate == 0) null else activator.repetitionRange.startDate * 1000L)
             val confirmEnabled = remember {
                 derivedStateOf { datePickerState.selectedDateMillis != null }
             }
