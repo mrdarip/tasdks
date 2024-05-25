@@ -46,8 +46,8 @@ data class RepetitionRange( //default is no start, no deadline
 @Entity(tableName = "activators")
 data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
-    val comment: String? = "Activator " + Date(System.currentTimeMillis()).toString(),
-    @Embedded val repetitionRange: RepetitionRange = RepetitionRange(startDate = unixEpochTime()),
+    val comment: String? = null,
+    @Embedded val repetitionRange: RepetitionRange = RepetitionRange(),
     val endAfterDate: Int? = null, //In seconds since epoch
     val endAfterRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
