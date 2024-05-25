@@ -1,6 +1,7 @@
 package com.mrdarip.tasdks.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -96,7 +97,12 @@ fun TaskCard(task: Task = Task(), placeName: String? = null, onClick: () -> Unit
 
 @Preview
 @Composable
-fun TaskCardGrid(task: Task = Task(), placeName: String? = null, onClick: () -> Unit = {}) {
+fun SelectableGridTask(
+    task: Task = Task(),
+    placeName: String? = null,
+    selected: Boolean = false,
+    onClick: () -> Unit = {}
+) {
     Box {
         Column(
             verticalArrangement = Arrangement.Top, modifier = Modifier
@@ -104,6 +110,15 @@ fun TaskCardGrid(task: Task = Task(), placeName: String? = null, onClick: () -> 
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(12.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer)
+                .apply {
+                    if (selected) {
+                        border(
+                            2.dp,
+                            MaterialTheme.colorScheme.secondary,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                    }
+                }
                 .clickable(onClick = onClick)
                 .padding(16.dp)
         ) {

@@ -166,6 +166,7 @@ fun ActivatorFields(
                 modifier = Modifier.weight(1f)
             )
         }
+
         val openDialog = remember { mutableStateOf(false) }
         Button(
             onClick = { openDialog.value = true },
@@ -177,7 +178,8 @@ fun ActivatorFields(
         }
 
         if (openDialog.value) {
-            val datePickerState = rememberDatePickerState()
+            val datePickerState =
+                rememberDatePickerState(activator.repetitionRange.startDate * 1000L)
             val confirmEnabled = remember {
                 derivedStateOf { datePickerState.selectedDateMillis != null }
             }
@@ -227,7 +229,7 @@ fun ActivatorFields(
             }
 
             if (openSelectEndAfterDateDialog.value) {
-                val datePickerState = rememberDatePickerState()
+                val datePickerState = rememberDatePickerState(activator.endAfterDate?.times(1000L))
                 val confirmEnabled = remember {
                     derivedStateOf { datePickerState.selectedDateMillis != null }
                 }
@@ -295,7 +297,11 @@ fun ActivatorFields(
             }//TODO implement search. Card based on TaskCard
 
             items(possibleTasksToActivate) { task ->
-                TaskCardGrid(task = task, placeName = "changeme", onClick = {
+                SelectableGridTask(
+                    task = task,
+                    placeName = "changeme",
+                    selected = (task.taskId == activator.taskToActivateId),
+                    onClick = {
                     onActivatorChanged(activator.copy(taskToActivateId = task.taskId))
                 })
             }
