@@ -3,6 +3,8 @@ package com.mrdarip.tasdks.screens.managementScreens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -40,7 +42,9 @@ fun CreateActivatorBodyContent(
     createActivatorViewModel: CreateActivatorViewModel
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         var newActivator by remember {
@@ -57,16 +61,14 @@ fun CreateActivatorBodyContent(
         }
         Text(text = "Create task", style = MaterialTheme.typography.headlineLarge)
 
-        Column(
-            modifier = Modifier.weight(1f) // This will make the Column fill the remaining height
-        ) {
-            ActivatorFields(
-                activator = newActivator,
-                possibleTasksToActivate = createActivatorViewModel.state.tasks,
-                onActivatorChanged = { newActivator = it }
-            )
+        ActivatorFields(
+            activator = newActivator,
+            possibleTasksToActivate = createActivatorViewModel.state.tasks,
+            onActivatorChanged = { newActivator = it }
+        )
 
-            Button(onClick = {
+        Button(
+            onClick = {
                 //TODO: Tell user why it can't submit
                 //TODO: Move check to ActivatorFields
                 if (newActivator.taskToActivateId != -1L) {//if task to activate is -1 it means that no task was selected
@@ -75,10 +77,9 @@ fun CreateActivatorBodyContent(
                     }
                 }
             }
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add Task")
-                Text("Add")
-            }
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = "Add Task")
+            Text("Add")
         }
     }
 
