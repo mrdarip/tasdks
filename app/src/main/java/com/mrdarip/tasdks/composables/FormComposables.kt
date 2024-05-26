@@ -116,21 +116,29 @@ fun ActivatorFields(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        TextField(
-            value = activator.comment ?: "",
-            onValueChange = { onActivatorChanged(activator.copy(comment = it)) },
-            label = { Text("Description") },
-            placeholder = { Text("Activator Description") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
+        ActivatorDescriptionInput(activator, onActivatorChanged)
         RepetitionsRangeInput(activator, onActivatorChanged)
         RepetitionUnitInput(activator, onActivatorChanged)
         StartDateInput(activator, onActivatorChanged)
         EndAfterFactorInput(activator, onActivatorChanged)
         SelectActivatedTaskInput(possibleTasksToActivate, activator, onActivatorChanged)
     }
+}
+
+@Composable
+private fun ActivatorDescriptionInput(
+    activator: Activator,
+    onActivatorChanged: (Activator) -> Unit
+) {
+    TextField(
+        value = activator.comment ?: "",
+        onValueChange = { onActivatorChanged(activator.copy(comment = it)) },
+        label = { Text("Description") },
+        placeholder = { Text("Activator Description") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    )
 }
 
 @Composable
