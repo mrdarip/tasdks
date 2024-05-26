@@ -125,151 +125,151 @@ fun ActivatorFields(
                 .fillMaxWidth()
                 .padding(16.dp)
         )
+        RepetitionsRangeInput(activator, onActivatorChanged)
+        RepetitionUnitInput(activator, onActivatorChanged)
+        StartDateInput(activator, onActivatorChanged)
+        EndAfterFactorInput(activator, onActivatorChanged)
+        SelectActivatedTaskInput(possibleTasksToActivate, activator, onActivatorChanged)
+    }
+}
 
+@Composable
+private fun RepetitionUnitInput(
+    activator: Activator,
+    onActivatorChanged: (Activator) -> Unit
+) {
+    var mExpanded by remember { mutableStateOf(false) }
+
+    val mOptions: List<String> = RepetitionType.entries.map { it.name }
+
+    var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
+
+    // Up Icon when expanded and down icon when collapsed
+    val icon = if (mExpanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+
+    Column(Modifier.padding(20.dp)) {
+
+        // Create an Outlined Text Field
+        // with icon and not expanded
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            TextField(
-                value = if (activator.repetitionRange.minRep == null) "" else activator.repetitionRange.minRep.toString(),
-                onValueChange = {
-                    onActivatorChanged(
-                        activator.copy(
-                            repetitionRange = activator.repetitionRange.copy(
-                                minRep = it.toIntOrNull()
-                            )
-                        )
-                    )
-                },
-                label = { Text("Min Repetitions") },
-                placeholder = { Text("Activator Description") },
-                modifier = Modifier.weight(1f)
-            )
-            TextField(
-                value = activator.repetitionRange.optRep?.toString() ?: "",
-                onValueChange = {
-                    onActivatorChanged(
-                        activator.copy(
-                            repetitionRange = activator.repetitionRange.copy(
-                                optRep = it.toIntOrNull()
-                            )
-                        )
-                    )
-                },
-                label = { Text("Opt Repetitions") },
-                placeholder = { Text("Activator Description") },
-
-                modifier = Modifier.weight(1f)
-            )
-            TextField(
-                value = activator.repetitionRange.maxRep?.toString() ?: "",
-                onValueChange = {
-                    onActivatorChanged(
-                        activator.copy(
-                            repetitionRange = activator.repetitionRange.copy(
-                                maxRep = it.toIntOrNull()
-                            )
-                        )
-                    )
-                },
-                label = { Text("Max Repetitions") },
-                placeholder = { Text("Activator Description") },
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        var mExpanded by remember { mutableStateOf(false) }
-
-        // Create a list of cities
-        val mCities: List<String> = RepetitionType.entries.map { it.name }
-
-        // Create a string value to store the selected city
-        var mSelectedText by remember { mutableStateOf("SELECT REPETITION TYPE") }
-
-        var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
-
-        // Up Icon when expanded and down icon when collapsed
-        val icon = if (mExpanded)
-            Icons.Filled.KeyboardArrowUp
-        else
-            Icons.Filled.KeyboardArrowDown
-
-        Column(Modifier.padding(20.dp)) {
-
-            // Create an Outlined Text Field
-            // with icon and not expanded
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onGloballyPositioned { coordinates ->
-                        // This value is used to assign to
-                        // the DropDown the same width
-                        mTextFieldSize = coordinates.size.toSize()
-                    },
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(mSelectedText)
-                Icon(icon, "contentDescription",
-                    Modifier.clickable { mExpanded = !mExpanded })
-            }
-
-            // Create a drop-down menu with list of cities,
-            // when clicked, set the Text Field text as the city selected
-            DropdownMenu(
-                expanded = mExpanded,
-                onDismissRequest = { mExpanded = false },
-                modifier = Modifier
-                    .width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
-            ) {
-                mCities.forEach { label ->
-                    DropdownMenuItem(onClick = {
-                        mSelectedText = label
-                        mExpanded = false
-                    }, text = {
-                        Text(text = label)
-                    })
+                .onGloballyPositioned { coordinates ->
+                    // This value is used to assign to
+                    // the DropDown the same width
+                    mTextFieldSize = coordinates.size.toSize()
                 }
+                .clickable { mExpanded = !mExpanded },
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(activator.repetitionRange.repetitionType.name)
+            Icon(icon, "contentDescription")
+
+        }
+
+        // Create a drop-down menu with list of cities,
+        // when clicked, set the Text Field text as the city selected
+        DropdownMenu(
+            expanded = mExpanded,
+            onDismissRequest = { mExpanded = false },
+            modifier = Modifier
+                .width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
+        ) {
+            mOptions.forEach { label ->
+                DropdownMenuItem(onClick = {
+                    onActivatorChanged(
+                        activator.copy(
+                            repetitionRange = activator.repetitionRange.copy(
+                                repetitionType = RepetitionType.valueOf(label)
+                            )
+                        )
+                    )
+                    mExpanded = false
+                }, text = {
+                    Text(text = label)
+                })
             }
         }
+    }
+}
 
+@Composable
+private fun SelectActivatedTaskInput(
+    possibleTasksToActivate: List<Task>,
+    activator: Activator,
+    onActivatorChanged: (Activator) -> Unit
+) {
+    LazyHorizontalGrid(
+        modifier = Modifier.height(200.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        rows = GridCells.Adaptive(128.dp)
+    ) {
+        item {
+            Column(
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier
+                    .width(150.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .clickable(onClick = { /*TODO*/ })
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "🔎 SEARCH",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
+        }//TODO implement search. Card based on TaskCard
 
+        items(possibleTasksToActivate) { task ->
+            SelectableGridTask(
+                task = task,
+                placeName = "changeme",
+                selected = (task.taskId == activator.taskToActivateId),
+                onClick = {
+                    onActivatorChanged(activator.copy(taskToActivateId = task.taskId))
+                })
+        }
+    }
+}
 
-
-
-
-        val openDialog = remember { mutableStateOf(false) }
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun EndAfterFactorInput(
+    activator: Activator,
+    onActivatorChanged: (Activator) -> Unit
+) {
+    Text("END", modifier = Modifier.padding(16.dp))
+    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        val openSelectEndAfterDateDialog = remember { mutableStateOf(false) }
         Button(
-            onClick = { openDialog.value = true },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            onClick = { openSelectEndAfterDateDialog.value = true },
+            modifier = Modifier.weight(1f)
         ) {
-            Text(text = "Select Start Date")
+            Text(text = "Select End Date")
         }
 
-        if (openDialog.value) {
-            val datePickerState =
-                rememberDatePickerState(if (activator.repetitionRange.startDate == 0) null else activator.repetitionRange.startDate * 1000L)
+        if (openSelectEndAfterDateDialog.value) {
+            val datePickerState = rememberDatePickerState(activator.endAfterDate?.times(1000L))
             val confirmEnabled = remember {
                 derivedStateOf { datePickerState.selectedDateMillis != null }
             }
             DatePickerDialog(
                 onDismissRequest = {
-                    openDialog.value = false
+                    openSelectEndAfterDateDialog.value = false
                 },
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            openDialog.value = false
-                            onActivatorChanged(
-                                activator.copy(
-                                    repetitionRange = activator.repetitionRange.copy(
-                                        startDate = ((datePickerState.selectedDateMillis!! / 1000).toInt())
-                                    )
-                                )
-                            )
+                            openSelectEndAfterDateDialog.value = false
+                            onActivatorChanged(activator.copy(endAfterDate = (datePickerState.selectedDateMillis!! / 1000).toInt()))
                         },
                         enabled = confirmEnabled.value
                     ) {
@@ -279,7 +279,7 @@ fun ActivatorFields(
                 dismissButton = {
                     TextButton(
                         onClick = {
-                            openDialog.value = false
+                            openSelectEndAfterDateDialog.value = false
                         }
                     ) {
                         Text("Cancel")
@@ -289,95 +289,129 @@ fun ActivatorFields(
                 DatePicker(state = datePickerState)
             }
         }
+        TextField(
+            value = "repetitions",
+            onValueChange = { onActivatorChanged(activator.copy(endAfterRep = it.toIntOrNull())) },
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
 
-        Text("END", modifier = Modifier.padding(16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            val openSelectEndAfterDateDialog = remember { mutableStateOf(false) }
-            Button(
-                onClick = { openSelectEndAfterDateDialog.value = true },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(text = "Select End Date")
-            }
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun StartDateInput(
+    activator: Activator,
+    onActivatorChanged: (Activator) -> Unit
+) {
+    val openDialog = remember { mutableStateOf(false) }
+    Button(
+        onClick = { openDialog.value = true },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(text = "Select Start Date")
+    }
 
-            if (openSelectEndAfterDateDialog.value) {
-                val datePickerState = rememberDatePickerState(activator.endAfterDate?.times(1000L))
-                val confirmEnabled = remember {
-                    derivedStateOf { datePickerState.selectedDateMillis != null }
+    if (openDialog.value) {
+        val datePickerState =
+            rememberDatePickerState(if (activator.repetitionRange.startDate == 0) null else activator.repetitionRange.startDate * 1000L)
+        val confirmEnabled = remember {
+            derivedStateOf { datePickerState.selectedDateMillis != null }
+        }
+        DatePickerDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        openDialog.value = false
+                        onActivatorChanged(
+                            activator.copy(
+                                repetitionRange = activator.repetitionRange.copy(
+                                    startDate = ((datePickerState.selectedDateMillis!! / 1000).toInt())
+                                )
+                            )
+                        )
+                    },
+                    enabled = confirmEnabled.value
+                ) {
+                    Text("OK")
                 }
-                DatePickerDialog(
-                    onDismissRequest = {
-                        openSelectEndAfterDateDialog.value = false
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                openSelectEndAfterDateDialog.value = false
-                                onActivatorChanged(activator.copy(endAfterDate = (datePickerState.selectedDateMillis!! / 1000).toInt()))
-                            },
-                            enabled = confirmEnabled.value
-                        ) {
-                            Text("OK")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = {
-                                openSelectEndAfterDateDialog.value = false
-                            }
-                        ) {
-                            Text("Cancel")
-                        }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        openDialog.value = false
                     }
                 ) {
-                    DatePicker(state = datePickerState)
+                    Text("Cancel")
                 }
             }
-            TextField(
-                value = "repetitions",
-                onValueChange = { onActivatorChanged(activator.copy(endAfterRep = it.toIntOrNull())) },
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-
-
-        LazyHorizontalGrid(
-            modifier = Modifier.height(200.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            rows = GridCells.Adaptive(128.dp)
         ) {
-            item {
-                Column(
-                    verticalArrangement = Arrangement.Top,
-                    modifier = Modifier
-                        .width(150.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .clickable(onClick = { /*TODO*/ })
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "🔎 SEARCH",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
-                    )
-                }
-            }//TODO implement search. Card based on TaskCard
-
-            items(possibleTasksToActivate) { task ->
-                SelectableGridTask(
-                    task = task,
-                    placeName = "changeme",
-                    selected = (task.taskId == activator.taskToActivateId),
-                    onClick = {
-                    onActivatorChanged(activator.copy(taskToActivateId = task.taskId))
-                })
-            }
+            DatePicker(state = datePickerState)
         }
+    }
+}
+
+@Composable
+private fun RepetitionsRangeInput(
+    activator: Activator,
+    onActivatorChanged: (Activator) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        TextField(
+            value = activator.repetitionRange.minRep?.toString() ?: "",
+            onValueChange = {
+                onActivatorChanged(
+                    activator.copy(
+                        repetitionRange = activator.repetitionRange.copy(
+                            minRep = it.toIntOrNull()
+                        )
+                    )
+                )
+            },
+            label = { Text("Min Repetitions") },
+            placeholder = { Text("Activator Description") },
+            modifier = Modifier.weight(1f)
+        )
+        TextField(
+            value = activator.repetitionRange.optRep?.toString() ?: "",
+            onValueChange = {
+                onActivatorChanged(
+                    activator.copy(
+                        repetitionRange = activator.repetitionRange.copy(
+                            optRep = it.toIntOrNull()
+                        )
+                    )
+                )
+            },
+            label = { Text("Opt Repetitions") },
+            placeholder = { Text("Activator Description") },
+
+            modifier = Modifier.weight(1f)
+        )
+        TextField(
+            value = activator.repetitionRange.maxRep?.toString() ?: "",
+            onValueChange = {
+                onActivatorChanged(
+                    activator.copy(
+                        repetitionRange = activator.repetitionRange.copy(
+                            maxRep = it.toIntOrNull()
+                        )
+                    )
+                )
+            },
+            label = { Text("Max Repetitions") },
+            placeholder = { Text("Activator Description") },
+            modifier = Modifier.weight(1f)
+        )
     }
 }
 
