@@ -5,24 +5,27 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,19 +34,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.RepetitionType
 import com.mrdarip.tasdks.data.entity.Task
@@ -116,12 +113,13 @@ fun ActivatorFields(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        ActivatorDescriptionInput(activator, onActivatorChanged)
-        RepetitionsRangeInput(activator, onActivatorChanged)
         RepetitionUnitInput(activator, onActivatorChanged)
+        RepetitionsRangeInput(activator, onActivatorChanged)
+
         StartDateInput(activator, onActivatorChanged)
         EndAfterFactorInput(activator, onActivatorChanged)
         SelectActivatedTaskInput(possibleTasksToActivate, activator, onActivatorChanged)
+        ActivatorDescriptionInput(activator, onActivatorChanged)
     }
 }
 
@@ -146,61 +144,40 @@ private fun RepetitionUnitInput(
     activator: Activator,
     onActivatorChanged: (Activator) -> Unit
 ) {
-    var mExpanded by remember { mutableStateOf(false) }
-
-    val mOptions: List<String> = RepetitionType.entries.map { it.name }
-
-    var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
-
-    // Up Icon when expanded and down icon when collapsed
-    val icon = if (mExpanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    Column(Modifier.padding(20.dp)) {
-
-        // Create an Outlined Text Field
-        // with icon and not expanded
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .onGloballyPositioned { coordinates ->
-                    // This value is used to assign to
-                    // the DropDown the same width
-                    mTextFieldSize = coordinates.size.toSize()
-                }
-                .clickable { mExpanded = !mExpanded },
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(activator.repetitionRange.repetitionType.name)
-            Icon(icon, "contentDescription")
-
-        }
-
-        // Create a drop-down menu with list of cities,
-        // when clicked, set the Text Field text as the city selected
-        DropdownMenu(
-            expanded = mExpanded,
-            onDismissRequest = { mExpanded = false },
-            modifier = Modifier
-                .width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
-        ) {
-            mOptions.forEach { label ->
-                DropdownMenuItem(onClick = {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(RepetitionType.entries) { option ->
+            val selected = activator.repetitionRange.repetitionType == option
+            FilterChip(
+                onClick = {
                     onActivatorChanged(
                         activator.copy(
                             repetitionRange = activator.repetitionRange.copy(
-                                repetitionType = RepetitionType.valueOf(label)
+                                repetitionType = option
                             )
                         )
                     )
-                    mExpanded = false
-                }, text = {
-                    Text(text = label)
-                })
-            }
+                },
+                label = {
+                    Text(option.name)
+                },
+                selected = selected,
+                leadingIcon = if (selected) {
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
+                } else {
+                    null
+                },
+            )
         }
+
     }
 }
 
@@ -368,58 +345,63 @@ private fun RepetitionsRangeInput(
     activator: Activator,
     onActivatorChanged: (Activator) -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        TextField(
-            value = activator.repetitionRange.minRep?.toString() ?: "",
-            onValueChange = {
-                onActivatorChanged(
-                    activator.copy(
-                        repetitionRange = activator.repetitionRange.copy(
-                            minRep = it.toIntOrNull()
-                        )
-                    )
-                )
-            },
-            label = { Text("Min Repetitions") },
-            placeholder = { Text("Activator Description") },
-            modifier = Modifier.weight(1f)
-        )
-        TextField(
-            value = activator.repetitionRange.optRep?.toString() ?: "",
-            onValueChange = {
-                onActivatorChanged(
-                    activator.copy(
-                        repetitionRange = activator.repetitionRange.copy(
-                            optRep = it.toIntOrNull()
-                        )
-                    )
-                )
-            },
-            label = { Text("Opt Repetitions") },
-            placeholder = { Text("Activator Description") },
+        Row {
+            Text(text = "min", modifier = Modifier.weight(1f))
 
-            modifier = Modifier.weight(1f)
-        )
-        TextField(
-            value = activator.repetitionRange.maxRep?.toString() ?: "",
-            onValueChange = {
-                onActivatorChanged(
-                    activator.copy(
-                        repetitionRange = activator.repetitionRange.copy(
-                            maxRep = it.toIntOrNull()
+            TextField(
+                value = activator.repetitionRange.minRep?.toString() ?: "",
+                onValueChange = {
+                    onActivatorChanged(
+                        activator.copy(
+                            repetitionRange = activator.repetitionRange.copy(
+                                minRep = it.toIntOrNull()
+                            )
                         )
                     )
+                },
+                label = { Text("Min Repetitions") },
+                placeholder = { Text("Activator Description") },
+
                 )
-            },
-            label = { Text("Max Repetitions") },
-            placeholder = { Text("Activator Description") },
-            modifier = Modifier.weight(1f)
-        )
+        }
+        Row {
+            Text(text = "min", modifier = Modifier.weight(1f))
+
+            TextField(
+                value = activator.repetitionRange.optRep?.toString() ?: "",
+                onValueChange = {
+                    onActivatorChanged(
+                        activator.copy(
+                            repetitionRange = activator.repetitionRange.copy(
+                                optRep = it.toIntOrNull()
+                            )
+                        )
+                    )
+                },
+                label = { Text("Opt Repetitions") },
+                placeholder = { Text("Activator Description") }
+            )
+        }
+        Row {
+            Text(text = "min", modifier = Modifier.weight(1f))
+            TextField(
+                value = activator.repetitionRange.maxRep?.toString() ?: "",
+                onValueChange = {
+                    onActivatorChanged(
+                        activator.copy(
+                            repetitionRange = activator.repetitionRange.copy(
+                                maxRep = it.toIntOrNull()
+                            )
+                        )
+                    )
+                },
+                label = { Text("Max Repetitions") },
+                placeholder = { Text("Activator Description") }
+            )
+        }
     }
 }
-
