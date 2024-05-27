@@ -395,14 +395,14 @@ private fun RepetitionsRangeInput(
                     onActivatorChanged(
                         activator.copy(
                             repetitionRange = activator.repetitionRange.copy(
-                                minRep = it.toIntOrNull()
+                                minRep = it.toDoubleOrNull()
                             )
                         )
                     )
                 },
                 label = { Text(capitalized(activator.repetitionRange.repetitionType.name) + " until start") },
                 placeholder = { Text("Activator Description") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
         }
 
@@ -414,14 +414,14 @@ private fun RepetitionsRangeInput(
                     onActivatorChanged(
                         activator.copy(
                             repetitionRange = activator.repetitionRange.copy(
-                                maxRep = it.toIntOrNull()
+                                maxRep = it.toDoubleOrNull()
                             )
                         )
                     )
                 },
                 label = { Text(capitalized(activator.repetitionRange.repetitionType.name) + " until deadline") },
                 placeholder = { Text("Activator Description") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
         }
     }
