@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.RepetitionType
 import com.mrdarip.tasdks.data.entity.Task
+import java.util.Locale
 
 
 @Composable
@@ -161,7 +162,11 @@ private fun RepetitionUnitInput(
                     )
                 },
                 label = {
-                    Text(option.name)
+                    Text(option.name.lowercase().replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.ROOT
+                        ) else it.toString()
+                    })
                 },
                 selected = selected,
                 leadingIcon = if (selected) {
