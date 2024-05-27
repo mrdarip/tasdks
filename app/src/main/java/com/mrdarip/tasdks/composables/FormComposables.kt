@@ -1,6 +1,7 @@
 package com.mrdarip.tasdks.composables
 
 import android.icu.text.BreakIterator
+import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.RepetitionType
 import com.mrdarip.tasdks.data.entity.Task
+import java.util.Date
 import java.util.Locale
 
 
@@ -114,12 +117,19 @@ fun ActivatorFields(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        StartDateInput(activator, onActivatorChanged)
+        HorizontalDivider()
+
         RepetitionUnitInput(activator, onActivatorChanged)
         RepetitionsRangeInput(activator, onActivatorChanged)
+        HorizontalDivider()
 
-        StartDateInput(activator, onActivatorChanged)
         EndAfterFactorInput(activator, onActivatorChanged)
+        HorizontalDivider()
+
         SelectActivatedTaskInput(possibleTasksToActivate, activator, onActivatorChanged)
+        HorizontalDivider()
+
         ActivatorDescriptionInput(activator, onActivatorChanged)
     }
 }
@@ -162,11 +172,7 @@ private fun RepetitionUnitInput(
                     )
                 },
                 label = {
-                    Text(option.name.lowercase().replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.ROOT
-                        ) else it.toString()
-                    })
+                    Text(capitalized(option.name))
                 },
                 selected = selected,
                 leadingIcon = if (selected) {
@@ -196,7 +202,7 @@ private fun SelectActivatedTaskInput(
         modifier = Modifier.height(200.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        rows = GridCells.Adaptive(128.dp)
+        rows = GridCells.Adaptive(64.dp), contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         item {
             Column(
@@ -236,9 +242,24 @@ private fun EndAfterFactorInput(
     activator: Activator,
     onActivatorChanged: (Activator) -> Unit
 ) {
-    Text("END", modifier = Modifier.padding(16.dp))
-    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        Text(text = "Kill after date")
+        TextField(
+            value = "repetitions",
+            onValueChange = { onActivatorChanged(activator.copy(endAfterRep = it.toIntOrNull())) },
+            modifier = Modifier.weight(1f)
+        )
+    }
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
         val openSelectEndAfterDateDialog = remember { mutableStateOf(false) }
+
+        Text(text = "Kill after date")
         Button(
             onClick = { openSelectEndAfterDateDialog.value = true },
             modifier = Modifier.weight(1f)
@@ -279,11 +300,6 @@ private fun EndAfterFactorInput(
                 DatePicker(state = datePickerState)
             }
         }
-        TextField(
-            value = "repetitions",
-            onValueChange = { onActivatorChanged(activator.copy(endAfterRep = it.toIntOrNull())) },
-            modifier = Modifier.weight(1f)
-        )
     }
 }
 
@@ -294,14 +310,26 @@ private fun StartDateInput(
     onActivatorChanged: (Activator) -> Unit
 ) {
     val openDialog = remember { mutableStateOf(false) }
-    Button(
-        onClick = { openDialog.value = true },
+
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
     ) {
-        Text(text = "Select Start Date")
+        Text("START:")
+        Button(
+            onClick = { openDialog.value = true }
+        ) {
+            Text(
+                text = if (activator.repetitionRange.startDate <= 0) "Select Start Date" else DateFormat.format(
+                    "dd/MM/yyyy",
+                    Date(activator.repetitionRange.startDate.toLong() * 1000)
+                ).toString()
+            )
+        }
     }
+
 
     if (openDialog.value) {
         val datePickerState =
@@ -368,7 +396,7 @@ private fun RepetitionsRangeInput(
                         )
                     )
                 },
-                label = { Text("Min Repetitions") },
+                label = { Text(capitalized(activator.repetitionRange.repetitionType.name) + " until start") },
                 placeholder = { Text("Activator Description") },
 
                 )
@@ -387,9 +415,17 @@ private fun RepetitionsRangeInput(
                         )
                     )
                 },
-                label = { Text("Max Repetitions") },
+                label = { Text(capitalized(activator.repetitionRange.repetitionType.name) + " until deadline") },
                 placeholder = { Text("Activator Description") }
             )
         }
+    }
+}
+
+fun capitalized(text: String): String {
+    return text.lowercase().replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase(
+            Locale.ROOT
+        ) else it.toString()
     }
 }
