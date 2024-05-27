@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
@@ -40,6 +41,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -248,8 +250,10 @@ private fun EndAfterFactorInput(
     ) {
         Text(text = "Kill after repetitions")
         TextField(
-            value = activator.endAfterRep.toString(),
+            value = activator.endAfterRep?.toString() ?: "",
+            label = { Text("End after repetitions") },
             onValueChange = { onActivatorChanged(activator.copy(endAfterRep = it.toIntOrNull())) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.weight(1f)
         )
     }
@@ -398,7 +402,7 @@ private fun RepetitionsRangeInput(
                 },
                 label = { Text(capitalized(activator.repetitionRange.repetitionType.name) + " until start") },
                 placeholder = { Text("Activator Description") },
-
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
         }
 
@@ -416,7 +420,8 @@ private fun RepetitionsRangeInput(
                     )
                 },
                 label = { Text(capitalized(activator.repetitionRange.repetitionType.name) + " until deadline") },
-                placeholder = { Text("Activator Description") }
+                placeholder = { Text("Activator Description") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }
     }
