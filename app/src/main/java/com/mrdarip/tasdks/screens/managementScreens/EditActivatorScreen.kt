@@ -11,7 +11,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,10 +27,19 @@ import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditActivatorView
 @Composable
 fun EditActivatorScreen(navController: NavController, activatorId: Long) {
     val mainMenuViewModel = viewModel(modelClass = EditActivatorViewModel::class.java)
+    var activator by remember { mutableStateOf(Activator(taskToActivateId = -1)) }
+
+    LaunchedEffect(mainMenuViewModel) {
+        mainMenuViewModel.getActivatorById(activatorId).collect { fetchedActivator ->
+            activator = fetchedActivator
+        }
+    }
+
     EditActivatorBodyContent(
         navController = navController,
         viewModel = mainMenuViewModel,
-        activatorId = activatorId
+        activator = activator,
+        onActivatorChanged = { activator = it }
     )
 }
 
@@ -34,23 +47,17 @@ fun EditActivatorScreen(navController: NavController, activatorId: Long) {
 fun EditActivatorBodyContent(
     navController: NavController,
     viewModel: EditActivatorViewModel,
-    activatorId: Long
+    activator: Activator,
+    onActivatorChanged: (Activator) -> Unit
 ) {
-    var activator = viewModel.getActivatorById(activatorId).collectAsState(
-        initial = Activator(
-            taskToActivateId = -1
-        )
-    ).value
-
     Column(modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState())) {
         ActivatorFields(
             activator = activator,
             possibleTasksToActivate = viewModel.state.tasks,
-            onActivatorChanged = { activator = it }
+            onActivatorChanged = onActivatorChanged
         )
-
 
         Button(onClick = {
             viewModel.upsertActivator(activator)
