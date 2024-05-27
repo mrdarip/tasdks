@@ -33,7 +33,7 @@ data class Object(
 )
 
 enum class RepetitionType {
-    DATE, MINUTES, HOURS, DAYS, WEEKS, MONTHS, YEARS//TODO Check how to manage time repetition vs date repetition ( a date is millis since epoch...)
+    MINUTES, HOURS, DAYS, WEEKS, MONTHS, YEARS//TODO Check how to manage time repetition vs date repetition ( a date is millis since epoch...)
 }
 
 data class RepetitionRange( //default is no start, no deadline
