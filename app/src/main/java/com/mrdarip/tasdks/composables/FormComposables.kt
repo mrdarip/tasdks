@@ -104,7 +104,7 @@ fun getLength(emoji: String?): Int {
     return count
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Preview
 @Composable
 fun ActivatorFields(

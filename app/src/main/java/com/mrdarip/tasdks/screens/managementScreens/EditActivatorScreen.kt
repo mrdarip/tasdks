@@ -2,6 +2,7 @@ package com.mrdarip.tasdks.screens.managementScreens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.ActivatorFields
@@ -53,7 +55,7 @@ fun EditActivatorBodyContent(
         Button(onClick = {
             viewModel.upsertActivator(activator)
             navController.popBackStack()
-        }) {
+        }, modifier = Modifier.padding(horizontal = 16.dp)) {
             Icon(Icons.Filled.Edit, contentDescription = "Localized description")
             Text("Save")
         }
