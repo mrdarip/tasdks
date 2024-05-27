@@ -368,26 +368,9 @@ private fun RepetitionsRangeInput(
 
                 )
         }
-        Row {
-            Text(text = "min", modifier = Modifier.weight(1f))
 
-            TextField(
-                value = activator.repetitionRange.optRep?.toString() ?: "",
-                onValueChange = {
-                    onActivatorChanged(
-                        activator.copy(
-                            repetitionRange = activator.repetitionRange.copy(
-                                optRep = it.toIntOrNull()
-                            )
-                        )
-                    )
-                },
-                label = { Text("Opt Repetitions") },
-                placeholder = { Text("Activator Description") }
-            )
-        }
         Row {
-            Text(text = "min", modifier = Modifier.weight(1f))
+            Text(text = "max", modifier = Modifier.weight(1f))
             TextField(
                 value = activator.repetitionRange.maxRep?.toString() ?: "",
                 onValueChange = {
