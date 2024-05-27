@@ -30,8 +30,8 @@ class MainMenuViewModel(
 
     private fun getTasks() {
         viewModelScope.launch {
-            repository.tasks.collectLatest {
-                state = state.copy(tasks = it)
+            repository.activeTasks.collectLatest {
+                state = state.copy(activeTasks = it)
             }
         }
     }
@@ -89,7 +89,7 @@ class MainMenuViewModel(
 }
 
 data class MainMenuState(
-    val tasks: List<Task> = emptyList(),
+    val activeTasks: List<Task> = emptyList(),
     val objects: List<Object> = emptyList(),
     val places: List<Place> = emptyList(),
     val tasksOrderedByLastDone: List<Task> = emptyList(),

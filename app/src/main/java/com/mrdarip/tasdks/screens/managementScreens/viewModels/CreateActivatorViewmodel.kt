@@ -27,7 +27,7 @@ class CreateActivatorViewModel(
 
     private fun getTasks() {
         viewModelScope.launch {
-            repository.tasks.collectLatest {
+            repository.activeTasks.collectLatest {
                 state = state.copy(tasks = it)
             }
         }

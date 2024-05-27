@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -108,19 +109,32 @@ fun EditTaskBodyContent(
             )
         }
 
-
-        Button(onClick = {
-            editTaskViewModel.upsertTask(
-                task.copy(
-                    name = name,
-                    comment = comment.ifBlank { null },
-                    iconEmoji = iconEmoji.ifBlank { null },
+        Row {
+            Button(onClick = {
+                editTaskViewModel.upsertTask(
+                    task.copy(
+                        archived = !task.archived
+                    )
                 )
-            )
-            navController.popBackStack()
-        }) {
-            Icon(Icons.Filled.Edit, contentDescription = "Localized description")
-            Text("Save")
+                navController.popBackStack()
+            }) {
+                Icon(Icons.Filled.Delete, contentDescription = "Localized description")
+                Text(if (task.archived) "Unarchive" else "Archive")
+            }
+
+            Button(onClick = {
+                editTaskViewModel.upsertTask(
+                    task.copy(
+                        name = name,
+                        comment = comment.ifBlank { null },
+                        iconEmoji = iconEmoji.ifBlank { null },
+                    )
+                )
+                navController.popBackStack()
+            }) {
+                Icon(Icons.Filled.Edit, contentDescription = "Localized description")
+                Text("Save")
+            }
         }
     }
 }
@@ -181,7 +195,8 @@ fun EditTasksBottomSheet(
             if (addingTask) {
                 if (addingExistingTask) {
                     SelectTaskGrid(
-                        tasks = editTaskViewModel.notSubtasksOfTask(taskId).collectAsState(initial = emptyList()).value,
+                        tasks = editTaskViewModel.notSubtasksOfTask(taskId)
+                            .collectAsState(initial = emptyList()).value,
                         onTaskClicked = {
                             editTaskViewModel.addTaskAsLastSubTask(
                                 it.taskId,

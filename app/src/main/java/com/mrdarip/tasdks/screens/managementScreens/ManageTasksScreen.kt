@@ -37,7 +37,7 @@ fun ManageTasksBodyContent(navController: NavController, mainMenuViewModel: Main
             contentPadding = PaddingValues(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(mainMenuState.tasks) { task ->
+            items(mainMenuState.activeTasks) { task ->
                 val placeName by mainMenuViewModel.getPlaceName(task.placeId)
                     .collectAsState(initial = "")
                 TaskLiItem(

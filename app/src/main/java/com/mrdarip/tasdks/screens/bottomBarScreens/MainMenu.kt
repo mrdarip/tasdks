@@ -29,7 +29,7 @@ fun BodyContent(
     navController: NavController
 ) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        TasksCardRow(mainMenuState.tasks, "All tasks", mainMenuViewModel, navController)
+        TasksCardRow(mainMenuState.activeTasks, "All tasks", mainMenuViewModel, navController)
         TasksCardRow(
             mainMenuState.tasksOrderedByLastDone,
             "Last done",

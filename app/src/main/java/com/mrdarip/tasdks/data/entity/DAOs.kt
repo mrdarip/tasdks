@@ -23,8 +23,8 @@ class DAOs {
         @Delete
         fun delete(task: Task)
 
-        @Query("SELECT * FROM tasks")
-        fun getAll(): Flow<List<Task>>
+        @Query("SELECT * FROM tasks WHERE NOT archived")
+        fun getActive(): Flow<List<Task>>
         @Query("""
         SELECT * FROM tasks 
         JOIN (
@@ -39,7 +39,7 @@ class DAOs {
         @Query("SELECT * FROM tasks JOIN executions on tasks.taskId = executions.taskId ORDER BY executions.`end` desc")
         fun getAllOrderByHistory(): Flow<List<Task>>
 
-        @Query("SELECT * FROM tasks")//TODO: Implement query
+        @Query("SELECT * FROM tasks WHERE NOT archived")//TODO: Implement query
         fun getAllOrderByUsuallyAtThisTime(): Flow<List<Task>>
 
         @Query("SELECT * FROM tasks WHERE taskId = :taskId")

@@ -15,7 +15,8 @@ data class Task(
     var name: String = "Task " + Date(System.currentTimeMillis()).toString(),
     val comment: String? = null, //iconEmoji can be null so later on you can know what tasks weren't given an emoji
     val iconEmoji: String? = null,
-    val placeId: Long? = null
+    val placeId: Long? = null,
+    val archived: Boolean = false
 )
 
 @Entity(tableName = "places")
