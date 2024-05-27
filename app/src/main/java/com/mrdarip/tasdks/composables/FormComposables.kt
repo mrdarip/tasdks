@@ -79,7 +79,7 @@ fun TaskFields(
                 label = { Text("Emoji") },
                 placeholder = { Text("😃") },
                 modifier = Modifier.weight(1f),
-                isError = isValidEmoji(taskEmoji)
+                isError = !isValidEmoji(taskEmoji)
             )
         }
         TextField(
