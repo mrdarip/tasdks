@@ -246,9 +246,9 @@ private fun EndAfterFactorInput(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        Text(text = "Kill after date")
+        Text(text = "Kill after repetitions")
         TextField(
-            value = "repetitions",
+            value = activator.endAfterRep.toString(),
             onValueChange = { onActivatorChanged(activator.copy(endAfterRep = it.toIntOrNull())) },
             modifier = Modifier.weight(1f)
         )
