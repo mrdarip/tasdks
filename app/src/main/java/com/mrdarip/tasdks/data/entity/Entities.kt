@@ -39,7 +39,6 @@ enum class RepetitionType {
 
 data class RepetitionRange( //default is no start, no deadline
     val startDate: Int = 0, //when will the first repetition happen, when is MinRep //In seconds since epoch //0 as its unknown when it starts. Could also be (System.currentTimeMillis()/1000).toInt()
-    val minRep: Double? = null,// when can it start to be done, default is no way for doing it before you should start doing it
     val maxRep: Double? = null,//deadline for doing it, default is no deadline
     val repetitionType: RepetitionType = RepetitionType.DAYS
 )
