@@ -59,7 +59,7 @@ data class Execution(
     val start: Int? = null, //In seconds since epoch
     val end: Int? = null,//In seconds since epoch
     val successfullyEnded: Boolean = false,
-    val activatorId: Long,
+    val activatorId: Long, //activator that triggered the the root of the execution tree
     val resourceId: Long? = null,
     val parentExecution: Long?,
     val taskId: Long
