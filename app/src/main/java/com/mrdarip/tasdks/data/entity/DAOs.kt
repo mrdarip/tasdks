@@ -25,7 +25,9 @@ class DAOs {
 
         @Query("SELECT * FROM tasks WHERE NOT archived")
         fun getActive(): Flow<List<Task>>
-        @Query("""
+
+        @Query(
+            """
         SELECT * FROM tasks 
         JOIN (
             SELECT taskId, MAX(`end`) as MaxEnd 
@@ -34,8 +36,10 @@ class DAOs {
         ) latestExecutions 
         ON tasks.taskId = latestExecutions.taskId 
         ORDER BY latestExecutions.MaxEnd DESC
-        """)
+        """
+        )
         fun getAllOrderByLastDone(): Flow<List<Task>>
+
         @Query("SELECT * FROM tasks JOIN executions on tasks.taskId = executions.taskId ORDER BY executions.`end` desc")
         fun getAllOrderByHistory(): Flow<List<Task>>
 
@@ -76,18 +80,19 @@ class DAOs {
         }
 
         @Transaction
-        fun removeSubTask(parentTaskId: Long,position: Long){
+        fun removeSubTask(parentTaskId: Long, position: Long) {
             deleteTaskTaskCR(parentTaskId, position)
             decreasePositionGreaterThan(parentTaskId, position)
         }
+
         @Query("UPDATE TaskTaskCR SET position = position-1 WHERE parentTaskId = :parentTaskId AND position>:position")
-        fun decreasePositionGreaterThan(parentTaskId: Long,position: Long)
+        fun decreasePositionGreaterThan(parentTaskId: Long, position: Long)
 
         @Query("DELETE FROM TaskTaskCR WHERE parentTaskId = :parentTaskId AND position = :position")
-        fun deleteTaskTaskCR(parentTaskId: Long,position: Long)
+        fun deleteTaskTaskCR(parentTaskId: Long, position: Long)
+
         @Query("UPDATE TaskTaskCR SET position = :newPosition WHERE parentTaskId = :parentTaskId AND position = :position")
         fun setTaskPosition(parentTaskId: Long, position: Long, newPosition: Long)
-
 
 
         @Query("SELECT COUNT(*) FROM TaskTaskCR WHERE parentTaskId = :taskId")
@@ -147,7 +152,7 @@ class DAOs {
         @Query("SELECT * FROM activators")
         fun getAllActivators(): Flow<List<Activator>>
 
-        @Query("SELECT * FROM activators WHERE NOT userCancelled AND COALESCE(endAfterDate > strftime('%s', 'now'),1) AND COALESCE(endAfterRep > (SELECT COUNT(*) FROM executions WHERE activatorId = activatorId),1)")
+        @Query("SELECT * FROM activators WHERE NOT userCancelled AND COALESCE(endAfterDate > strftime('%s', 'now'),1) AND COALESCE(endAfterRep > (SELECT COUNT(activatorId) FROM executions GROUP BY activatorId),1)")
         fun getActiveActivators(): Flow<List<Activator>>
 
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
@@ -155,6 +160,28 @@ class DAOs {
 
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
         fun getActivatorByIdAsFlow(activatorId: Long): Flow<Activator>
+
+        @Query(
+            """
+                SELECT activators.* 
+                FROM activators 
+                LEFT JOIN executions ON activators.activatorId = executions.activatorId 
+                GROUP BY activators.activatorId 
+                HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,strftime('%s', 'now') ))) < activators.maxRep
+            """
+        )
+        fun getPending(): Flow<List<Activator>>
+
+        @Query(
+            """
+            SELECT activators.*
+            FROM activators
+            LEFT JOIN executions ON activators.activatorId = executions.activatorId
+            GROUP BY activators.activatorId
+            HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,strftime('%s', 'now') ))) > activators.maxRep
+            """
+        )
+        fun getOverdue(): Flow<List<Activator>>
     }
 
     @Dao
@@ -170,9 +197,7 @@ class DAOs {
 
         @Query("UPDATE executions SET 'end' = :end, successfullyEnded = :successfullyEnded WHERE executionId = :executionId")
         fun update(
-            executionId: Long,
-            end: Int,
-            successfullyEnded: Boolean
+            executionId: Long, end: Int, successfullyEnded: Boolean
         )
 
         @Delete
@@ -206,34 +231,37 @@ class DAOs {
     @Dao
     interface TaskWithTasksDAO {
 
-        @Query("""
+        @Query(
+            """
             WITH RECURSIVE idk(taskId) AS (
                 SELECT :taskId
             UNION ALL
                 SELECT TaskTaskCR.parentTaskId FROM TaskTaskCR JOIN idk ON TaskTaskCR.childTaskId = idk.taskId
             )
             SELECT * FROM tasks WHERE taskId NOT IN (SELECT taskId FROM idk)
-        """)
+        """
+        )
         fun getTasksNotSubTasks(taskId: Long): Flow<List<Task>>
 
         @Transaction
         @Query("SELECT * FROM tasks")
         fun getTasksWithParentTasks(): Flow<List<TaskWithTasks>>
 
-        @Query("""
+        @Query(
+            """
     WITH RECURSIVE subtasks(taskId, path) AS (
         SELECT childTaskId, ',' || childTaskId || ',' FROM TaskTaskCR WHERE parentTaskId = :taskId
         UNION ALL
         SELECT TaskTaskCR.childTaskId, path || TaskTaskCR.childTaskId || ',' FROM TaskTaskCR JOIN subtasks ON TaskTaskCR.parentTaskId = subtasks.taskId WHERE path NOT LIKE '%' || TaskTaskCR.childTaskId || '%'
     )
     SELECT * FROM tasks WHERE taskId IN (SELECT taskId FROM subtasks)
-""")
+"""
+        )
         fun getAllSubTasks(taskId: Long): List<Task>
 
 
         @Query(
-            "INSERT INTO TaskTaskCR (parentTaskId, childTaskId, position) VALUES " +
-                    "(:parentTaskId, :taskId, COALESCE(((SELECT MAX(position) FROM TaskTaskCR WHERE parentTaskId = :parentTaskId) + 1),0))"
+            "INSERT INTO TaskTaskCR (parentTaskId, childTaskId, position) VALUES " + "(:parentTaskId, :taskId, COALESCE(((SELECT MAX(position) FROM TaskTaskCR WHERE parentTaskId = :parentTaskId) + 1),0))"
         )
         fun addTaskAsLastSubTask(taskId: Long, parentTaskId: Long)
     }

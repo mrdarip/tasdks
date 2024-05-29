@@ -22,6 +22,8 @@ class TasdksRepository(
 
     //Todo add other DAOs, video 5/7
     val activeTasks = taskDAO.getActive()
+    val overdueTasks = activatorDAO.getOverdue()
+    val pendingTasks = activatorDAO.getPending()
     val tasksOrderByLastDone = taskDAO.getAllOrderByLastDone()
     val tasksOrderByUsuallyAtThisTime = taskDAO.getAllOrderByUsuallyAtThisTime()
     val places = placeDAO.getAllPlaces()

@@ -22,16 +22,34 @@ class MainMenuViewModel(
         private set
 
     init {
-        getTasks()
+        getOverdueTasks()
+        getPendingTasks()
+        getActiveTasks()
         getPlaces()
         getTasksOrderByLastDone()
         getTasksOrderByUsuallyAtThisTime()
     }
 
-    private fun getTasks() {
+    private fun getActiveTasks() {
         viewModelScope.launch {
             repository.activeTasks.collectLatest {
                 state = state.copy(activeTasks = it)
+            }
+        }
+    }
+
+    private fun getOverdueTasks() {
+        viewModelScope.launch {
+            repository.overdueTasks.collectLatest {
+                state = state.copy(overdueActivators = it)
+            }
+        }
+    }
+
+    private fun getPendingTasks() {
+        viewModelScope.launch {
+            repository.pendingTasks.collectLatest {
+                state = state.copy(pendingActivators = it)
             }
         }
     }
@@ -94,5 +112,7 @@ data class MainMenuState(
     val places: List<Place> = emptyList(),
     val tasksOrderedByLastDone: List<Task> = emptyList(),
     val tasksOrderedByUsuallyAtThisTime: List<Task> = emptyList(),
+    val overdueActivators: List<Activator> = emptyList(),
+    val pendingActivators: List<Activator> = emptyList(),
     //TODO: Add other entities video 6/7
 )
