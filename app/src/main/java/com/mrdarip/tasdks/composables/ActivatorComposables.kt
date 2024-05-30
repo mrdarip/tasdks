@@ -25,7 +25,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
+import com.mrdarip.tasdks.navigation.AppScreens
 
 
 @Composable
@@ -100,6 +102,7 @@ fun EditActivatorListItem(
 fun ActivatorCardRow(
     tasks: List<Activator>,
     title: String,
+    navController: NavController
 ) {
     Text(
         text = title,
@@ -119,7 +122,9 @@ fun ActivatorCardRow(
         items(tasks) { activator ->
             ActivatorCard(
                 activator = activator,
-                onClick = {}
+                onClick = {
+                    navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
+                }
             )
         }
     }
@@ -146,6 +151,13 @@ fun ActivatorCard(activator: Activator, onClick: () -> Unit = {}) {
         )
         Text(
             text = activator.activatorId.toString(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
+        Text(
+            text = activator.taskToActivateId.toString(),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             overflow = TextOverflow.Ellipsis,
