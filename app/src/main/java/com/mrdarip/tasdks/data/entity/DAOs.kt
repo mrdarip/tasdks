@@ -167,7 +167,7 @@ class DAOs {
                 FROM activators 
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId 
                 GROUP BY activators.activatorId 
-                HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,strftime('%s', 'now') ))) < activators.maxRep
+                HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.startDate ))) < activators.maxRep * 86400
             """
         )
         fun getPending(): Flow<List<Activator>>
@@ -178,7 +178,7 @@ class DAOs {
             FROM activators
             LEFT JOIN executions ON activators.activatorId = executions.activatorId
             GROUP BY activators.activatorId
-            HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,strftime('%s', 'now') ))) > activators.maxRep
+            HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.startDate ))) > activators.maxRep * 86400
             """
         )
         fun getOverdue(): Flow<List<Activator>>
