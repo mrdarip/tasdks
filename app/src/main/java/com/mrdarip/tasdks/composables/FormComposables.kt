@@ -387,6 +387,25 @@ private fun RepetitionsRangeInput(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row {
+            Text(text = "min", modifier = Modifier.weight(1f))
+
+            TextField(
+                value = activator.repetitionRange.minRep?.toString() ?: "",
+                onValueChange = {
+                    onActivatorChanged(
+                        activator.copy(
+                            repetitionRange = activator.repetitionRange.copy(
+                                minRep = it.toDoubleOrNull()
+                            )
+                        )
+                    )
+                },
+                label = { Text(capitalized(activator.repetitionRange.repetitionType.name) + " until start") },
+                placeholder = { Text("Activator Description") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            )
+        }
+        Row {
             Text(text = "max", modifier = Modifier.weight(1f))
             TextField(
                 value = activator.repetitionRange.maxRep?.toString() ?: "",
