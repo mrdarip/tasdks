@@ -167,7 +167,7 @@ class DAOs {
                 FROM activators 
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId 
                 GROUP BY activators.activatorId 
-                HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.startDate ))) < activators.maxRep * 86400
+                HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.startDate ))) < activators.maxRep * 86400 AND (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.startDate ))) > activators.minRep * 86400
                 ORDER BY MAX(COALESCE(executions.`end`,activators.startDate )) ASC
             """
         )
