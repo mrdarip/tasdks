@@ -152,7 +152,7 @@ class DAOs {
         @Query("SELECT * FROM activators")
         fun getAllActivators(): Flow<List<Activator>>
 
-        @Query("SELECT * FROM activators WHERE NOT userCancelled AND COALESCE(endAfterDate > strftime('%s', 'now'),1) AND COALESCE(endAfterRep > (SELECT COUNT(activatorId) FROM executions GROUP BY activatorId),1)")
+        @Query("SELECT * FROM activators WHERE NOT userCancelled AND COALESCE(endAfterDateDate > strftime('%s', 'now'),1) AND COALESCE(endAfterRep > (SELECT COUNT(activatorId) FROM executions GROUP BY activatorId),1)")
         fun getActiveActivators(): Flow<List<Activator>>
 
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")

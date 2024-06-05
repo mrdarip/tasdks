@@ -39,8 +39,10 @@ enum class RepetitionType {
 
 data class RepetitionRange( //default is no start, no deadline
     val startDate: Int = 0, //when will the first repetition happen, when is MinRep //In seconds since epoch //0 as its unknown when it starts. Could also be (System.currentTimeMillis()/1000).toInt()
-    val maxRep: Double? = null,//deadline for doing it, default is no deadline
-    val minRep: Double? = null,// when can it start to be done, default is no way for doing it before you should start doing it
+    val endDate: Int = 0, //when will the first repetition end //TODO: Use it
+    val repeatsEvery: Int = 1, //how often does it repeat
+    val maxRep: Double? = null,//deadline for doing it, default is no deadline //TODO: Deprecate it
+    val minRep: Double? = null,// when can it start to be done, default is no way for doing it before you should start doing it //TODO: Deprecate it
     val repetitionType: RepetitionType = RepetitionType.DAYS
 )
 @Entity(tableName = "activators")
@@ -48,7 +50,8 @@ data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
     val comment: String? = null,
     @Embedded val repetitionRange: RepetitionRange = RepetitionRange(),
-    val endAfterDate: Int? = null, //In seconds since epoch
+    val endsAfterDate: Boolean? = null, //null as it doesn't end by default //TODO: Use it
+    val endAfterDateDate: Int? = null, //In seconds since epoch
     val endAfterRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
     val taskToActivateId: Long

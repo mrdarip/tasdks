@@ -272,7 +272,7 @@ private fun EndAfterFactorInput(
         }
 
         if (openSelectEndAfterDateDialog.value) {
-            val datePickerState = rememberDatePickerState(activator.endAfterDate?.times(1000L))
+            val datePickerState = rememberDatePickerState(activator.endAfterDateDate?.times(1000L))
             val confirmEnabled = remember {
                 derivedStateOf { datePickerState.selectedDateMillis != null }
             }
@@ -284,7 +284,7 @@ private fun EndAfterFactorInput(
                     TextButton(
                         onClick = {
                             openSelectEndAfterDateDialog.value = false
-                            onActivatorChanged(activator.copy(endAfterDate = (datePickerState.selectedDateMillis!! / 1000).toInt()))
+                            onActivatorChanged(activator.copy(endAfterDateDate = (datePickerState.selectedDateMillis!! / 1000).toInt()))
                         },
                         enabled = confirmEnabled.value
                     ) {
