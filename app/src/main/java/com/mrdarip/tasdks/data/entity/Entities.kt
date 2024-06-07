@@ -16,7 +16,8 @@ data class Task(
     val comment: String? = null, //iconEmoji can be null so later on you can know what tasks weren't given an emoji
     val iconEmoji: String? = null,
     val placeId: Long? = null,
-    val archived: Boolean = false
+    val archived: Boolean = false,
+    val createdTime: Double = System.currentTimeMillis() / 1000.0
 )
 
 @Entity(tableName = "places")
@@ -54,7 +55,8 @@ data class Activator(
     val endAfterDateDate: Int? = null, //In seconds since epoch
     val endAfterRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
-    val taskToActivateId: Long
+    val taskToActivateId: Long,
+    val createdTime: Double = System.currentTimeMillis() / 1000.0
 )
 
 @Entity(tableName = "executions")
