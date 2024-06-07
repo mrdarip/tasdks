@@ -63,6 +63,9 @@ fun PlayActivatorBodyContent(
             Button(onClick = {
                 viewModel.viewModelScope.launch(Dispatchers.IO) {
                     exit(viewModel)
+                    withContext(Dispatchers.Main) {
+                        navController.navigate(AppScreens.FirstScreen.route)
+                    }
                 }
             }) {
                 Text("Exit")
