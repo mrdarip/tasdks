@@ -97,6 +97,9 @@ class DAOs {
 
         @Query("SELECT COUNT(*) FROM TaskTaskCR WHERE parentTaskId = :taskId")
         fun taskLength(taskId: Long): Long
+
+        @Query("SELECT MAX(`end`- start) FROM executions WHERE taskId = :taskId ORDER BY `end`- start ASC LIMIT Round(((SELECT COUNT(*) FROM executions WHERE taskID = :taskId) * :percentile / 100.0),0)")
+        fun maxETA(taskId: Long, percentile: Double = 95.0): Long
     }
 
     @Dao
