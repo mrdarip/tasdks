@@ -40,7 +40,7 @@ enum class RepetitionType {
 
 data class RepetitionRange(
     val exactDateRange: Boolean = false,
-    val firstTimeDone: Int? = 0, //In seconds since epoch
+    val firstTimeDone: Int = -1, //In seconds since epoch
     //min max activators: when will the first repetition occur
     //from-to activators: null
 

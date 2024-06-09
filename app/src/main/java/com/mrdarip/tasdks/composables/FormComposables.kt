@@ -326,9 +326,10 @@ private fun StartDateInput(
             onClick = { openDialog.value = true }
         ) {
             Text(
-                text = if (activator.repetitionRange.start <= 0) "Select Start Date" else DateFormat.format(
+                text = if (activator.repetitionRange.firstTimeDone < 0) "Select Start Date"
+                else DateFormat.format(
                     "dd/MM/yyyy",
-                    Date(activator.repetitionRange.start.toLong() * 1000)
+                    Date(activator.repetitionRange.firstTimeDone.toLong() * 1000)
                 ).toString()
             )
         }
@@ -337,7 +338,7 @@ private fun StartDateInput(
 
     if (openDialog.value) {
         val datePickerState =
-            rememberDatePickerState(if (activator.repetitionRange.start == 0) null else activator.repetitionRange.start * 1000L)
+            rememberDatePickerState(if (activator.repetitionRange.firstTimeDone < 0) null else activator.repetitionRange.start * 1000L)
         val confirmEnabled = remember {
             derivedStateOf { datePickerState.selectedDateMillis != null }
         }
