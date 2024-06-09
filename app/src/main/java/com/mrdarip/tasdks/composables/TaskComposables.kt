@@ -189,7 +189,7 @@ fun TasksCardRow(
                             Activator(
                                 comment = "created for one time execution",
                                 taskToActivateId = task.taskId,
-                                endAfterRep = 1
+                                endRep = 1
                             ) //TODO: check RepetitionRange for one time repetition
                         )
 

@@ -155,7 +155,7 @@ class DAOs {
         @Query("SELECT * FROM activators")
         fun getAllActivators(): Flow<List<Activator>>
 
-        @Query("SELECT * FROM activators WHERE NOT userCancelled AND COALESCE(endAfterDateDate > strftime('%s', 'now'),1) AND COALESCE(endAfterRep > (SELECT COUNT(activatorId) FROM executions GROUP BY activatorId),1)")
+        @Query("SELECT * FROM activators WHERE NOT userCancelled AND COALESCE(endDate > strftime('%s', 'now'),1) AND COALESCE(endRep > (SELECT COUNT(activatorId) FROM executions GROUP BY activatorId),1)")
         fun getActiveActivators(): Flow<List<Activator>>
 
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
@@ -170,10 +170,16 @@ class DAOs {
                 FROM activators 
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId 
                 GROUP BY activators.activatorId 
-                HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.startDate ))) < activators.maxRep * 86400 AND (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.startDate ))) > activators.minRep * 86400
-                ORDER BY MAX(COALESCE(executions.`end`,activators.startDate )) ASC
+                HAVING 
+                    (
+                        NOT exactDateRange AND 
+                        (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.firstTimeDone ))) < activators.`end` * 86400 AND 
+                        (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.firstTimeDone ))) > activators.start * 86400
+                    ) OR
+                    (exactDateRange)
+                ORDER BY MAX(COALESCE(executions.`end`,activators.firstTimeDone )) ASC
             """
-        )
+        ) //TODO: implement querying exactDateRange pending tasks
         fun getPending(): Flow<List<Activator>>
 
         @Query(
@@ -182,10 +188,15 @@ class DAOs {
                 FROM activators
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId
                 GROUP BY activators.activatorId
-                HAVING (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.startDate ))) > activators.maxRep * 86400
-                ORDER BY MAX(COALESCE(executions.`end`,activators.startDate )) ASC
+                HAVING 
+                    (
+                        NOT exactDateRange AND 
+                        (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.firstTimeDone ))) > activators.`end` * 86400
+                    ) OR
+                    (exactDateRange)
+                ORDER BY MAX(COALESCE(executions.`end`,activators.firstTimeDone )) ASC
             """
-        )
+        ) //TODO: implement querying exactDateRange overdue tasks
         fun getOverdue(): Flow<List<Activator>>
     }
 

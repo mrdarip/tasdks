@@ -250,9 +250,9 @@ private fun EndAfterFactorInput(
     ) {
         Text(text = "Kill after repetitions")
         TextField(
-            value = activator.endAfterRep?.toString() ?: "",
+            value = activator.endRep?.toString() ?: "",
             label = { Text("End after repetitions") },
-            onValueChange = { onActivatorChanged(activator.copy(endAfterRep = it.toIntOrNull())) },
+            onValueChange = { onActivatorChanged(activator.copy(endRep = it.toIntOrNull())) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.weight(1f)
         )
@@ -272,7 +272,7 @@ private fun EndAfterFactorInput(
         }
 
         if (openSelectEndAfterDateDialog.value) {
-            val datePickerState = rememberDatePickerState(activator.endAfterDateDate?.times(1000L))
+            val datePickerState = rememberDatePickerState(activator.endDate?.times(1000L))
             val confirmEnabled = remember {
                 derivedStateOf { datePickerState.selectedDateMillis != null }
             }
@@ -284,7 +284,7 @@ private fun EndAfterFactorInput(
                     TextButton(
                         onClick = {
                             openSelectEndAfterDateDialog.value = false
-                            onActivatorChanged(activator.copy(endAfterDateDate = (datePickerState.selectedDateMillis!! / 1000).toInt()))
+                            onActivatorChanged(activator.copy(endDate = (datePickerState.selectedDateMillis!! / 1000).toInt()))
                         },
                         enabled = confirmEnabled.value
                     ) {
@@ -326,9 +326,9 @@ private fun StartDateInput(
             onClick = { openDialog.value = true }
         ) {
             Text(
-                text = if (activator.repetitionRange.startDate <= 0) "Select Start Date" else DateFormat.format(
+                text = if (activator.repetitionRange.start <= 0) "Select Start Date" else DateFormat.format(
                     "dd/MM/yyyy",
-                    Date(activator.repetitionRange.startDate.toLong() * 1000)
+                    Date(activator.repetitionRange.start.toLong() * 1000)
                 ).toString()
             )
         }
@@ -337,7 +337,7 @@ private fun StartDateInput(
 
     if (openDialog.value) {
         val datePickerState =
-            rememberDatePickerState(if (activator.repetitionRange.startDate == 0) null else activator.repetitionRange.startDate * 1000L)
+            rememberDatePickerState(if (activator.repetitionRange.start == 0) null else activator.repetitionRange.start * 1000L)
         val confirmEnabled = remember {
             derivedStateOf { datePickerState.selectedDateMillis != null }
         }
@@ -352,7 +352,7 @@ private fun StartDateInput(
                         onActivatorChanged(
                             activator.copy(
                                 repetitionRange = activator.repetitionRange.copy(
-                                    startDate = ((datePickerState.selectedDateMillis!! / 1000).toInt())
+                                    firstTimeDone = ((datePickerState.selectedDateMillis!! / 1000).toInt())
                                 )
                             )
                         )
@@ -390,12 +390,12 @@ private fun RepetitionsRangeInput(
             Text(text = "min", modifier = Modifier.weight(1f))
 
             TextField(
-                value = activator.repetitionRange.minRep?.toString() ?: "",
+                value = activator.repetitionRange.start.toString(),
                 onValueChange = {
                     onActivatorChanged(
                         activator.copy(
                             repetitionRange = activator.repetitionRange.copy(
-                                minRep = it.toDoubleOrNull()
+                                start = it.toIntOrNull() ?: 0
                             )
                         )
                     )
@@ -408,12 +408,12 @@ private fun RepetitionsRangeInput(
         Row {
             Text(text = "max", modifier = Modifier.weight(1f))
             TextField(
-                value = activator.repetitionRange.maxRep?.toString() ?: "",
+                value = activator.repetitionRange.end.toString(),
                 onValueChange = {
                     onActivatorChanged(
                         activator.copy(
                             repetitionRange = activator.repetitionRange.copy(
-                                maxRep = it.toDoubleOrNull()
+                                end = it.toIntOrNull() ?: 0
                             )
                         )
                     )

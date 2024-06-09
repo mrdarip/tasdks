@@ -54,10 +54,10 @@ fun CreateActivatorBodyContent(
                 Activator(
                     comment = null,
                     taskToActivateId = -1,
-                    endAfterDateDate = null,
+                    endDate = null,
                     userCancelled = false,
                     repetitionRange = RepetitionRange(),
-                    endAfterRep = null
+                    endRep = null
                 )
             )
         }

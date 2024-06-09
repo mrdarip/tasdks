@@ -38,12 +38,22 @@ enum class RepetitionType {
     MINUTES, HOURS, DAYS, WEEKS, MONTHS, YEARS//TODO Check how to manage time repetition vs date repetition ( a date is millis since epoch...)
 }
 
-data class RepetitionRange( //default is no start, no deadline
-    val startDate: Int = 0, //when will the first repetition happen, when is MinRep //In seconds since epoch //0 as its unknown when it starts. Could also be (System.currentTimeMillis()/1000).toInt()
-    val endDate: Int = 0, //when will the first repetition end //TODO: Use it
-    val repeatsEvery: Int = 1, //how often does it repeat
-    val maxRep: Double? = null,//deadline for doing it, default is no deadline //TODO: Deprecate it
-    val minRep: Double? = null,// when can it start to be done, default is no way for doing it before you should start doing it //TODO: Deprecate it
+data class RepetitionRange(
+    val exactDateRange: Boolean = false,
+    val firstTimeDone: Int? = 0, //In seconds since epoch
+    //min max activators: when will the first repetition occur
+    //from-to activators: null
+
+    val start: Int = 0, //In seconds since epoch
+    //min-max activators: min
+    //from-to activators: from
+    val end: Int = 0,
+    //min-max activators: max
+    //from-to activators: to
+
+    val repeatsEvery: Int = 1, //how often does it repeat, mustn't be <= 0
+    //min-max activators: null
+    //from-to activators:
     val repetitionType: RepetitionType = RepetitionType.DAYS
 )
 @Entity(tableName = "activators")
@@ -52,8 +62,8 @@ data class Activator(
     val comment: String? = null,
     @Embedded val repetitionRange: RepetitionRange = RepetitionRange(),
     val endsAfterDate: Boolean? = null, //null as it doesn't end by default //TODO: Use it
-    val endAfterDateDate: Int? = null, //In seconds since epoch
-    val endAfterRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
+    val endDate: Int? = null, //In seconds since epoch
+    val endRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
     val taskToActivateId: Long,
     val createdTime: Double = System.currentTimeMillis() / 1000.0
