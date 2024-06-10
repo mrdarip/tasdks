@@ -34,7 +34,7 @@ data class Object(
     val placeId: Long? = null
 )
 
-enum class RepetitionType {
+enum class RepetitionUnit {
     MINUTES, HOURS, DAYS, WEEKS, MONTHS, YEARS//TODO Check how to manage time repetition vs date repetition ( a date is millis since epoch...)
 }
 
@@ -54,7 +54,7 @@ data class RepetitionRange(
     val repeatsEvery: Int = 1, //how often does it repeat, mustn't be <= 0
     //min-max activators: null
     //from-to activators:
-    val repetitionType: RepetitionType = RepetitionType.DAYS
+    val repetitionUnit: RepetitionUnit = RepetitionUnit.DAYS
 )
 @Entity(tableName = "activators")
 data class Activator(

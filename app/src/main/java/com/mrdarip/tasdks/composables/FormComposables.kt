@@ -31,6 +31,9 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -46,7 +49,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mrdarip.tasdks.data.entity.Activator
-import com.mrdarip.tasdks.data.entity.RepetitionType
+import com.mrdarip.tasdks.data.entity.RepetitionUnit
 import com.mrdarip.tasdks.data.entity.Task
 import java.util.Date
 import java.util.Locale
@@ -122,6 +125,7 @@ fun ActivatorFields(
         StartDateInput(activator, onActivatorChanged)
         HorizontalDivider()
 
+        RepetitionTypeInput(activator, onActivatorChanged)
         RepetitionUnitInput(activator, onActivatorChanged)
         RepetitionsRangeInput(activator, onActivatorChanged)
         HorizontalDivider()
@@ -152,6 +156,38 @@ private fun ActivatorDescriptionInput(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RepetitionTypeInput(
+    activator: Activator,
+    onActivatorChanged: (Activator) -> Unit
+) {
+    var selectedIndex = if (activator.repetitionRange.exactDateRange) 0 else 1
+    val options = listOf("Date", "Time")
+    Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+        SingleChoiceSegmentedButtonRow {
+            options.forEachIndexed { index, label ->
+                SegmentedButton(
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
+                    onClick = {
+                        selectedIndex = index
+                        onActivatorChanged(
+                            activator.copy(
+                                repetitionRange = activator.repetitionRange.copy(
+                                    exactDateRange = (index == 0)
+                                )
+                            )
+                        )
+                    },
+                    selected = index == selectedIndex
+                ) {
+                    Text(label)
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun RepetitionUnitInput(
     activator: Activator,
@@ -161,14 +197,14 @@ private fun RepetitionUnitInput(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        items(RepetitionType.entries) { option ->
-            val selected = activator.repetitionRange.repetitionType == option
+        items(RepetitionUnit.entries) { option ->
+            val selected = activator.repetitionRange.repetitionUnit == option
             FilterChip(
                 onClick = {
                     onActivatorChanged(
                         activator.copy(
                             repetitionRange = activator.repetitionRange.copy(
-                                repetitionType = option
+                                repetitionUnit = option
                             )
                         )
                     )
@@ -407,7 +443,7 @@ private fun RepetitionsRangeInput(
                         )
                     )
                 },
-                label = { Text(capitalized(activator.repetitionRange.repetitionType.name) + " until start") },
+                label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until start") },
                 placeholder = { Text("Activator Description") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
@@ -425,7 +461,7 @@ private fun RepetitionsRangeInput(
                         )
                     )
                 },
-                label = { Text(capitalized(activator.repetitionRange.repetitionType.name) + " until deadline") },
+                label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until deadline") },
                 placeholder = { Text("Activator Description") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
