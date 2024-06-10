@@ -268,7 +268,13 @@ private fun EndAfterFactorInput(
             onClick = { openSelectEndAfterDateDialog.value = true },
             modifier = Modifier.weight(1f)
         ) {
-            Text(text = "Select End Date")
+            Text(
+                text = if (activator.endDate == null || activator.endDate < 0) "Select End Date"
+                else DateFormat.format(
+                    "dd/MM/yyyy",
+                    Date(activator.endDate.toLong() * 1000)
+                ).toString()
+            )
         }
 
         if (openSelectEndAfterDateDialog.value) {
