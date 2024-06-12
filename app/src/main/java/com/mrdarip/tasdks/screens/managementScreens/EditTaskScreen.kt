@@ -20,12 +20,10 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,16 +58,6 @@ fun EditTaskBodyContent(
         )
     )
 
-    var name by rememberSaveable { mutableStateOf("") }
-    var comment by rememberSaveable { mutableStateOf("") }
-    var iconEmoji by rememberSaveable { mutableStateOf("") }
-
-    LaunchedEffect(task) {
-        name = task.name
-        comment = task.comment ?: ""
-        iconEmoji = task.iconEmoji ?: ""
-    }
-
     val parentTasks = editTaskViewModel.getParentTasksOfTask(taskId)
         .collectAsState(initial = emptyList()).value
     val subTasks =
@@ -81,12 +69,7 @@ fun EditTaskBodyContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Edit task", style = MaterialTheme.typography.headlineMedium)
-        TaskFields(taskName = name,
-            taskEmoji = iconEmoji,
-            taskComment = comment,
-            onTaskNameChange = { name = it },
-            onTaskEmojiChange = { iconEmoji = it },
-            onTaskCommentChange = { comment = it })
+        TaskFields(task)
 
         if (parentTasks.isNotEmpty()) {
             Text(text = "Parent tasks", style = MaterialTheme.typography.headlineSmall)
@@ -124,11 +107,7 @@ fun EditTaskBodyContent(
 
             Button(onClick = {
                 editTaskViewModel.upsertTask(
-                    task.copy(
-                        name = name,
-                        comment = comment.ifBlank { null },
-                        iconEmoji = iconEmoji.ifBlank { null },
-                    )
+                    task
                 )
                 navController.popBackStack()
             }) {
@@ -205,27 +184,15 @@ fun EditTasksBottomSheet(
                         })
                 } else {
 
-                    var name by remember { mutableStateOf("") }
-                    var emoji by remember { mutableStateOf("") }
-                    var comment by remember { mutableStateOf("") }
+                    var newTask by remember { mutableStateOf(Task()) }
 
                     TaskFields(
-                        taskName = name,
-                        taskEmoji = emoji,
-                        taskComment = comment,
-                        onTaskNameChange = { name = it },
-                        onTaskEmojiChange = { emoji = it },
-                        onTaskCommentChange = { comment = it }
+                        newTask
                     )
 
                     Button(onClick = {
                         editTaskViewModel.addTaskAsLastSubTask(
-                            Task(
-                                name = name,
-                                iconEmoji = emoji.ifBlank { null },
-                                comment = comment.ifBlank { null },
-                                placeId = null
-                            ),
+                            newTask,
                             taskId
                         )
                         addingTask = false

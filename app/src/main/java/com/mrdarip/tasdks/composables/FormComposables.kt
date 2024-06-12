@@ -56,38 +56,35 @@ import java.util.Locale
 
 
 @Composable
+@Preview
 fun TaskFields(
-    taskName: String = "test",
-    taskEmoji: String = "🍀",
-    taskComment: String = "comment test",
-    onTaskNameChange: (String) -> Unit = {},
-    onTaskEmojiChange: (String) -> Unit = {},
-    onTaskCommentChange: (String) -> Unit = {}
+    task: Task = Task(),
+    onTaskChange: (Task) -> Unit = {}
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TextField(
-                value = taskName,
-                onValueChange = { onTaskNameChange(it) },
+                value = task.name,
+                onValueChange = { onTaskChange(task.copy(name = it)) },
                 label = { Text("Name") },
                 placeholder = { Text("Task name") },
                 modifier = Modifier.weight(3f),
                 singleLine = true
             )
             TextField(
-                value = taskEmoji,
-                onValueChange = { onTaskEmojiChange(it) },
+                value = task.iconEmoji.orEmpty(),
+                onValueChange = { onTaskChange(task.copy(iconEmoji = it.ifBlank { null })) },
                 label = { Text("Emoji") },
                 placeholder = { Text("😃") },
                 modifier = Modifier.weight(1f),
-                isError = !isValidEmoji(taskEmoji)
+                isError = !isValidEmoji(task.iconEmoji.orEmpty())
             )
         }
         TextField(
-            value = taskComment,
-            onValueChange = { onTaskCommentChange(it) },
+            value = task.comment.orEmpty(),
+            onValueChange = { onTaskChange(task.copy(comment = it.ifBlank { null })) },
             label = { Text("Comment") },
             placeholder = { Text("Task comment") },
             modifier = Modifier.fillMaxWidth()
@@ -110,7 +107,6 @@ fun getLength(emoji: String?): Int {
 }
 
 
-@Preview
 @Composable
 fun ActivatorFields(
     activator: Activator = Activator(taskToActivateId = -1),

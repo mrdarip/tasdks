@@ -31,30 +31,16 @@ fun CreateTaskScreen(navController: NavController) {
 
 @Composable
 fun CreateTaskBodyContent(navController: NavController, createTaskViewModel: CreateTaskViewModel) {
-    var name by remember { mutableStateOf("") }
-    var emoji by remember { mutableStateOf("") }
-    var comment by remember { mutableStateOf("") }
+    var task by remember { mutableStateOf(Task()) }
     Column(verticalArrangement = Arrangement.SpaceAround) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text(text = "Create task", style = MaterialTheme.typography.headlineLarge)
             TaskFields(
-                taskName = name,
-                taskEmoji = emoji,
-                taskComment = comment,
-                onTaskNameChange = { name = it },
-                onTaskEmojiChange = { emoji = it },
-                onTaskCommentChange = { comment = it }
+                task
             )
         }
         Button(onClick = {
-            createTaskViewModel.insertTask(
-                Task(
-                    name = name,
-                    comment = comment.ifBlank { null },
-                    iconEmoji = emoji.ifBlank { null },
-                    placeId = null
-                )
-            )
+            createTaskViewModel.insertTask(task)
         }
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Add Task")
