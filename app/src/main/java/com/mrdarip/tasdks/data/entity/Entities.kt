@@ -17,7 +17,10 @@ data class Task(
     val iconEmoji: String? = null,
     val placeId: Long? = null,
     val archived: Boolean = false,
-    val createdTime: Double = System.currentTimeMillis() / 1000.0
+    val createdTime: Double = System.currentTimeMillis() / 1000.0,
+
+    val isPlaylist: Boolean = false,
+    val waitTime: Int = 0, //In seconds
 )
 
 @Entity(tableName = "places")
@@ -56,6 +59,7 @@ data class RepetitionRange(
     //from-to activators:
     val repetitionUnit: RepetitionUnit = RepetitionUnit.DAYS
 )
+
 @Entity(tableName = "activators")
 data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
