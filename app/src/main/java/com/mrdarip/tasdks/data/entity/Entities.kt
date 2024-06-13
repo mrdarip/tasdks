@@ -12,7 +12,7 @@ import java.util.Date
 @Entity(tableName = "tasks")
 data class Task(
     @PrimaryKey(autoGenerate = true) val taskId: Long = 0,
-    var name: String = "Task " + Date(System.currentTimeMillis()).toString(),
+    var name: String = "",
     val comment: String? = null, //iconEmoji can be null so later on you can know what tasks weren't given an emoji
     val iconEmoji: String? = null,
     val placeId: Long? = null,

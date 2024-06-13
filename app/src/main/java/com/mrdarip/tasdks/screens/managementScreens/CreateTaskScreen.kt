@@ -36,7 +36,8 @@ fun CreateTaskBodyContent(navController: NavController, createTaskViewModel: Cre
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text(text = "Create task", style = MaterialTheme.typography.headlineLarge)
             TaskFields(
-                task
+                task = task,
+                onTaskChange = { task = it }
             )
         }
         Button(onClick = {

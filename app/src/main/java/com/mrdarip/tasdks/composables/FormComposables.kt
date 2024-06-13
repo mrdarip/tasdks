@@ -23,6 +23,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +43,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
@@ -89,6 +91,22 @@ fun TaskFields(
             placeholder = { Text("Task comment") },
             modifier = Modifier.fillMaxWidth()
         )
+
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "is playlist")
+            Checkbox(
+                checked = task.isPlaylist,
+                onCheckedChange = { onTaskChange(task.copy(isPlaylist = it)) }
+            )
+        }
+        if (!task.isPlaylist) {
+            TextField(
+                value = task.waitTime.toString(),
+                onValueChange = { onTaskChange(task.copy(waitTime = it.toIntOrNull() ?: 0)) },
+                label = { Text("Wait time") },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 

@@ -69,7 +69,11 @@ fun EditTaskBodyContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Edit task", style = MaterialTheme.typography.headlineMedium)
-        TaskFields(task)
+        TaskFields(task,
+            onTaskChange = {
+                editTaskViewModel.upsertTask(it)
+            } //TODO: upsert only when the save button is clicked
+        )
 
         if (parentTasks.isNotEmpty()) {
             Text(text = "Parent tasks", style = MaterialTheme.typography.headlineSmall)
@@ -187,7 +191,8 @@ fun EditTasksBottomSheet(
                     var newTask by remember { mutableStateOf(Task()) }
 
                     TaskFields(
-                        newTask
+                        task = newTask,
+                        onTaskChange = { newTask = it }
                     )
 
                     Button(onClick = {
