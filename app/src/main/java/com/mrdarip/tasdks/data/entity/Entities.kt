@@ -19,8 +19,9 @@ data class Task(
     val archived: Boolean = false,
     val createdTime: Double = System.currentTimeMillis() / 1000.0,
 
-    val isPlaylist: Boolean = false,
-    val waitTime: Int = 0, //In seconds
+    val isPlaylist: Boolean = false, //for tasks that allow skipping its direct subtasks
+    val waitTime: Int = 0, //In seconds //for tasks that need waiting until you can do the next task
+    val allowParallelTasks: Boolean = false, //for tasks that can be done at the same time as other tasks
 )
 
 @Entity(tableName = "places")
