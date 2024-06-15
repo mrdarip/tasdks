@@ -300,7 +300,6 @@ private fun SelectActivatedTaskInput(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun EndAfterFactorInput(
     activator: Activator,
     onActivatorChanged: (Activator) -> Unit
@@ -322,66 +321,18 @@ private fun EndAfterFactorInput(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        val openSelectEndAfterDateDialog = remember { mutableStateOf(false) }
-
         Text(text = "Kill after date")
-        Button(
-            onClick = { openSelectEndAfterDateDialog.value = true },
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = if (activator.endDate == null || activator.endDate < 0) "Select End Date"
-                else DateFormat.format(
-                    "dd/MM/yyyy",
-                    Date(activator.endDate.toLong() * 1000)
-                ).toString()
-            )
-        }
-
-        if (openSelectEndAfterDateDialog.value) {
-            val datePickerState = rememberDatePickerState(activator.endDate?.times(1000L))
-            val confirmEnabled = remember {
-                derivedStateOf { datePickerState.selectedDateMillis != null }
-            }
-            DatePickerDialog(
-                onDismissRequest = {
-                    openSelectEndAfterDateDialog.value = false
-                },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            openSelectEndAfterDateDialog.value = false
-                            onActivatorChanged(activator.copy(endDate = (datePickerState.selectedDateMillis!! / 1000).toInt()))
-                        },
-                        enabled = confirmEnabled.value
-                    ) {
-                        Text("OK")
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            openSelectEndAfterDateDialog.value = false
-                        }
-                    ) {
-                        Text("Cancel")
-                    }
-                }
-            ) {
-                DatePicker(state = datePickerState)
-            }
-        }
+        DateInput(
+            date = activator.endDate ?: -1,
+            onDateChanged = { onActivatorChanged(activator.copy(endDate = if (it < 0) null else it)) })
     }
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun StartDateInput(
     activator: Activator,
     onActivatorChanged: (Activator) -> Unit
 ) {
-    val openDialog = remember { mutableStateOf(false) }
-
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -389,23 +340,38 @@ private fun StartDateInput(
             .padding(horizontal = 16.dp)
     ) {
         Text("START:")
-        Button(
-            onClick = { openDialog.value = true }
-        ) {
-            Text(
-                text = if (activator.repetitionRange.firstTimeDone < 0) "Select Start Date"
-                else DateFormat.format(
-                    "dd/MM/yyyy",
-                    Date(activator.repetitionRange.firstTimeDone.toLong() * 1000)
-                ).toString()
-            )
-        }
-    }
 
+        DateInput(activator.repetitionRange.firstTimeDone, onDateChanged = {
+            onActivatorChanged(
+                activator.copy(repetitionRange = activator.repetitionRange.copy(firstTimeDone = it))
+            )
+        })
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun DateInput(
+    date: Int,
+    onDateChanged: (Int) -> Unit
+) {
+    val openDialog = remember { mutableStateOf(false) }
+
+    Button(
+        onClick = { openDialog.value = true }
+    ) {
+        Text(
+            text = if (date < 0) "Select Date"
+            else DateFormat.format(
+                "dd/MM/yyyy",
+                Date(date.toLong() * 1000)
+            ).toString()
+        )
+    }
 
     if (openDialog.value) {
         val datePickerState =
-            rememberDatePickerState(if (activator.repetitionRange.firstTimeDone < 0) null else activator.repetitionRange.start * 1000L)
+            rememberDatePickerState(if (date < 0) null else date * 1000L)
         val confirmEnabled = remember {
             derivedStateOf { datePickerState.selectedDateMillis != null }
         }
@@ -417,12 +383,8 @@ private fun StartDateInput(
                 TextButton(
                     onClick = {
                         openDialog.value = false
-                        onActivatorChanged(
-                            activator.copy(
-                                repetitionRange = activator.repetitionRange.copy(
-                                    firstTimeDone = ((datePickerState.selectedDateMillis!! / 1000).toInt())
-                                )
-                            )
+                        onDateChanged(
+                            (datePickerState.selectedDateMillis!! / 1000).toInt()
                         )
                     },
                     enabled = confirmEnabled.value
