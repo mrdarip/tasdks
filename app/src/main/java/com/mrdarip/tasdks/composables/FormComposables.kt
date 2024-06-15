@@ -106,6 +106,17 @@ fun TaskFields(
                 label = { Text("Wait time") },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "allow running parallel tasks")
+                Checkbox(
+                    checked = task.allowParallelTasks,
+                    onCheckedChange = { onTaskChange(task.copy(allowParallelTasks = it)) }
+                )
+            }
         }
     }
 }
