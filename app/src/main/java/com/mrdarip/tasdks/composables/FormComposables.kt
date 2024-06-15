@@ -361,7 +361,7 @@ private fun DateInput(
         onClick = { openDialog.value = true }
     ) {
         Text(
-            text = if (date < 0) "Select Date"
+            text = if (date <= 0) "Select Date"
             else DateFormat.format(
                 "dd/MM/yyyy",
                 Date(date.toLong() * 1000)
@@ -371,7 +371,7 @@ private fun DateInput(
 
     if (openDialog.value) {
         val datePickerState =
-            rememberDatePickerState(if (date < 0) null else date * 1000L)
+            rememberDatePickerState(if (date <= 0) null else date * 1000L)
         val confirmEnabled = remember {
             derivedStateOf { datePickerState.selectedDateMillis != null }
         }
@@ -417,41 +417,68 @@ private fun RepetitionsRangeInput(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row {
-            Text(text = "min", modifier = Modifier.weight(1f))
+            Text(
+                text = if (activator.repetitionRange.exactDateRange) "start" else "min",
+                modifier = Modifier.weight(1f)
+            )
 
-            TextField(
-                value = activator.repetitionRange.start.toString(),
-                onValueChange = {
-                    onActivatorChanged(
-                        activator.copy(
-                            repetitionRange = activator.repetitionRange.copy(
-                                start = it.toIntOrNull() ?: 0
+            if (activator.repetitionRange.exactDateRange) {
+                DateInput(
+                    date = activator.repetitionRange.start,
+                    onDateChanged = {
+                        onActivatorChanged(
+                            activator.copy(
+                                repetitionRange = activator.repetitionRange.copy(start = it)
                             )
                         )
-                    )
-                },
-                label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until start") },
-                placeholder = { Text("Activator Description") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-            )
+                    })
+            } else {
+                TextField(
+                    value = activator.repetitionRange.start.toString(),
+                    onValueChange = {
+                        onActivatorChanged(
+                            activator.copy(
+                                repetitionRange = activator.repetitionRange.copy(
+                                    start = it.toIntOrNull() ?: 0
+                                )
+                            )
+                        )
+                    },
+                    label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until start") },
+                    placeholder = { Text("Activator Description") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                )
+            }
         }
         Row {
             Text(text = "max", modifier = Modifier.weight(1f))
-            TextField(
-                value = activator.repetitionRange.end.toString(),
-                onValueChange = {
-                    onActivatorChanged(
-                        activator.copy(
-                            repetitionRange = activator.repetitionRange.copy(
-                                end = it.toIntOrNull() ?: 0
+            if (activator.repetitionRange.exactDateRange) {
+                DateInput(
+                    date = activator.repetitionRange.end,
+                    onDateChanged = {
+                        onActivatorChanged(
+                            activator.copy(
+                                repetitionRange = activator.repetitionRange.copy(end = it)
                             )
                         )
-                    )
-                },
-                label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until deadline") },
-                placeholder = { Text("Activator Description") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-            )
+                    })
+            } else {
+                TextField(
+                    value = activator.repetitionRange.end.toString(),
+                    onValueChange = {
+                        onActivatorChanged(
+                            activator.copy(
+                                repetitionRange = activator.repetitionRange.copy(
+                                    end = it.toIntOrNull() ?: 0
+                                )
+                            )
+                        )
+                    },
+                    label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until deadline") },
+                    placeholder = { Text("Activator Description") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                )
+            }
         }
     }
 }
