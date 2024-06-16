@@ -176,7 +176,15 @@ class DAOs {
                         (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.firstTimeDone ))) < activators.`end` * 86400 AND 
                         (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.firstTimeDone ))) > activators.start * 86400
                     ) OR
-                    (exactDateRange)
+                    (
+                        exactDateRange AND 
+                        (
+                            repetitionUnit = 'MONTHS' AND
+                            strftime('%d', 'now') > strftime('%d', activators.start, 'unixepoch') AND
+                            strftime('%d', 'now') < strftime('%d', activators.`end`, 'unixepoch') AND
+                            strftime('%Y%m', 'now') NOT IN (SELECT strftime('%Y%m', `end`,'unixepoch') FROM executions WHERE activators.activatorId = executions.activatorId)
+                        )
+                    )
                 ORDER BY MAX(COALESCE(executions.`end`,activators.firstTimeDone )) ASC
             """
         ) //TODO: implement querying exactDateRange pending tasks
