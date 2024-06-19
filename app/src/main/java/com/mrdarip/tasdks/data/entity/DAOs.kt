@@ -179,10 +179,18 @@ class DAOs {
                     (
                         exactDateRange AND 
                         (
-                            repetitionUnit = 'MONTHS' AND
-                            strftime('%d', 'now') > strftime('%d', activators.start, 'unixepoch') AND
-                            strftime('%d', 'now') < strftime('%d', activators.`end`, 'unixepoch') AND
-                            strftime('%Y%m', 'now') NOT IN (SELECT strftime('%Y%m', `end`,'unixepoch') FROM executions WHERE activators.activatorId = executions.activatorId)
+                            (
+                                repetitionUnit = 'MONTHS' AND
+                                strftime('%d', 'now') > strftime('%d', activators.start, 'unixepoch') AND
+                                strftime('%d', 'now') < strftime('%d', activators.`end`, 'unixepoch') AND
+                                strftime('%Y%m', 'now') NOT IN (SELECT strftime('%Y%m', `end`,'unixepoch') FROM executions WHERE activators.activatorId = executions.activatorId)
+                            ) OR
+                            (
+                                repetitionUnit = 'YEARS' AND
+                                strftime('%d', 'now') > strftime('%d', activators.start, 'unixepoch') AND
+                                strftime('%m', 'now') > strftime('%m', activators.start, 'unixepoch') AND
+                                strftime('%Y', 'now') NOT IN (SELECT strftime('%Y', `end`,'unixepoch') FROM executions WHERE activators.activatorId = executions.activatorId)
+                            )
                         )
                     )
                 ORDER BY MAX(COALESCE(executions.`end`,activators.firstTimeDone )) ASC
