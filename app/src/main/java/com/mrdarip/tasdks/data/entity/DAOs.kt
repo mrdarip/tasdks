@@ -169,6 +169,7 @@ class DAOs {
                 SELECT activators.* 
                 FROM activators 
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId 
+                WHERE activators.userCancelled = 0
                 GROUP BY activators.activatorId 
                 HAVING 
                     (
@@ -203,6 +204,7 @@ class DAOs {
                 SELECT activators.*
                 FROM activators
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId
+                WHERE activators.userCancelled = 0
                 GROUP BY activators.activatorId
                 HAVING 
                     (
