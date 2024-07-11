@@ -188,9 +188,11 @@ class DAOs {
                             ) OR
                             (
                                 repetitionUnit = 'YEARS' AND
-                                strftime('%d', 'now') > strftime('%d', activators.start, 'unixepoch') AND
-                                strftime('%m', 'now') > strftime('%m', activators.start, 'unixepoch') AND
-                                strftime('%Y', 'now') NOT IN (SELECT strftime('%Y', `end`,'unixepoch') FROM executions WHERE activators.activatorId = executions.activatorId)
+                                datetime(
+                                    activators.`end`, 'unixepoch', (substr(timediff('now',datetime(activators.`end`, 'unixepoch')),1,5)+1)|| ' years',
+                                    '-'|| 
+                                    datetime( activators.start, 'unixepoch', (substr(timediff('now',datetime( activators.start, 'unixepoch')),1,5)+0)|| ' years')
+                                )
                             )
                         )
                     )
