@@ -18,3 +18,12 @@ Don't ever forget any steps of a task, neither underestimate its duration
 | Pomodoro     | tasks are distributed in 25 min work - 5 min rest periods, the 3º cycle, a 15 min rest period instead of 5 |                                                                                                 |                                                                                                                                                                                         |
 | FlowTime     |                                                                                                            |                                                                                                 |                                                                                                                                                                                         |
 |              |                                                                                                            |                                                                                                 |                                                                                                                                                                                         |
+
+## Elements used by the app
+
+The app uses 2 elements
+- Tasks:  
+  - If a task has any subtask, then is a group.
+  - If a task has no subtasks, then is a final task, which the user will be actually be asked to do
+- Activators:
+  - Element that allows defining when should a task be done
