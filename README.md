@@ -27,3 +27,10 @@ The app uses 2 elements
   - If a task has no subtasks, then is a final task, which the user will be actually be asked to do
 - Activators:
   - Element that allows defining when should a task be done
+
+## Creating tasks and activators tips
+
+- A final task should only ask the user to do ONE task, else it should be a group, whose subtasks are those tasks independently
+  - for example, `shower and dry`, should be divided into 3 tasks, a parent `take a shower`, and its two children, `shower` and `dry`
+- If a final task doesn't specify in a clear way, then it should be a group with subtasks of the task making it clearer
+- If you always forget a step on a task you should add that step as a task, with the task it belongs to as its parent
