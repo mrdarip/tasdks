@@ -22,15 +22,29 @@ Don't ever forget any steps of a task, neither underestimate its duration
 ## Elements used by the app
 
 The app uses 2 elements
-- Tasks:  
-  - If a task has any subtask, then is a group.
-  - If a task has no subtasks, then is a final task, which the user will be actually be asked to do
+
+- Tasks:
+  - There are two types of tasks:
+    - Group tasks: tasks that has subtasks
+    - Final task: tasks which the user will be actually be asked to do, can't have subtasks, as it
+      would be a group
 - Activators:
   - Element that allows defining when should a task be done
+  - There exists two types of activators
+    - Date activators:   
+      For tasks that must be executed in exact dates, like birthdays, monthly payments, etc.
+    - Time activators:  
+      For tasks that must be executed in relative date ranges, like daily or weekly
 
 ## Creating tasks and activators tips
 
+- A task should be highly reusable, so it should be generic and modular, so it can be used in
+  different contexts.
+  Is recommended to put the not specific steps in a brother task
+  - for example, if you have `shave` as a subtask of `take a shower`, you should create the
+    task `shower and shave`, with the subtasks `take a shower` and `shave`
 - A final task should only ask the user to do ONE task, else it should be a group, whose subtasks are those tasks independently
-  - for example, `shower and dry`, should be divided into 3 tasks, a parent `take a shower`, and its two children, `shower` and `dry`
+  - for example, the final task `shower and dry`, should be divided into 3 tasks, a
+    parent `take a shower`, and its two children, `shower` and `dry`
 - If a final task doesn't specify in a clear way, then it should be a group with subtasks of the task making it clearer
 - If you always forget a step on a task you should add that step as a task, with the task it belongs to as its parent
