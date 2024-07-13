@@ -38,6 +38,12 @@ The app uses 2 elements
 
 ## Creating tasks and activators tips
 
+- When naming a task it should allow:
+  - Recognise what its subtasks are, 
+  - Be descriptive enought so you can find it, for example, when creating an activator.
+  - Be short enought so you can quickly read it when executing an activator
+  - Be decriptive enought so you can know exactly what you have to do  
+  You should only use the description field when its scrictly needed, in most cases you might want to create subtasks or improve tasks naming, the execution time is reduced if the user has tu read less.
 - A task should be highly reusable, so it should be generic and modular, so it can be used in
   different contexts.
   Is recommended to put the not specific steps in a brother task
