@@ -188,11 +188,8 @@ class DAOs {
                             ) OR
                             (
                                 repetitionUnit = 'YEARS' AND
-                                datetime(
-                                    activators.`end`, 'unixepoch', (substr(timediff('now',datetime(activators.`end`, 'unixepoch')),1,5)+1)|| ' years',
-                                    '-'|| 
-                                    datetime( activators.start, 'unixepoch', (substr(timediff('now',datetime( activators.start, 'unixepoch')),1,5)+0)|| ' years')
-                                )
+                                dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
+                                dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years')
                             )
                         )
                     )
