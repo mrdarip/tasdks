@@ -39,16 +39,21 @@ The app uses 2 elements
 ## Creating tasks and activators tips
 
 - When naming a task it should allow:
-  - Recognise what its subtasks are, 
+  - Recognise what its subtasks are 
   - Be descriptive enought so you can find it, for example, when creating an activator.
   - Be short enought so you can quickly read it when executing an activator
-  - Be decriptive enought so you can know exactly what you have to do  
+  - Be decriptive enought so you can know exactly what you have to do without thinking about it  
   You should only use the description field when its scrictly needed, in most cases you might want to create subtasks or improve tasks naming, the execution time is reduced if the user has tu read less.
+  It's recommended to use it for describing specific data, such as hard to convert quantities, for example `make rice on the microwave` would have the subtask `put water in the bowl`, but the user may not know how much is "water", so as the task description you may want to put:  
+  ```
+  1 serving -> 120 ml  
+  2 servings -> 330 ml
+  3 servings -> 450 ml```
 - A task should be highly reusable, so it should be generic and modular, so it can be used in
-  different contexts.
+  different contexts.  
   Is recommended to put the not specific steps in a brother task
   - for example, if you have `shave` as a subtask of `take a shower`, you should create the
-    task `shower and shave`, with the subtasks `take a shower` and `shave`
+    task `shower and shave`, with two direct subtasks, `take a shower` and `shave`
 - A final task should only ask the user to do ONE task, else it should be a group, whose subtasks are those tasks independently
   - for example, the final task `shower and dry`, should be divided into 3 tasks, a
     parent `take a shower`, and its two children, `shower` and `dry`
