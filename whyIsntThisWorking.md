@@ -15,4 +15,11 @@ select dateTime('2034-02-01 00:00', '-' || abs(strftime('%Y','now') - strftime('
 dateTime('2034-02-02 00:00', '-' || abs(strftime('%Y','now') - strftime('%Y','2034-02-01 00:00')) || ' years')
 ```
 
-this query returns the dates on current year
+this query returns the dates on current year, lets try now comparing with current date
+
+dateTime('now') > dateTime('2034-02-01 00:00', '-' || abs(strftime('%Y','now') - strftime('%Y','
+2034-02-01 00:00')) || ' years') AND
+dateTime('now')  < dateTime('2034-02-02 00:00', '-' || abs(strftime('%Y','now') - strftime('%Y','
+2034-02-01 00:00')) || ' years')
+
+this query returns if we are in the range of 2034-02-01 00:00 and 2034-02-02 00:00
