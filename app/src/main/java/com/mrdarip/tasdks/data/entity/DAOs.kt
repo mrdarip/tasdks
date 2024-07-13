@@ -189,7 +189,13 @@ class DAOs {
                             (
                                 repetitionUnit = 'YEARS' AND
                                 dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
-                                dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+                                dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
+                                (
+                                    SELECT COUNT(*) FROM executions WHERE 
+                                        activators.activatorId = executions.activatorId AND
+                                        dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
+                                        dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+                                ) = 0
                             )
                         )
                     )
