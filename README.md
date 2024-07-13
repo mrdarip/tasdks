@@ -1,14 +1,15 @@
 # Tasdks
 
-Don't ever forget any steps of a task, neither underestimate its duration
+Don't ever forget any steps of a task, neither underestimate its duration.
+Add everything you want to have done, like sweeping th floor or playing the piano! The app will learn from you and distribute all your tasks for every day!
 
 ## Features
 
-- Organise and simplify your tasks
-- Remember you overdue tasks
-- Predict duration of tasks
-- Flatern tasks loads between days
-- Provide alerts, encouraging the user to finish their tasks
+- Organise and simplify your tasks.
+- Remember you overdue tasks.
+- Predict duration of tasks.
+- Flatern tasks loads between days.
+- Provide alerts, encouraging the user to finish their pending tasks.
 
 ## Based on
 
@@ -63,3 +64,14 @@ The app uses 2 elements:
     parent `take a shower`, and its two children, `shower` and `dry`
 - If a final task doesn't specify in a clear way what has to be done, then it should be a group with subtasks of the task making it clearer.
 - If you always forget a step on a task you should add that step as a task, with the task it belongs to as its parent.
+
+## Pending features
+- Complete all screens layouts
+  - Play activator screen
+  - Create activator screen
+  - Modify activator screen
+  - Main screen
+- Create more screens
+  - stats screens
+- Complete querying overdue and pending date activators
+- Remove Place and Object entities, maybe Resource too as probably the user should use no resource at all? reject dopamine embrace watching the tasdks execution activator screen
