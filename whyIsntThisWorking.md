@@ -39,3 +39,27 @@ so you no longer are on range until the next 12-31
   overdue (activator.end - activator.start <= 1 year)
 - overdue year-repeating activators aren't overdue if now > next year's from overdue activator's
   start date
+
+### So our fix is
+
+- if now > this year's start (A) and
+  - now < this year's start's end (B)
+- else
+  - if now > last year's start (always true, ignore) (C) and
+    - now < last year's start's end (D)
+
+Using Karnaugh:
+
+|       | !C !D | !C D | C D | C !D |
+|-------|-------|------|-----|------|
+| !A !B | 0     | 1    | 1   | 0    |
+| !A B  | 0     | 1    | 1   | 0    |
+| A  B  | 1     | 1    | 1   | 1    |
+| A  !B | 0     | 1    | 1   | 0    |
+
+S = D + AB
+
+In other words, we are in range if
+now > this year's start (A) AND now < this year's start's end (B) OR now < last year's start's end (
+D)
+
