@@ -33,11 +33,9 @@ convert that to 2024 and 2025 on 2024 so if we were on 31 of december the query 
 range but on 2025 the query converts the dates to 2025 2026
 so you no longer are on range until the next 12-31
 
-### What should be taken into account
+### Fixing this is slowing down the development too much, lets write some simple rules and completely fix the query later
 
-- The activator can repeat every 1,2,3... years
-- The activator can start and end on different years
-- There can be activators that are overlapping themselves
-
-We should therefore check if the current date is in the range of the last (end.year-start.year)
-years
+- year-repeating activators are limited to be executed in max 1 year until the activator is
+  overdue (activator.end - activator.start <= 1 year)
+- overdue year-repeating activators aren't overdue if now > next year's from overdue activator's
+  start date
