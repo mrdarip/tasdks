@@ -26,9 +26,18 @@ dateTime('now')  < dateTime('2034-02-02 00:00', '-' || abs(strftime('%Y','now') 
 
 this query returns if we are in the range of 2034-02-01 00:00 and 2034-02-02 00:00
 
-### The query fails on start and end dates on different years
+### The query fails when start and end dates are on different years
 
 If you put 2000-12-31 as start and 2001-12-31 as end date, the query will fail, the query will
 convert that to 2024 and 2025 on 2024 so if we were on 31 of december the query would say we are in
 range but on 2025 the query converts the dates to 2025 2026
 so you no longer are on range until the next 12-31
+
+### What should be taken into account
+
+- The activator can repeat every 1,2,3... years
+- The activator can start and end on different years
+- There can be activators that are overlapping themselves
+
+We should therefore check every year since the last execution (or just the last 100 years) and check
+if the current date is in the range of the start and end date of the activator
