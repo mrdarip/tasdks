@@ -12,19 +12,21 @@
 
 having 1-2-34 as start and 2-3-34 as end, lets check if we're in range in this year
 
-```
+```roomsql
 select dateTime('2034-02-01 00:00', '-' || abs(strftime('%Y','now') - strftime('%Y','2034-02-01 00:00')) || ' years'),
 dateTime('2034-02-02 00:00', '-' || abs(strftime('%Y','now') - strftime('%Y','2034-02-01 00:00')) || ' years')
 ```
 
-this query returns the dates on current year, lets try now comparing with current date
+This query returns the dates on current year, lets try now comparing with current date
 
-dateTime('now') > dateTime('2034-02-01 00:00', '-' || abs(strftime('%Y','now') - strftime('%Y','
+```roomsql
+select dateTime('now') > dateTime('2034-02-01 00:00', '-' || abs(strftime('%Y','now') - strftime('%Y','
 2034-02-01 00:00')) || ' years') AND
 dateTime('now')  < dateTime('2034-02-02 00:00', '-' || abs(strftime('%Y','now') - strftime('%Y','
 2034-02-01 00:00')) || ' years')
+```
 
-this query returns if we are in the range of 2034-02-01 00:00 and 2034-02-02 00:00
+This query returns if we are in the range of 2034-02-01 00:00 and 2034-02-02 00:00
 
 ### The query fails when start and end dates are on different years
 
@@ -65,8 +67,8 @@ D)
 
 ### This still is not working, lets make some test to debug
 
-```
-(
+```roomsql
+select (
 dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') OR
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
@@ -82,20 +84,20 @@ dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', 
 
 We have to debug each parameter on the query, lets make a table for just the first part of the query
 
-```sql
-Full query:
-
+```roomsql
+/*Full query:*/
+select
 dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') OR
-dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years');
 
-A:
+/*A:*/
 dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years')
 
-B:
+/*B:*/
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
 
-C:
+/*C:*/
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
 ```
 
