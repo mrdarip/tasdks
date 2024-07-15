@@ -43,10 +43,10 @@ so you no longer are on range until the next 12-31
 ### So our fix is
 
 - if now > this year's start (A) and
-  - now < this year's start's end (B)
+    - now < this year's start's end (B)
 - else
-  - if now > last year's start (always true, ignore) (C) and
-    - now < last year's start's end (D)
+    - if now > last year's start (always true, ignore) (C) and
+        - now < last year's start's end (D)
 
 Using Karnaugh:
 
@@ -99,8 +99,17 @@ C:
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
 ```
 
-| now | activator.start | activator.end | Expected ful query value | Full query value | A | B | C |
-|-----|-----------------|---------------|--------------------------|------------------|---|---|---|
-|     |                 |               |                          |                  |   |   |   |
-|     |                 |               |                          |                  |   |   |   |
-|     |                 |               |                          |                  |   |   |   |
+| Description                                                                    | Expected full query value | now | activator.start | activator.end | Full query value | A | B | C |
+|--------------------------------------------------------------------------------|---------------------------|-----|-----------------|---------------|------------------|---|---|---|
+| range a month before today                                                     | 0                         |     |                 |               |                  |   |   |   |
+| range a month and years before today                                           | 0                         |     |                 |               |                  |   |   |   |
+| range a month after today                                                      | 0                         |     |                 |               |                  |   |   |   |
+| range a month and years after today                                            | 0                         |     |                 |               |                  |   |   |   |
+| range starting past month and ending in 2 days from now                        | 1                         |     |                 |               |                  |   |   |   |
+| range starting past month and ending in 2 days before now                      | 0                         |     |                 |               |                  |   |   |   |
+| range starting 2 days before now and ending next month                         | 1                         |     |                 |               |                  |   |   |   |
+| range starting 2 days after now and ending nex month                           | 0                         |     |                 |               |                  |   |   |   |
+| range starting past month in x years and ending in 2 days + x years from now   | 1                         |     |                 |               |                  |   |   |   |
+| range starting past month in x years and ending in 2 days + x years before now | 0                         |     |                 |               |                  |   |   |   |
+| range starting 2 days + x years before now and ending next month + x years     | 1                         |     |                 |               |                  |   |   |   |
+| range starting 2 days after now and ending next month                          | 0                         |     |                 |               |                  |   |   |   |
