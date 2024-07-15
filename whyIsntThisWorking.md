@@ -101,17 +101,55 @@ dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
 ```
 
-| Description                                                                                        | Expected full query value | now       | activator.start | activator.end | Full query value | A | B | C |
-|----------------------------------------------------------------------------------------------------|---------------------------|-----------|-----------------|---------------|------------------|---|---|---|
-| range a month before today (1 month duration)                                                      | 0                         | 15/7/2024 | 1/6/2024        | 30/6/2024     |                  |   |   |   |
-| range a month and years before today (1 month duration)                                            | 0                         | 15/7/2024 | 1/6/2020        | 30/6/2020     |                  |   |   |   |
-| range a month after today (1 month duration)                                                       | 0                         | 15/7/2024 | 1/8/2024        | 30/8/2024     |                  |   |   |   |
-| range a month and years after today (1 month duration)                                             | 0                         | 15/7/2024 | 1/8/2020        | 30/8/2020     |                  |   |   |   |
-| range starting past month and ending in 2 days from now (<1 month duration)                        | 1                         | 15/7/2024 | 25/6/2024       | 17/7/2024     |                  |   |   |   |
-| range starting past month and ending in 2 days before now (<1 month duration)                      | 0                         | 15/7/2024 | 25/6/2024       | 13/7/2024     |                  |   |   |   |
-| range starting 2 days before now and ending next month (<1 month duration)                         | 1                         | 15/7/2024 | 13/7/2024       | 5/8/2024      |                  |   |   |   |
-| range starting 2 days after now and ending next month (<1 month duration)                          | 0                         | 15/7/2024 | 17/7/2024       | 5/8/2024      |                  |   |   |   |
-| range starting past month in x years and ending in 2 days + x years from now (<1 month duration)   | 1                         | 15/7/2024 | 25/6/2020       | 17/7/2020     |                  |   |   |   |
-| range starting past month in x years and ending in 2 days + x years before now (<1 month duration) | 0                         | 15/7/2024 | 25/6/2020       | 13/7/2020     |                  |   |   |   |
-| range starting 2 days + x years before now and ending next month + x years (<1 month duration)     | 1                         | 15/7/2024 | 13/7/2020       | 5/8/2020      |                  |   |   |   |
-| range starting 2 days after now and ending next month (<1 month duration)                          | 0                         | 15/7/2024 | 17/7/2020       | 5/8/2020      |                  |   |   |   |
+| activatorId | Description                                                                                        | Expected full query value | now       | activator.start | activator.end | Full query value | A | B | C |
+|-------------|----------------------------------------------------------------------------------------------------|---------------------------|-----------|-----------------|---------------|------------------|---|---|---|
+| 0           | range a month before today (1 month duration)                                                      | 0                         | 15/7/2024 | 1/6/2024        | 30/6/2024     |                  |   |   |   |
+| 1           | range a month and years before today (1 month duration)                                            | 0                         | 15/7/2024 | 1/6/2020        | 30/6/2020     |                  |   |   |   |
+| 2           | range a month after today (1 month duration)                                                       | 0                         | 15/7/2024 | 1/8/2024        | 30/8/2024     |                  |   |   |   |
+| 3           | range a month and years after today (1 month duration)                                             | 0                         | 15/7/2024 | 1/8/2020        | 30/8/2020     |                  |   |   |   |
+| 4           | range starting past month and ending in 2 days from now (<1 month duration)                        | 1                         | 15/7/2024 | 25/6/2024       | 17/7/2024     |                  |   |   |   |
+| 5           | range starting past month and ending in 2 days before now (<1 month duration)                      | 0                         | 15/7/2024 | 25/6/2024       | 13/7/2024     |                  |   |   |   |
+| 6           | range starting 2 days before now and ending next month (<1 month duration)                         | 1                         | 15/7/2024 | 13/7/2024       | 5/8/2024      |                  |   |   |   |
+| 7           | range starting 2 days after now and ending next month (<1 month duration)                          | 0                         | 15/7/2024 | 17/7/2024       | 5/8/2024      |                  |   |   |   |
+| 8           | range starting past month in x years and ending in 2 days + x years from now (<1 month duration)   | 1                         | 15/7/2024 | 25/6/2020       | 17/7/2020     |                  |   |   |   |
+| 9           | range starting past month in x years and ending in 2 days + x years before now (<1 month duration) | 0                         | 15/7/2024 | 25/6/2020       | 13/7/2020     |                  |   |   |   |
+| 10          | range starting 2 days + x years before now and ending next month + x years (<1 month duration)     | 1                         | 15/7/2024 | 13/7/2020       | 5/8/2020      |                  |   |   |   |
+| 11          | range starting 2 days after now and ending next month (<1 month duration)                          | 0                         | 15/7/2024 | 17/7/2020       | 5/8/2020      |                  |   |   |   |
+
+#### Lets make some sqlite to test it
+
+```roomsql
+    CREATE TABLE activators(
+        activatorId INTEGER PRIMARY KEY,
+        start INTEGER NOT NULL,
+        `end` INTEGER NOT NULL
+    );
+```
+
+``` roomsql
+INSERT INTO activators VALUES
+    (0, strftime('%s','2024-06-01 00:00:00'), strftime('%s','2024-06-30 00:00:00')),
+    (1, strftime('%s','2020-06-01 00:00:00'), strftime('%s','2020-06-30 00:00:00')),
+    (2, strftime('%s','2024-08-01 00:00:00'), strftime('%s','2024-08-30 00:00:00')),
+    (3, strftime('%s','2020-08-01 00:00:00'), strftime('%s','2020-08-30 00:00:00')),
+    (4, strftime('%s','2024-06-25 00:00:00'), strftime('%s','2024-07-17 00:00:00')),
+    (5, strftime('%s','2024-06-25 00:00:00'), strftime('%s','2024-07-13 00:00:00')),
+    (6, strftime('%s','2024-07-13 00:00:00'), strftime('%s','2024-08-05 00:00:00')),
+    (7, strftime('%s','2024-07-17 00:00:00'), strftime('%s','2024-08-05 00:00:00')),
+    (8, strftime('%s','2020-06-25 00:00:00'), strftime('%s','2020-07-17 00:00:00')),
+    (9, strftime('%s','2020-06-25 00:00:00'), strftime('%s','2020-07-13 00:00:00')),
+    (10, strftime('%s','2020-07-13 00:00:00'), strftime('%s','2020-08-05 00:00:00')),
+    (11, strftime('%s','2020-07-17 00:00:00'), strftime('%s','2020-08-05 00:00:00'));
+```
+
+``` roomsql   
+    SELECT dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') OR
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years'),
+,
+dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+,
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+,
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years');
+```
