@@ -63,3 +63,44 @@ In other words, we are in range if
 now > this year's start (A) AND now < this year's start's end (B) OR now < last year's start's end (
 D)
 
+### This still is not working, lets make some test to debug
+
+```
+(
+dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') OR
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+) AND
+(
+SELECT COUNT(*) FROM executions WHERE
+activators.activatorId = executions.activatorId AND
+dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
+dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') OR
+dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+) = 0
+```
+
+We have to debug each parameter on the query, lets make a table for just the first part of the query
+
+```sql
+Full query:
+
+dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') OR
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+
+A:
+dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+
+B:
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+
+C:
+dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+```
+
+| now | activator.start | activator.end | Expected ful query value | Full query value | A | B | C |
+|-----|-----------------|---------------|--------------------------|------------------|---|---|---|
+|     |                 |               |                          |                  |   |   |   |
+|     |                 |               |                          |                  |   |   |   |
+|     |                 |               |                          |                  |   |   |   |
