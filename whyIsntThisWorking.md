@@ -99,17 +99,17 @@ C:
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
 ```
 
-| Description                                                                    | Expected full query value | now | activator.start | activator.end | Full query value | A | B | C |
-|--------------------------------------------------------------------------------|---------------------------|-----|-----------------|---------------|------------------|---|---|---|
-| range a month before today                                                     | 0                         |     |                 |               |                  |   |   |   |
-| range a month and years before today                                           | 0                         |     |                 |               |                  |   |   |   |
-| range a month after today                                                      | 0                         |     |                 |               |                  |   |   |   |
-| range a month and years after today                                            | 0                         |     |                 |               |                  |   |   |   |
-| range starting past month and ending in 2 days from now                        | 1                         |     |                 |               |                  |   |   |   |
-| range starting past month and ending in 2 days before now                      | 0                         |     |                 |               |                  |   |   |   |
-| range starting 2 days before now and ending next month                         | 1                         |     |                 |               |                  |   |   |   |
-| range starting 2 days after now and ending nex month                           | 0                         |     |                 |               |                  |   |   |   |
-| range starting past month in x years and ending in 2 days + x years from now   | 1                         |     |                 |               |                  |   |   |   |
-| range starting past month in x years and ending in 2 days + x years before now | 0                         |     |                 |               |                  |   |   |   |
-| range starting 2 days + x years before now and ending next month + x years     | 1                         |     |                 |               |                  |   |   |   |
-| range starting 2 days after now and ending next month                          | 0                         |     |                 |               |                  |   |   |   |
+| Description                                                                                        | Expected full query value | now | activator.start | activator.end | Full query value | A | B | C |
+|----------------------------------------------------------------------------------------------------|---------------------------|-----|-----------------|---------------|------------------|---|---|---|
+| range a month before today (1 month duration)                                                      | 0                         |     |                 |               |                  |   |   |   |
+| range a month and years before today (1 month duration)                                            | 0                         |     |                 |               |                  |   |   |   |
+| range a month after today (1 month duration)                                                       | 0                         |     |                 |               |                  |   |   |   |
+| range a month and years after today (1 month duration)                                             | 0                         |     |                 |               |                  |   |   |   |
+| range starting past month and ending in 2 days from now (<1 month duration)                        | 1                         |     |                 |               |                  |   |   |   |
+| range starting past month and ending in 2 days before now (<1 month duration)                      | 0                         |     |                 |               |                  |   |   |   |
+| range starting 2 days before now and ending next month (<1 month duration)                         | 1                         |     |                 |               |                  |   |   |   |
+| range starting 2 days after now and ending next month (<1 month duration)                          | 0                         |     |                 |               |                  |   |   |   |
+| range starting past month in x years and ending in 2 days + x years from now (<1 month duration)   | 1                         |     |                 |               |                  |   |   |   |
+| range starting past month in x years and ending in 2 days + x years before now (<1 month duration) | 0                         |     |                 |               |                  |   |   |   |
+| range starting 2 days + x years before now and ending next month + x years (<1 month duration)     | 1                         |     |                 |               |                  |   |   |   |
+| range starting 2 days after now and ending next month (<1 month duration)                          | 0                         |     |                 |               |                  |   |   |   |
