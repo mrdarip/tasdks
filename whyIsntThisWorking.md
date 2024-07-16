@@ -187,10 +187,10 @@ Then... It's finally fixed 😎🥨🐱‍💻
 ## Implement overdue year-repeating query
 
 a year-repeating activator is overdue if
-if now > this year's end date  
-AND no task has been done between this year's start and next year's start date //could be improved
 
-else
-if now > last year's end date
-AND now < this year's start date
-AND no task has been done since last year's start date
+- if now > this year's end date
+    - AND no task has been done since this year's start date
+- else
+    - if now > last year's end date
+        - AND now < this year's start date
+            - AND no task has been done since last year's start date
