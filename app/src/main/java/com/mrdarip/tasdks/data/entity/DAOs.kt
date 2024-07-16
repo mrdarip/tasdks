@@ -189,16 +189,26 @@ class DAOs {
                             (
                                 repetitionUnit = 'YEARS' AND
                                 (
-                                    dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
-                                    dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') OR
-                                    dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+                                    (
+                                        dateTime('now') > dateTime(activators.start,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+                                        dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+                                    ) OR
+                                    (
+                                        dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+                                    )
                                 ) AND
                                 (
                                     SELECT COUNT(*) FROM executions WHERE 
                                         activators.activatorId = executions.activatorId AND
-                                        dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
-                                        dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') OR
-                                        dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+                                        (
+                                            (
+                                                dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+                                                dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+                                            ) OR
+                                            (
+                                                dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+                                            )
+                                        )
                                 ) = 0
                             )
                         )

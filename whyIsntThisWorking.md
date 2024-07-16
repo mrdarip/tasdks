@@ -157,13 +157,16 @@ INSERT INTO activators VALUES
 
 ```roomsql   
 SELECT 
-activatorid,
+activatorid
+as ID,
 (
-    dateTime('now') > dateTime(activators.start,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
-    dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
-) OR
-(
-    dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+    (
+        dateTime('now') > dateTime(activators.start,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+        dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+    ) OR
+    (
+        dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+    )
 )
 as fullQuery,
 dateTime('now') > dateTime(activators.start,'unixepoch', printf('%+d', abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') 
@@ -177,20 +180,3 @@ dateTime(activators.`end`,'unixepoch', printf('%+d', abs(strftime('%Y','now') - 
 dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') as lastYearStartEnd
 FROM activators;
 ```
-
-### Results
-
-"0"    "1"
-"1"    "0"
-"2"    "1"
-"3"    "0"
-"4"    "1"
-"5"    "1"
-"6"    "1"
-"7"    "1"
-"8"    "0"
-"9"    "0"
-"10" "0"
-"11" "0"
-
-catastrophic... as expected
