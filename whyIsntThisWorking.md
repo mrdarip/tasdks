@@ -6,11 +6,11 @@
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
 | timediff(dateA, dateB)                                                                                                                                                                                                                                                                                             | it has magically been removed from sqlite(?      |
 | repetitionUnit = 'YEARS' AND datetime(     activators.`end`, 'unixepoch', (substr(timediff('now',datetime(activators.`end`, 'unixepoch')),1,5)+1)\|\| ' years',     '-'\|\|      datetime( activators.start, 'unixepoch', (substr(timediff('now',datetime( activators.start, 'unixepoch')),1,5)+0)\|\| ' years') ) | still timediff has been removed                  |
-| select  dateTime(1718841600,'unixepoch', '+2024-06-20 00:00:00')                                                                                                                                                                                                                                                   | even is listed in the official docs, not working |
+| select dateTime(1718841600,'unixepoch', '+2024-06-20 00:00:00')                                                                                                                                                                                                                                                    | even is listed in the official docs, not working |
 
-### using strftime instead of timediff
+### Using strftime instead of timediff
 
-having 1-2-34 as start and 2-3-34 as end, lets check if we're in range in this year
+Having 1-2-34 as start and 2-3-34 as end, lets check if we're in range in this year
 
 ```roomsql
 select dateTime('2034-02-01 00:00', '-' || abs(strftime('%Y','now') - strftime('%Y','2034-02-01 00:00')) || ' years'),
@@ -37,9 +37,9 @@ so you no longer are on range until the next 12-31
 
 ### Fixing this is slowing down the development too much, lets write some simple rules and completely fix the query later
 
-- year-repeating activators are limited to be executed in max 1 year until the activator is
+- Year-repeating activators are limited to be executed in max 1 year until the activator is
   overdue (activator.end - activator.start <= 1 year)
-- overdue year-repeating activators aren't overdue if now > next year's from overdue activator's
+- Overdue year-repeating activators aren't overdue if now > next year's from overdue activator's
   start date
 
 ### So our fix is
@@ -186,7 +186,7 @@ Then... It's finally fixed 😎🥨🐱‍💻
 
 ## Implement overdue year-repeating query
 
-a year-repeating activator is overdue if
+A year-repeating activator is overdue if:
 
 - if now > this year's end date (A)
     - AND no task has been done since this year's start date (B)
@@ -195,7 +195,7 @@ a year-repeating activator is overdue if
         - AND now < this year's start date (D)
             - AND no task has been done since last year's start date (E)
 
-so our query will be like
+So our query will be like
 
 ```roomsql
 SELECT (A AND B) OR (C AND D AND E) 
@@ -204,26 +204,26 @@ SELECT (A AND B) OR (C AND D AND E)
 ### Lets define each letter
 
 - A
-    - ```roomsql
+    ```roomsql
     SELECT dateTime('now') > dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
     ```
 - B
-    - ```roomsql
+    ```roomsql
     SELECT (SELECT COUNT(*) FROM executions WHERE
     activators.activatorId = executions.activatorId AND
     dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
     ) = 0
     ```
 - C
-    - ```roomsql
+    ```roomsql
     SELECT dateTime('now') > dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
     ```
 - D
-    - ```roomsql
+    ```roomsql
     SELECT dateTime('now') < dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
     ```
 - E
-    - ```roomsql
+    ```roomsql
     SELECT (SELECT COUNT(*) FROM executions WHERE
     activators.activatorId = executions.activatorId AND
     dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
