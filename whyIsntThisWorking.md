@@ -63,7 +63,7 @@ S = D + AB
 
 In other words, we are in range if
 now > this year's start (A) AND now < this year's start's end (B) OR now < last year's start's end (
-D)
+C)
 
 ### This still is not working, lets make some test to debug
 
@@ -90,14 +90,23 @@ select
 dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') OR
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years');
+```
 
+```roomsql
 /*A:*/
+select
 dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+```
 
+```roomsql
 /*B:*/
+select
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+```
 
+```roomsql
 /*C:*/
+select
 dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
 ```
 
