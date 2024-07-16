@@ -103,18 +103,18 @@ dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y
 
 | activatorId | Description                                                                                        | Expected full query value | now       | activator.start | activator.end | Full query value | A | B | C |
 |-------------|----------------------------------------------------------------------------------------------------|---------------------------|-----------|-----------------|---------------|------------------|---|---|---|
-| 0           | range a month before today (1 month duration)                                                      | 0                         | 15/7/2024 | 1/6/2024        | 30/6/2024     |                  |   |   |   |
-| 1           | range a month and years before today (1 month duration)                                            | 0                         | 15/7/2024 | 1/6/2020        | 30/6/2020     |                  |   |   |   |
-| 2           | range a month after today (1 month duration)                                                       | 0                         | 15/7/2024 | 1/8/2024        | 30/8/2024     |                  |   |   |   |
-| 3           | range a month and years after today (1 month duration)                                             | 0                         | 15/7/2024 | 1/8/2020        | 30/8/2020     |                  |   |   |   |
-| 4           | range starting past month and ending in 2 days from now (<1 month duration)                        | 1                         | 15/7/2024 | 25/6/2024       | 17/7/2024     |                  |   |   |   |
-| 5           | range starting past month and ending in 2 days before now (<1 month duration)                      | 0                         | 15/7/2024 | 25/6/2024       | 13/7/2024     |                  |   |   |   |
-| 6           | range starting 2 days before now and ending next month (<1 month duration)                         | 1                         | 15/7/2024 | 13/7/2024       | 5/8/2024      |                  |   |   |   |
-| 7           | range starting 2 days after now and ending next month (<1 month duration)                          | 0                         | 15/7/2024 | 17/7/2024       | 5/8/2024      |                  |   |   |   |
-| 8           | range starting past month in x years and ending in 2 days + x years from now (<1 month duration)   | 1                         | 15/7/2024 | 25/6/2020       | 17/7/2020     |                  |   |   |   |
-| 9           | range starting past month in x years and ending in 2 days + x years before now (<1 month duration) | 0                         | 15/7/2024 | 25/6/2020       | 13/7/2020     |                  |   |   |   |
-| 10          | range starting 2 days + x years before now and ending next month + x years (<1 month duration)     | 1                         | 15/7/2024 | 13/7/2020       | 5/8/2020      |                  |   |   |   |
-| 11          | range starting 2 days after now and ending next month (<1 month duration)                          | 0                         | 15/7/2024 | 17/7/2020       | 5/8/2020      |                  |   |   |   |
+| 0           | range a month before today (1 month duration)                                                      | 0                         | 15/7/2024 | 1/6/2024        | 30/6/2024     |                  | 1 | 0 |   |
+| 1           | range a month and years before today (1 month duration)                                            | 0                         | 15/7/2024 | 1/6/2020        | 30/6/2020     |                  | 1 | 0 |   |
+| 2           | range a month after today (1 month duration)                                                       | 0                         | 15/7/2024 | 1/8/2024        | 30/8/2024     |                  | 0 | 1 |   |
+| 3           | range a month and years after today (1 month duration)                                             | 0                         | 15/7/2024 | 1/8/2020        | 30/8/2020     |                  | 0 | 1 |   |
+| 4           | range starting past month and ending in 2 days from now (<1 month duration)                        | 1                         | 15/7/2024 | 25/6/2024       | 17/7/2024     |                  | 1 | 1 |   |
+| 5           | range starting past month and ending in 2 days before now (<1 month duration)                      | 0                         | 15/7/2024 | 25/6/2024       | 13/7/2024     |                  | 1 | 0 |   |
+| 6           | range starting 2 days before now and ending next month (<1 month duration)                         | 1                         | 15/7/2024 | 13/7/2024       | 5/8/2024      |                  | 1 | 1 |   |
+| 7           | range starting 2 days after now and ending next month (<1 month duration)                          | 0                         | 15/7/2024 | 17/7/2024       | 5/8/2024      |                  | 0 | 1 |   |
+| 8           | range starting past month in x years and ending in 2 days + x years from now (<1 month duration)   | 1                         | 15/7/2024 | 25/6/2020       | 17/7/2020     |                  | 1 | 1 |   |
+| 9           | range starting past month in x years and ending in 2 days + x years before now (<1 month duration) | 0                         | 15/7/2024 | 25/6/2020       | 13/7/2020     |                  | 1 | 0 |   |
+| 10          | range starting 2 days + x years before now and ending next month + x years (<1 month duration)     | 1                         | 15/7/2024 | 13/7/2020       | 5/8/2020      |                  | 1 | 1 |   |
+| 11          | range starting 2 days after now and ending next month (<1 month duration)                          | 0                         | 15/7/2024 | 17/7/2020       | 5/8/2020      |                  | 0 | 1 |   |
 
 #### Lets make some sqlite to test it
 
