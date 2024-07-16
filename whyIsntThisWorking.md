@@ -146,32 +146,35 @@ INSERT INTO activators VALUES
 SELECT 
 activatorid,
 (
-    dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
-    dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+    dateTime('now') > dateTime(activators.start,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+    dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
 ) OR
-    dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+    dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
     as fullQuery
 ,
-dateTime('now') > dateTime(activators.start,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') as A
+dateTime('now') > dateTime(activators.start,'unixepoch', printf('%+d', abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as A
 ,
-dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch')) || ' years') as B
+dateTime('now') < dateTime(activators.`end`,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as B
 ,
-dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') AS C
+dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d', abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AS C
+,
+ dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as thisYearStart,
+ dateTime(activators.`end`,'unixepoch', printf('%+d', abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as thisYearEnd
 FROM activators;
 ```
 
-### Results 
+### Results
 
-"0"	"1"
-"1"	"0"
-"2"	"1"
-"3"	"0"
-"4"	"1"
-"5"	"1"
-"6"	"1"
-"7"	"1"
-"8"	"0"
-"9"	"0"
+"0"    "1"
+"1"    "0"
+"2"    "1"
+"3"    "0"
+"4"    "1"
+"5"    "1"
+"6"    "1"
+"7"    "1"
+"8"    "0"
+"9"    "0"
 "10" "0"
 "11" "0"
 
