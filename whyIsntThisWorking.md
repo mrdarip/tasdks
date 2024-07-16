@@ -135,7 +135,7 @@ dateTime('now') < dateTime(activators.`end`,'unixepoch', '-' || abs(strftime('%Y
     );
 ```
 
-``` roomsql
+```roomsql
 INSERT INTO activators VALUES
     (0, strftime('%s','2024-06-01 00:00:00'), strftime('%s','2024-06-30 00:00:00')),
     (1, strftime('%s','2020-06-01 00:00:00'), strftime('%s','2020-06-30 00:00:00')),
@@ -151,24 +151,26 @@ INSERT INTO activators VALUES
     (11, strftime('%s','2020-07-17 00:00:00'), strftime('%s','2020-08-05 00:00:00'));
 ```
 
-``` roomsql   
+```roomsql   
 SELECT 
 activatorid,
 (
     dateTime('now') > dateTime(activators.start,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
     dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
 ) OR
-    dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
-    as fullQuery
-,
-dateTime('now') > dateTime(activators.start,'unixepoch', printf('%+d', abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as A
-,
-dateTime('now') < dateTime(activators.`end`,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as B
-,
-dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d', abs(strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AS C
-,
- dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as thisYearStart,
- dateTime(activators.`end`,'unixepoch', printf('%+d', abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as thisYearEnd
+(
+    dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+)
+as fullQuery,
+dateTime('now') > dateTime(activators.start,'unixepoch', printf('%+d', abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') 
+as A,
+dateTime('now') < dateTime(activators.`end`,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') 
+as B,
+dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+AS C,
+dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as thisYearStart,
+dateTime(activators.`end`,'unixepoch', printf('%+d', abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') as thisYearEnd,
+dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') as lastYearStartEnd
 FROM activators;
 ```
 
