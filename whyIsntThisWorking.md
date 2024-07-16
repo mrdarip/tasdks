@@ -180,3 +180,5 @@ dateTime(activators.`end`,'unixepoch', printf('%+d', abs(strftime('%Y','now') - 
 dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') as lastYearStartEnd
 FROM activators;
 ```
+
+Then... It's finally fixed 😎🥨🐱‍💻
