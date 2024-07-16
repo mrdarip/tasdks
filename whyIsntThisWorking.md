@@ -188,9 +188,45 @@ Then... It's finally fixed 😎🥨🐱‍💻
 
 a year-repeating activator is overdue if
 
-- if now > this year's end date
-    - AND no task has been done since this year's start date
+- if now > this year's end date (A)
+    - AND no task has been done since this year's start date (B)
 - else
-    - if now > last year's end date
-        - AND now < this year's start date
-            - AND no task has been done since last year's start date
+    - if now > last year's end date (C)
+        - AND now < this year's start date (D)
+            - AND no task has been done since last year's start date (E)
+
+so our query will be like
+
+```roomsql
+SELECT (A AND B) OR (C AND D AND E) 
+```
+
+### Lets define each letter
+
+- A
+    - ```roomsql
+    SELECT dateTime('now') > dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+    ```
+- B
+    - ```roomsql
+    SELECT (SELECT COUNT(*) FROM executions WHERE
+    activators.activatorId = executions.activatorId AND
+    dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+    ) = 0
+    ```
+- C
+    - ```roomsql
+    SELECT dateTime('now') > dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+    ```
+- D
+    - ```roomsql
+    SELECT dateTime('now') < dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+    ```
+- E
+    - ```roomsql
+    SELECT (SELECT COUNT(*) FROM executions WHERE
+    activators.activatorId = executions.activatorId AND
+    dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+    ) = 0
+    ```
+
