@@ -229,8 +229,39 @@ class DAOs {
                     (
                         NOT exactDateRange AND 
                         (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.firstTimeDone ))) > activators.`end` * 86400
-                    ) OR
-                    (exactDateRange)
+                     ) OR
+                    (
+                        exactDateRange AND 
+                        (
+                            (
+                                repetitionUnit = 'MONTHS' AND
+                                strftime('%d', 'now') > strftime('%d', activators.start, 'unixepoch') AND
+                                strftime('%d', 'now') < strftime('%d', activators.`end`, 'unixepoch') AND
+                                strftime('%Y%m', 'now') NOT IN (SELECT strftime('%Y%m', `end`,'unixepoch') FROM executions WHERE activators.activatorId = executions.activatorId)
+                            ) OR
+                            (
+                                repetitionUnit = 'YEARS' AND 
+                                (
+                                    dateTime('now') > dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+                                    (
+                                        SELECT COUNT(*) FROM executions WHERE
+                                        activators.activatorId = executions.activatorId AND
+                                        dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+                                    ) = 0
+                                )
+                                OR
+                                (
+                                    dateTime('now') > dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
+                                    dateTime('now') < dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+                                    (
+                                        SELECT COUNT(*) FROM executions WHERE
+                                        activators.activatorId = executions.activatorId AND
+                                        dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+                                    ) = 0
+                                )
+                            )
+                        )
+                    )
                 ORDER BY MAX(COALESCE(executions.`end`,activators.firstTimeDone )) ASC
             """
         ) //TODO: implement querying exactDateRange overdue tasks
