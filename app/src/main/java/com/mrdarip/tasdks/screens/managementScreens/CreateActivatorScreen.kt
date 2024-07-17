@@ -30,18 +30,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun CreateActivatorScreen(navController: NavController) {
+fun CreateActivatorScreen(navController: NavController, preSelectedTaskId: Long) {
     val createActivatorViewModel = viewModel(modelClass = CreateActivatorViewModel::class.java)
     CreateActivatorBodyContent(
         navController = navController,
-        createActivatorViewModel = createActivatorViewModel
+        createActivatorViewModel = createActivatorViewModel,
+        preSelectedTaskId = preSelectedTaskId
     )
 }
 
 @Composable
 fun CreateActivatorBodyContent(
     navController: NavController,
-    createActivatorViewModel: CreateActivatorViewModel
+    createActivatorViewModel: CreateActivatorViewModel,
+    preSelectedTaskId: Long
 ) {
     Column(
         modifier = Modifier
@@ -53,7 +55,7 @@ fun CreateActivatorBodyContent(
             mutableStateOf(
                 Activator(
                     comment = null,
-                    taskToActivateId = -1,
+                    taskToActivateId = preSelectedTaskId,
                     endDate = null,
                     userCancelled = false,
                     repetitionRange = RepetitionRange(),

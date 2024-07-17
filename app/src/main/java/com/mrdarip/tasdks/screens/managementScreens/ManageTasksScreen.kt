@@ -55,6 +55,9 @@ fun ManageTasksBodyContent(navController: NavController, mainMenuViewModel: Main
                     },
                     onSecondaryClick = {
                         //TODO: implement creating activator
+                        navController.navigate(
+                            "${AppScreens.CreateActivator.route}/${task.taskId}"
+                        )
                     }
                 )
             }

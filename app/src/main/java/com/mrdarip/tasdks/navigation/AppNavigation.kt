@@ -282,8 +282,13 @@ fun MainNavHost(navController: NavHostController) {
             ManageActivatorsScreen(navController = navController)
         }
 
-        composable( AppScreens.CreateActivator.route) {
-            CreateActivatorScreen(navController)
+        composable("${AppScreens.CreateActivator.route}/{taskId}",
+            arguments = listOf(navArgument("taskId") { type = NavType.LongType })
+        ) {
+            CreateActivatorScreen(
+                navController,
+                preSelectedTaskId = it.arguments?.getLong("taskId") ?: -1
+            )
         }
 
         composable(
