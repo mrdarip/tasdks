@@ -162,43 +162,44 @@ fun TasksCardRow(
     mainMenuViewModel: MainMenuViewModel,
     navController: NavController
 ) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.headlineMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier
-            .padding(16.dp, 32.dp, 16.dp, 8.dp)
-            .fillMaxWidth()
+    if (!tasks.isEmpty()) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .padding(16.dp, 32.dp, 16.dp, 8.dp)
+                .fillMaxWidth()
+        )
 
-    )
+        LazyRow(
+            modifier = Modifier.padding(0.dp, 8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            items(tasks) { task ->
+                val placeName by mainMenuViewModel.getPlaceName(task.placeId)
+                    .collectAsState(initial = "")
+                TaskCard(
+                    task = task,
+                    placeName = placeName,
+                    onClick = {
+                        mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
+                            val activatorId = mainMenuViewModel.insertActivator(
+                                Activator(
+                                    comment = "created for one time execution",
+                                    taskToActivateId = task.taskId,
+                                    endRep = 1
+                                ) //TODO: check RepetitionRange for one time repetition
+                            )
 
-    LazyRow(
-        modifier = Modifier.padding(0.dp, 8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        items(tasks) { task ->
-            val placeName by mainMenuViewModel.getPlaceName(task.placeId)
-                .collectAsState(initial = "")
-            TaskCard(
-                task = task,
-                placeName = placeName,
-                onClick = {
-                    mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
-                        val activatorId = mainMenuViewModel.insertActivator(
-                            Activator(
-                                comment = "created for one time execution",
-                                taskToActivateId = task.taskId,
-                                endRep = 1
-                            ) //TODO: check RepetitionRange for one time repetition
-                        )
-
-                        withContext(Dispatchers.Main) {
-                            navController.navigate("${AppScreens.PlayActivator.route}/$activatorId")
+                            withContext(Dispatchers.Main) {
+                                navController.navigate("${AppScreens.PlayActivator.route}/$activatorId")
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
