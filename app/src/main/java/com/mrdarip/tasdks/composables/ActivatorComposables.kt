@@ -31,7 +31,7 @@ import com.mrdarip.tasdks.navigation.AppScreens
 
 
 @Composable
-fun EditActivatorListItem(
+fun TwoButtonsListItem(
     title: String,
     subTitle: String,
     emoji: String,

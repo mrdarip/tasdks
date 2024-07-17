@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.composables.EditActivatorListItem
+import com.mrdarip.tasdks.composables.TwoButtonsListItem
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageActivatorsViewModel
@@ -49,7 +49,7 @@ fun ManageActivatorsBodyContent(
         ) {
             items(viewModel.state.activeActivators) { activator ->
                 val taskToActivate = viewModel.getTaskById(activator.taskToActivateId).collectAsState(initial = Task(name = "...", comment = null, iconEmoji = null, placeId = null)).value
-                EditActivatorListItem(
+                TwoButtonsListItem(
                     title = taskToActivate.name,
                     subTitle = activator.comment?:"No comment provided",
                     emoji = taskToActivate.iconEmoji?:"🔨",

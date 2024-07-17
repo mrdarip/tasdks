@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.composables.TaskLiItem
+import com.mrdarip.tasdks.composables.TwoButtonsListItem
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.viewModels.MainMenuState
 import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
@@ -40,11 +43,18 @@ fun ManageTasksBodyContent(navController: NavController, mainMenuViewModel: Main
             items(mainMenuState.activeTasks) { task ->
                 val placeName by mainMenuViewModel.getPlaceName(task.placeId)
                     .collectAsState(initial = "")
-                TaskLiItem(
-                    task = task,
-                    placeName = placeName,
-                    onClick = {
-                        navController.navigate(AppScreens.EditTask.route + "/" + task.taskId)
+
+                TwoButtonsListItem(
+                    title = task.name,
+                    subTitle = "",
+                    emoji = task.iconEmoji ?: "🔨",
+                    primaryIcon = Icons.Filled.PlayArrow,
+                    secondaryIcon = Icons.Filled.Add,
+                    onPrimaryClick = {
+                        //TODO: implement creating one time activator
+                    },
+                    onSecondaryClick = {
+                        //TODO: implement creating activator
                     }
                 )
             }
