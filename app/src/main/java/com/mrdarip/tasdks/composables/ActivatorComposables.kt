@@ -104,28 +104,30 @@ fun ActivatorCardRow(
     title: String,
     navController: NavController
 ) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.headlineMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier
-            .padding(16.dp, 32.dp, 16.dp, 8.dp)
-            .fillMaxWidth()
+    if (!tasks.isEmpty()) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .padding(16.dp, 32.dp, 16.dp, 8.dp)
+                .fillMaxWidth()
 
-    )
+        )
 
-    LazyRow(
-        modifier = Modifier.padding(0.dp, 8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        items(tasks) { activator ->
-            ActivatorCard(
-                activator = activator,
-                onClick = {
-                    navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
-                }
-            )
+        LazyRow(
+            modifier = Modifier.padding(0.dp, 8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            items(tasks) { activator ->
+                ActivatorCard(
+                    activator = activator,
+                    onClick = {
+                        navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
+                    }
+                )
+            }
         }
     }
 }
