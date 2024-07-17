@@ -21,7 +21,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
@@ -200,16 +202,26 @@ private fun RepetitionUnitInput(
                     Text(capitalized(option.name))
                 },
                 selected = selected,
-                leadingIcon = if (selected) {
-                    {
+                leadingIcon = {
+                    if (selected) {
+
                         Icon(
                             imageVector = Icons.Filled.Done,
                             contentDescription = "Done icon",
                             modifier = Modifier.size(FilterChipDefaults.IconSize)
                         )
+
+                    } else {
+                        Icon(
+                            imageVector =
+                            if (activator.repetitionRange.repetitionUnit.isExactDate)
+                                Icons.Filled.DateRange
+                            else
+                                Icons.Filled.Home,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
                     }
-                } else {
-                    null
                 },
             )
         }
