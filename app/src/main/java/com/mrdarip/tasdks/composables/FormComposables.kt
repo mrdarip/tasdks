@@ -32,9 +32,6 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -151,7 +148,6 @@ fun ActivatorFields(
         StartDateInput(activator, onActivatorChanged)
         HorizontalDivider()
 
-        RepetitionTypeInput(activator, onActivatorChanged)
         RepetitionUnitInput(activator, onActivatorChanged)
         RepetitionsRangeInput(activator, onActivatorChanged)
         HorizontalDivider()
@@ -160,8 +156,6 @@ fun ActivatorFields(
         HorizontalDivider()
 
         SelectActivatedTaskInput(possibleTasksToActivate, activator, onActivatorChanged)
-
-
     }
 }
 
@@ -179,38 +173,6 @@ private fun ActivatorDescriptionInput(
             .fillMaxWidth()
             .padding(16.dp)
     )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun RepetitionTypeInput(
-    activator: Activator,
-    onActivatorChanged: (Activator) -> Unit
-) {
-    var selectedIndex = if (activator.repetitionRange.exactDateRange) 0 else 1
-    val options = listOf("Date", "Time")
-    Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-        SingleChoiceSegmentedButtonRow {
-            options.forEachIndexed { index, label ->
-                SegmentedButton(
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
-                    onClick = {
-                        selectedIndex = index
-                        onActivatorChanged(
-                            activator.copy(
-                                repetitionRange = activator.repetitionRange.copy(
-                                    exactDateRange = (index == 0)
-                                )
-                            )
-                        )
-                    },
-                    selected = index == selectedIndex
-                ) {
-                    Text(label)
-                }
-            }
-        }
-    }
 }
 
 @Composable
@@ -422,11 +384,11 @@ private fun RepetitionsRangeInput(
     ) {
         Row {
             Text(
-                text = if (activator.repetitionRange.exactDateRange) "start" else "min",
+                text = if (activator.repetitionRange.repetitionUnit.isExactDate) "start" else "min",
                 modifier = Modifier.weight(1f)
             )
 
-            if (activator.repetitionRange.exactDateRange) {
+            if (activator.repetitionRange.repetitionUnit.isExactDate) {
                 DateInput(
                     date = activator.repetitionRange.start,
                     onDateChanged = {
@@ -456,7 +418,7 @@ private fun RepetitionsRangeInput(
         }
         Row {
             Text(text = "max", modifier = Modifier.weight(1f))
-            if (activator.repetitionRange.exactDateRange) {
+            if (activator.repetitionRange.repetitionUnit.isExactDate) {
                 DateInput(
                     date = activator.repetitionRange.end,
                     onDateChanged = {

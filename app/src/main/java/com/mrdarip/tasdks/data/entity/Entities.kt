@@ -38,12 +38,16 @@ data class Object(
     val placeId: Long? = null
 )
 
-enum class RepetitionUnit {
-    MINUTES, HOURS, DAYS, WEEKS, MONTHS, YEARS//TODO Check how to manage time repetition vs date repetition ( a date is millis since epoch...)
+enum class RepetitionUnit(val isExactDate: Boolean) {
+    MINUTES(false),
+    HOURS(false),
+    DAYS(false),
+    WEEKS(false),
+    MONTHS(true),
+    YEARS(true)
 }
 
 data class RepetitionRange(
-    val exactDateRange: Boolean = false,
     val firstTimeDone: Int = -1, //In seconds since epoch
     //min max activators: when will the first repetition occur
     //from-to activators: null
@@ -66,8 +70,7 @@ data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
     val comment: String? = null,
     @Embedded val repetitionRange: RepetitionRange = RepetitionRange(),
-    val endsAfterDate: Boolean? = null, //null as it doesn't end by default //TODO: Use it
-    val endDate: Int? = null, //In seconds since epoch
+    val endDate: Int? = null, //In seconds since epoch //TODO: implement 'x' button to make it null
     val endRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
     val taskToActivateId: Long,
