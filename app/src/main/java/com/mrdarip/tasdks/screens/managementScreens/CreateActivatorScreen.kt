@@ -63,7 +63,7 @@ fun CreateActivatorBodyContent(
                 )
             )
         }
-        Text(text = "Create task", style = MaterialTheme.typography.headlineLarge)
+        Text(text = "Create activator", style = MaterialTheme.typography.headlineLarge)
 
         ActivatorFields(
             activator = newActivator,
