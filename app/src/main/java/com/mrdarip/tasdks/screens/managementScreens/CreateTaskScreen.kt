@@ -2,6 +2,9 @@ package com.mrdarip.tasdks.screens.managementScreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -13,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -32,7 +36,12 @@ fun CreateTaskScreen(navController: NavController) {
 @Composable
 fun CreateTaskBodyContent(navController: NavController, createTaskViewModel: CreateTaskViewModel) {
     var task by remember { mutableStateOf(Task()) }
-    Column(verticalArrangement = Arrangement.SpaceAround) {
+    Column(
+        Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text(text = "Create task", style = MaterialTheme.typography.headlineLarge)
             TaskFields(
