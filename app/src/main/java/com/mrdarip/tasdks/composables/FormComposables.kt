@@ -214,7 +214,7 @@ private fun RepetitionUnitInput(
                     } else {
                         Icon(
                             imageVector =
-                            if (activator.repetitionRange.repetitionUnit.isExactDate)
+                            if (option.isExactDate)
                                 Icons.Filled.DateRange
                             else
                                 Icons.Filled.Home,
