@@ -67,7 +67,7 @@ fun CreateActivatorBodyContent(
 
         ActivatorFields(
             activator = newActivator,
-            possibleTasksToActivate = createActivatorViewModel.state.tasks,
+            possibleTasksToActivate = if (preSelectedTaskId == -1L) createActivatorViewModel.state.tasks else emptyList(),
             onActivatorChanged = { newActivator = it }
         )
 

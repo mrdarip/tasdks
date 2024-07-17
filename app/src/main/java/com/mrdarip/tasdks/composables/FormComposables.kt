@@ -147,6 +147,7 @@ fun ActivatorFields(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        ActivatorDescriptionInput(activator, onActivatorChanged)
         StartDateInput(activator, onActivatorChanged)
         HorizontalDivider()
 
@@ -159,9 +160,8 @@ fun ActivatorFields(
         HorizontalDivider()
 
         SelectActivatedTaskInput(possibleTasksToActivate, activator, onActivatorChanged)
-        HorizontalDivider()
 
-        ActivatorDescriptionInput(activator, onActivatorChanged)
+
     }
 }
 
@@ -261,6 +261,10 @@ private fun SelectActivatedTaskInput(
     activator: Activator,
     onActivatorChanged: (Activator) -> Unit
 ) {
+    if (possibleTasksToActivate.isEmpty()) {
+        return
+    }
+
     LazyHorizontalGrid(
         modifier = Modifier.height(200.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
