@@ -162,7 +162,7 @@ fun TasksCardRow(
     mainMenuViewModel: MainMenuViewModel,
     navController: NavController
 ) {
-    if (!tasks.isEmpty()) {
+    if (tasks.isNotEmpty()) {
         Text(
             text = title,
             style = MaterialTheme.typography.headlineMedium,

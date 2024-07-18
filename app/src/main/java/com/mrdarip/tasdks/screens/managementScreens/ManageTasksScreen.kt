@@ -18,12 +18,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
+import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.viewModels.MainMenuState
 import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun ManageTasksScreen(navController: NavController) {
@@ -51,10 +56,21 @@ fun ManageTasksBodyContent(navController: NavController, mainMenuViewModel: Main
                     primaryIcon = Icons.Filled.PlayArrow,
                     secondaryIcon = Icons.Filled.Add,
                     onPrimaryClick = {
-                        //TODO: implement creating one time activator
+                        mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
+                            val activatorId = mainMenuViewModel.insertActivator(
+                                Activator(
+                                    comment = "Created for one time execution",
+                                    taskToActivateId = task.taskId,
+                                    endRep = 1
+                                )
+                            )
+
+                            withContext(Dispatchers.Main) {
+                                navController.navigate("${AppScreens.PlayActivator.route}/$activatorId")
+                            }
+                        }
                     },
                     onSecondaryClick = {
-                        //TODO: implement creating activator
                         navController.navigate(
                             "${AppScreens.CreateActivator.route}/${task.taskId}"
                         )
