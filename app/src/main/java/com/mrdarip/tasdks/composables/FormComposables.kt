@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -57,7 +56,6 @@ import java.util.Locale
 
 
 @Composable
-@Preview
 fun TaskFields(
     task: Task = Task(),
     onTaskChange: (Task) -> Unit = {}
@@ -144,7 +142,7 @@ fun ActivatorFields(
     Column(
         modifier = Modifier
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         ActivatorDescriptionInput(activator, onActivatorChanged)
         StartDateInput(activator, onActivatorChanged)
@@ -162,6 +160,12 @@ fun ActivatorFields(
 }
 
 @Composable
+@Preview
+fun ActivatorFieldsPreview() {
+    ActivatorFields()
+}
+
+@Composable
 private fun ActivatorDescriptionInput(
     activator: Activator,
     onActivatorChanged: (Activator) -> Unit
@@ -173,7 +177,6 @@ private fun ActivatorDescriptionInput(
         placeholder = { Text("Activator Description") },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
     )
 }
 
@@ -183,8 +186,7 @@ private fun RepetitionUnitInput(
     onActivatorChanged: (Activator) -> Unit
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(RepetitionUnit.entries) { option ->
             val selected = activator.repetitionRange.repetitionUnit == option
@@ -243,7 +245,7 @@ private fun SelectActivatedTaskInput(
         modifier = Modifier.height(200.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        rows = GridCells.Adaptive(64.dp), contentPadding = PaddingValues(horizontal = 16.dp)
+        rows = GridCells.Adaptive(64.dp),
     ) {
         item {
             Column(
@@ -283,8 +285,7 @@ private fun EndAfterFactorInput(
     onActivatorChanged: (Activator) -> Unit
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.padding(horizontal = 16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(text = "Kill after repetitions")
         TextField(
@@ -296,8 +297,7 @@ private fun EndAfterFactorInput(
         )
     }
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.padding(horizontal = 16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(text = "Kill after date")
         DateInput(
@@ -315,7 +315,6 @@ private fun StartDateInput(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
     ) {
         Text("START:")
 
@@ -391,7 +390,6 @@ private fun RepetitionsRangeInput(
     onActivatorChanged: (Activator) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row {
