@@ -104,7 +104,7 @@ fun ActivatorCardRow(
     title: String,
     navController: NavController
 ) {
-    if (!tasks.isEmpty()) {
+    if (tasks.isNotEmpty()) {
         Text(
             text = title,
             style = MaterialTheme.typography.headlineMedium,
@@ -112,7 +112,6 @@ fun ActivatorCardRow(
             modifier = Modifier
                 .padding(16.dp, 32.dp, 16.dp, 8.dp)
                 .fillMaxWidth()
-
         )
 
         LazyRow(
@@ -123,6 +122,7 @@ fun ActivatorCardRow(
             items(tasks) { activator ->
                 ActivatorCard(
                     activator = activator,
+                    taskName = "Task Name",
                     onClick = {
                         navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
                     }
@@ -133,7 +133,7 @@ fun ActivatorCardRow(
 }
 
 @Composable
-fun ActivatorCard(activator: Activator, onClick: () -> Unit = {}) {
+fun ActivatorCard(activator: Activator, taskName: String, onClick: () -> Unit = {}) {
 
     Column(
         verticalArrangement = Arrangement.Top, modifier = Modifier
@@ -145,25 +145,18 @@ fun ActivatorCard(activator: Activator, onClick: () -> Unit = {}) {
             .padding(16.dp)
     ) {
         Text(
-            text = activator.comment ?: "Hola",
+            text = taskName,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurface,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2
         )
         Text(
-            text = activator.activatorId.toString(),
+            text = activator.comment ?: "",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-        Text(
-            text = activator.taskToActivateId.toString(),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
+            maxLines = 3
         )
     }
 
