@@ -169,7 +169,10 @@ class DAOs {
                 SELECT activators.* 
                 FROM activators 
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId 
-                WHERE activators.userCancelled = 0
+                WHERE
+                    activators.userCancelled = 0 AND
+                    COALESCE(endDate > strftime('%s', 'now'),1) AND
+                    COALESCE(endRep > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
                 GROUP BY activators.activatorId 
                 HAVING 
                     (
@@ -218,7 +221,10 @@ class DAOs {
                 SELECT activators.*
                 FROM activators
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId
-                WHERE activators.userCancelled = 0
+                WHERE 
+                    activators.userCancelled = 0 AND
+                    COALESCE(endDate > strftime('%s', 'now'),1) AND
+                    COALESCE(endRep > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
                 GROUP BY activators.activatorId
                 HAVING 
                     (
