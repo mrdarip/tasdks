@@ -283,8 +283,10 @@ private fun EndAfterFactorInput(
     onActivatorChanged: (Activator) -> Unit
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.padding(horizontal = 16.dp)
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
     ) {
         Text(text = "Kill after repetitions")
         TextField(
@@ -296,8 +298,10 @@ private fun EndAfterFactorInput(
         )
     }
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.padding(horizontal = 16.dp)
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
     ) {
         Text(text = "Kill after date")
         DateInput(
