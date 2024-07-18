@@ -255,4 +255,24 @@ OR
 )
 ```
 
+## Play Activator screen need to be reworked
+
+### UI
+
+The play activator screen is too simple, it should have a more complex UI, like rendering the tree
+graph
+
+```mermaid
+flowchart LR
+    A["hi mom"] --> B["this is mermaid!"]
+```
+
+### UX
+
+maybe aproximating it to something like spotify UI would give user a familiar experience
+
+### Code
+
+Background-running code should be moved to its viewmodel
+
 
