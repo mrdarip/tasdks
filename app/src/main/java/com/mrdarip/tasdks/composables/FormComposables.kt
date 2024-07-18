@@ -398,12 +398,9 @@ private fun RepetitionsRangeInput(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row {
-            Text(
-                text = if (activator.repetitionRange.repetitionUnit.isExactDate) "start" else "min",
-                modifier = Modifier.weight(1f)
-            )
-
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             if (activator.repetitionRange.repetitionUnit.isExactDate) {
                 DateInput(
                     date = activator.repetitionRange.start,
@@ -428,12 +425,11 @@ private fun RepetitionsRangeInput(
                     },
                     label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until start") },
                     placeholder = { Text("Activator Description") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    modifier = Modifier.weight(1f)
                 )
             }
-        }
-        Row {
-            Text(text = "max", modifier = Modifier.weight(1f))
+
             if (activator.repetitionRange.repetitionUnit.isExactDate) {
                 DateInput(
                     date = activator.repetitionRange.end,
@@ -458,7 +454,8 @@ private fun RepetitionsRangeInput(
                     },
                     label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until deadline") },
                     placeholder = { Text("Activator Description") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
