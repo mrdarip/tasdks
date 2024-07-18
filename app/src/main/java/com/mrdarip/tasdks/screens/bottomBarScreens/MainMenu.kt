@@ -32,8 +32,18 @@ fun BodyContent(
     navController: NavController
 ) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
-        ActivatorCardRow(mainMenuState.overdueActivators, "Overdue Tasks", navController)
-        ActivatorCardRow(mainMenuState.pendingActivators, "Pending Tasks", navController)
+        ActivatorCardRow(
+            mainMenuState.overdueActivators,
+            "Overdue Tasks",
+            mainMenuViewModel,
+            navController
+        )
+        ActivatorCardRow(
+            mainMenuState.pendingActivators,
+            "Pending Tasks",
+            mainMenuViewModel,
+            navController
+        )
 
         TasksCardRow(mainMenuState.activeTasks, "All tasks", mainMenuViewModel, navController)
         TasksCardRow(

@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,7 +28,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
+import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
 
 
 @Composable
@@ -102,6 +105,7 @@ fun TwoButtonsListItem(
 fun ActivatorCardRow(
     tasks: List<Activator>,
     title: String,
+    mainMenuViewModel: MainMenuViewModel,
     navController: NavController
 ) {
     if (tasks.isNotEmpty()) {
@@ -122,7 +126,8 @@ fun ActivatorCardRow(
             items(tasks) { activator ->
                 ActivatorCard(
                     activator = activator,
-                    taskName = "Task Name",
+                    taskName = mainMenuViewModel.getTaskById(activator.taskToActivateId)
+                        .collectAsState(initial = Task()).value.name,
                     onClick = {
                         navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
                     }
