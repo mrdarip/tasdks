@@ -269,7 +269,16 @@ flowchart LR
 
 ### UX
 
-maybe aproximating it to something like spotify UI would give user a familiar experience
+Maybe approximating it to something like spotify UI would give user a familiar experience
+
+- Playlists need to be implemented
+    - Allow skipping to next subtask
+- ~~Allow pausing and resuming~~
+    - If you started a task, you should finish it
+- Allow doing tasks in the background like in spotify mini player
+- Allow setting a task as a favorite
+    - This one sounds like a good idea, but it's not necessary
+- Allow doing tasks while you're in a waiting task
 
 ### Code
 
