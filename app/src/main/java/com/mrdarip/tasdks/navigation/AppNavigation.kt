@@ -6,13 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -123,24 +121,18 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
     val labels = listOf(
         "Manage Tasks",
         "Manage Activators",
-        "Manage Objects",
-        "Manage Places",
         "Manage Resources"
     )
 
     val icons = listOf(
         Icons.Filled.Build,
         Icons.Filled.PlayArrow,
-        Icons.Filled.ShoppingCart,
-        Icons.Filled.Place,
-        Icons.Filled.Face
+        Icons.Filled.Star
     )
 
     val screens = listOf(
         AppScreens.ManageTasks,
         AppScreens.ManageActivators,
-        AppScreens.ManageObjects,
-        AppScreens.ManagePlaces,
         AppScreens.ManageResources
     )
 

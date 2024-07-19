@@ -291,8 +291,5 @@ flowchart LR
 
 - Background-running code should be moved to its viewmodel
   - Prioritize starting with play activator screen
-- remove entities
-  - places
-  - objects
-  - resources
+- remove resources entity?
 
