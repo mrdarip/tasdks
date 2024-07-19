@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
@@ -98,6 +102,21 @@ fun TwoButtonsListItem(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun MiniActivatorPlayer(
+    topActivator: Activator = Activator(taskToActivateId = 1),
+    currentActivator: Activator = Activator(taskToActivateId = 2)
+) {
+    TwoButtonsListItem(
+        title = "hol",
+        subTitle = "a",
+        emoji = "m",
+        primaryIcon = Icons.Filled.PlayArrow,
+        secondaryIcon = Icons.Filled.Done
+    )
 }
 
 

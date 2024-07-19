@@ -277,8 +277,8 @@ flowchart LR
 - Implement a settings page
 
 - Playlists need to be implemented
-    - Allow skipping to next subtask
-  - as specified by task.isPlaylist
+  - Allow skipping to next subtask
+  - As specified by task.isPlaylist
 - ~~Allow pausing and resuming~~
   - If you started a task, you must finish it
 - Allow doing tasks in the background like in spotify mini player
