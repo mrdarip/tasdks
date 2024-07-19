@@ -260,7 +260,8 @@ OR
 ### UI
 
 The play activator screen is too simple, it should have a more complex UI, like rendering the tree
-graph
+graph. [this](https://github.com/patrykandpatrick/vico?tab=Apache-2.0-1-ov-file#readme) could be
+useful
 
 ```mermaid
 flowchart LR
@@ -274,7 +275,12 @@ flowchart LR
 - Maybe approximating it to something like spotify UI would give user a familiar experience
 - Main screen should be less monotone and more distinct
   - Design a new page layout
-- Implement a settings page
+- Implement a settings screen
+- Implement a help screen
+- Implement a about screen
+- Implement a feedback screen
+- Implement a tutorial screen
+- Implement a statistics screen
 
 - Playlists need to be implemented
   - Allow skipping to next subtask
@@ -292,4 +298,4 @@ flowchart LR
 - Background-running code should be moved to its viewmodel
   - Prioritize starting with play activator screen
 - remove resources entity?
-
+- Replace all hardcoded strings with resources
