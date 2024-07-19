@@ -267,21 +267,28 @@ flowchart LR
     A["hi mom"] --> B["this is mermaid!"]
 ```
 
+- ActivatorCardRow's cards should display task's icon
+
 ### UX
 
-Maybe approximating it to something like spotify UI would give user a familiar experience
+- Maybe approximating it to something like spotify UI would give user a familiar experience
+- Main screen should be less monotone and more distinct
+  - Design a new page layout
 
 - Playlists need to be implemented
     - Allow skipping to next subtask
+  - as specified by task.isPlaylist
 - ~~Allow pausing and resuming~~
-    - If you started a task, you should finish it
+  - If you started a task, you must finish it
 - Allow doing tasks in the background like in spotify mini player
 - Allow setting a task as a favorite
     - This one sounds like a good idea, but it's not necessary
 - Allow doing tasks while you're in a waiting task
+  - As specified by task.allowParallelTasks and task.waitTime
 
 ### Code
 
-Background-running code should be moved to its viewmodel
+- Background-running code should be moved to its viewmodel
+  - Prioritize starting with play activator screen
 
 
