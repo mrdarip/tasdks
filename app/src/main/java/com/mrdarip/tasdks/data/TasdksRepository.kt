@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 
 class TasdksRepository(
     private val taskDAO: DAOs.TaskDAO,
-    private val objectDAO: DAOs.ObjectDAO,
     private val activatorDAO: DAOs.ActivatorDAO,
     private val executionDAO: DAOs.ExecutionDAO,
     private val resourceDAO: DAOs.ResourceDAO,
@@ -25,7 +24,6 @@ class TasdksRepository(
     val pendingTasks = activatorDAO.getPending()
     val tasksOrderByLastDone = taskDAO.getAllOrderByLastDone()
     val tasksOrderByUsuallyAtThisTime = taskDAO.getAllOrderByUsuallyAtThisTime()
-    val objects = objectDAO.getAllObjects()
     val activators = activatorDAO.getAllActivators()
     val activeActivators = activatorDAO.getActiveActivators()
     val resources = resourceDAO.getAllResources()

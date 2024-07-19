@@ -102,25 +102,6 @@ class DAOs {
         fun maxETA(taskId: Long, percentile: Double = 95.0): Long
     }
 
-
-    @Dao
-    interface ObjectDAO {
-        @Insert
-        fun insert(obj: Object)
-
-        @Update
-        fun update(obj: Object)
-
-        @Delete
-        fun delete(obj: Object)
-
-        @Query("SELECT * FROM objects")
-        fun getAllObjects(): Flow<List<Object>>
-
-        @Query("SELECT * FROM objects WHERE objectId = :objectId")
-        fun getObjectById(objectId: Long): Object
-    }
-
     @Dao
     interface ActivatorDAO {
         @Insert
@@ -328,10 +309,4 @@ class DAOs {
         fun addTaskAsLastSubTask(taskId: Long, parentTaskId: Long)
     }
 
-    @Dao
-    interface TaskWithObjectsDAO {
-        @Transaction
-        @Query("SELECT * FROM tasks")
-        fun getTasksWithObjects(): Flow<List<TaskWithObjects>>
-    }
 }

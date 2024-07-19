@@ -10,7 +10,6 @@ object Graph {
     val repository by lazy{
         TasdksRepository(
             db.taskDao(),
-            db.objectDao(),
             db.activatorDao(),
             db.executionDao(),
             db.resourceDao(),

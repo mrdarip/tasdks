@@ -17,17 +17,9 @@ data class Task(
     val iconEmoji: String? = null,
     val archived: Boolean = false,
     val createdTime: Double = System.currentTimeMillis() / 1000.0,
-
     val isPlaylist: Boolean = false, //for tasks that allow skipping its direct subtasks
     val waitTime: Int = 0, //In seconds //for tasks that need waiting until you can do the next task
     val allowParallelTasks: Boolean = false, //for tasks that can be done at the same time as other tasks
-)
-
-
-@Entity(tableName = "objects")
-data class Object(
-    @PrimaryKey(autoGenerate = true) val objectId: Long = 0,
-    val name: String = "Object " + Date(System.currentTimeMillis()).toString(),
 )
 
 enum class RepetitionUnit(val isExactDate: Boolean) {
@@ -92,13 +84,6 @@ data class Resource(
     val resourceType: ResourceType
 )
 
-
-@Entity(primaryKeys = ["taskId", "objectId"])
-data class TaskObjectCR(
-    val taskId: Long,
-    val objectId: Long
-)
-
 @Entity(primaryKeys = ["parentTaskId", "position"])
 data class TaskTaskCR(
     val parentTaskId: Long,
@@ -119,16 +104,6 @@ data class TaskWithTasks(
         )
     )
     val tasks: List<Task>
-)
-
-data class TaskWithObjects(
-    @Embedded val task: Task,
-    @Relation(
-        parentColumn = "taskId",
-        entityColumn = "objectId",
-        associateBy = Junction(TaskObjectCR::class)
-    )
-    val objects: List<Object>
 )
 
 fun unixEpochTime(): Int {
