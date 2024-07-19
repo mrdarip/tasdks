@@ -274,6 +274,7 @@ flowchart LR
 - Maybe approximating it to something like spotify UI would give user a familiar experience
 - Main screen should be less monotone and more distinct
   - Design a new page layout
+- Implement a settings page
 
 - Playlists need to be implemented
     - Allow skipping to next subtask
@@ -290,5 +291,8 @@ flowchart LR
 
 - Background-running code should be moved to its viewmodel
   - Prioritize starting with play activator screen
-
+- remove entities
+  - places
+  - objects
+  - resources
 
