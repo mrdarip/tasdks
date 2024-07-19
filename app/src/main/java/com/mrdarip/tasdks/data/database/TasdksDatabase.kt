@@ -9,28 +9,36 @@ import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Converters
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.Execution
+import com.mrdarip.tasdks.data.entity.Object
+import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Resource
 import com.mrdarip.tasdks.data.entity.Task
+import com.mrdarip.tasdks.data.entity.TaskObjectCR
 import com.mrdarip.tasdks.data.entity.TaskTaskCR
 
 @Database(
     entities = [
         Task::class,
+        Place::class,
         Object::class,
         Activator::class,
         Execution::class,
         Resource::class,
-        TaskTaskCR::class],
+        TaskTaskCR::class,
+        TaskObjectCR::class],
     version = 1,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class TasdksDatabase : RoomDatabase() {
     abstract fun taskDao(): DAOs.TaskDAO
+    abstract fun placeDao(): DAOs.PlaceDAO
+    abstract fun objectDao(): DAOs.ObjectDAO
     abstract fun activatorDao(): DAOs.ActivatorDAO
     abstract fun executionDao(): DAOs.ExecutionDAO
     abstract fun resourceDao(): DAOs.ResourceDAO
     abstract fun taskWithTasksDao(): DAOs.TaskWithTasksDAO
+    abstract fun taskWithObjectsDao(): DAOs.TaskWithObjectsDAO
     companion object {
         @Volatile
         private var INSTANCE: TasdksDatabase? = null

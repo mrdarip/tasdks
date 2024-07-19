@@ -102,6 +102,41 @@ class DAOs {
         fun maxETA(taskId: Long, percentile: Double = 95.0): Long
     }
 
+    @Dao
+    interface PlaceDAO {
+        @Insert
+        fun insert(place: Place)
+
+        @Update
+        fun update(place: Place)
+
+        @Delete
+        fun delete(place: Place)
+
+        @Query("SELECT * FROM places")
+        fun getAllPlaces(): Flow<List<Place>>
+
+        @Query("SELECT * FROM places WHERE placeId = :placeId")
+        fun getPlaceById(placeId: Long): Flow<Place>
+    }
+
+    @Dao
+    interface ObjectDAO {
+        @Insert
+        fun insert(obj: Object)
+
+        @Update
+        fun update(obj: Object)
+
+        @Delete
+        fun delete(obj: Object)
+
+        @Query("SELECT * FROM objects")
+        fun getAllObjects(): Flow<List<Object>>
+
+        @Query("SELECT * FROM objects WHERE objectId = :objectId")
+        fun getObjectById(objectId: Long): Object
+    }
 
     @Dao
     interface ActivatorDAO {
@@ -308,5 +343,12 @@ class DAOs {
             "INSERT INTO TaskTaskCR (parentTaskId, childTaskId, position) VALUES " + "(:parentTaskId, :taskId, COALESCE(((SELECT MAX(position) FROM TaskTaskCR WHERE parentTaskId = :parentTaskId) + 1),0))"
         )
         fun addTaskAsLastSubTask(taskId: Long, parentTaskId: Long)
+    }
+
+    @Dao
+    interface TaskWithObjectsDAO {
+        @Transaction
+        @Query("SELECT * FROM tasks")
+        fun getTasksWithObjects(): Flow<List<TaskWithObjects>>
     }
 }
