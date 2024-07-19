@@ -106,7 +106,6 @@ class EditTaskViewModel(
 
 data class EditTaskState(
     val tasks: List<Task> = emptyList(),
-    val objects: List<Object> = emptyList(),
     val tasksOrderedByLastDone: List<Task> = emptyList(),
     val tasksOrderedByUsuallyAtThisTime: List<Task> = emptyList(),
     //TODO: Add other entities video 6/7

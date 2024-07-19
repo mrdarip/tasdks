@@ -1,4 +1,4 @@
-package com.mrdarip.tasdks.screens.viewModels
+package com.mrdarip.tasdks.screens.bottomBarScreens.viewModels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,7 +87,6 @@ class MainMenuViewModel(
 
 data class MainMenuState(
     val activeTasks: List<Task> = emptyList(),
-    val objects: List<Object> = emptyList(),
     val tasksOrderedByLastDone: List<Task> = emptyList(),
     val tasksOrderedByUsuallyAtThisTime: List<Task> = emptyList(),
     val overdueActivators: List<Activator> = emptyList(),

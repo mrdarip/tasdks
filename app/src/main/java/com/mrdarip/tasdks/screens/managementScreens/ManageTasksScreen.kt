@@ -22,8 +22,8 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.navigation.AppScreens
-import com.mrdarip.tasdks.screens.viewModels.MainMenuState
-import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
+import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuState
+import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

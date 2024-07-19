@@ -5,8 +5,7 @@ import com.mrdarip.tasdks.data.database.TasdksDatabase
 
 object Graph {
 
-    lateinit var db:TasdksDatabase
-        private set
+    private lateinit var db: TasdksDatabase
     val repository by lazy{
         TasdksRepository(
             db.taskDao(),

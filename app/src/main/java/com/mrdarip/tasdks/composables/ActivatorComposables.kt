@@ -34,7 +34,7 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
-import com.mrdarip.tasdks.screens.viewModels.MainMenuViewModel
+import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
 
 
 @Composable

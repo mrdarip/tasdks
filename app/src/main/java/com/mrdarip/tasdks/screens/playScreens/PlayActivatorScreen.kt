@@ -92,7 +92,7 @@ fun PlayActivatorBodyContent(
 
 
 fun start(newTask: Task, parentExecution: Execution?, vm: PlayActivatorViewModel) {
-    vm.addToTaksList(newTask)
+    vm.addToTasksList(newTask)
     Log.i("PlayActivatorScreen", "Tarea actual: ${newTask.name}")
     val currentExecutionId = vm.insertExecution(
         Execution(
