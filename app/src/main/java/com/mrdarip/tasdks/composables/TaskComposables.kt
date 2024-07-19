@@ -31,8 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,7 +49,7 @@ import kotlinx.coroutines.withContext
 
 @Preview
 @Composable
-fun TaskCard(task: Task = Task(), placeName: String? = null, onClick: () -> Unit = {}) {
+fun TaskCard(task: Task = Task(), onClick: () -> Unit = {}) {
     Box {
         Column(
             verticalArrangement = Arrangement.Top, modifier = Modifier
@@ -76,15 +74,6 @@ fun TaskCard(task: Task = Task(), placeName: String? = null, onClick: () -> Unit
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
-            if (placeName != null) {
-                Text(
-                    text = placeName,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
-            }
         }
         Text(
             text = task.iconEmoji ?: "🗒️",
@@ -178,11 +167,8 @@ fun TasksCardRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(tasks) { task ->
-                val placeName by mainMenuViewModel.getPlaceName(task.placeId)
-                    .collectAsState(initial = "")
                 TaskCard(
                     task = task,
-                    placeName = placeName,
                     onClick = {
                         mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
                             val activatorId = mainMenuViewModel.insertActivator(
@@ -252,8 +238,7 @@ fun TaskLiItemPreview() {
         task = Task(
             name = "Task name",
             comment = "Task comment",
-            iconEmoji = "🐱",
-            placeId = null
+            iconEmoji = "🐱"
         ),
         placeName = "Place name"
     )
@@ -328,7 +313,7 @@ fun SelectTaskRow(
 ) {//TODO: review this function, adding a searchbar
     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         items(tasks) { task ->
-            TaskCard(task = task, placeName = "", onClick = { onTaskClicked(task) })
+            TaskCard(task = task, onClick = { onTaskClicked(task) })
         }
     }
 }
@@ -343,7 +328,7 @@ fun SelectTaskGrid(
         columns = GridCells.Adaptive(minSize = 128.dp)
     ) {
         items(tasks) { task ->
-            TaskCard(task = task, placeName = "", onClick = { onTaskClicked(task) })
+            TaskCard(task = task, onClick = { onTaskClicked(task) })
         }
     }
 }

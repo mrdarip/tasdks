@@ -10,7 +10,6 @@ import com.mrdarip.tasdks.data.entity.Converters
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.Object
-import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Resource
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.data.entity.TaskObjectCR
@@ -19,7 +18,6 @@ import com.mrdarip.tasdks.data.entity.TaskTaskCR
 @Database(
     entities = [
         Task::class,
-        Place::class,
         Object::class,
         Activator::class,
         Execution::class,
@@ -32,7 +30,6 @@ import com.mrdarip.tasdks.data.entity.TaskTaskCR
 @TypeConverters(Converters::class)
 abstract class TasdksDatabase : RoomDatabase() {
     abstract fun taskDao(): DAOs.TaskDAO
-    abstract fun placeDao(): DAOs.PlaceDAO
     abstract fun objectDao(): DAOs.ObjectDAO
     abstract fun activatorDao(): DAOs.ActivatorDAO
     abstract fun executionDao(): DAOs.ExecutionDAO

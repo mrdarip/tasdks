@@ -102,23 +102,6 @@ class DAOs {
         fun maxETA(taskId: Long, percentile: Double = 95.0): Long
     }
 
-    @Dao
-    interface PlaceDAO {
-        @Insert
-        fun insert(place: Place)
-
-        @Update
-        fun update(place: Place)
-
-        @Delete
-        fun delete(place: Place)
-
-        @Query("SELECT * FROM places")
-        fun getAllPlaces(): Flow<List<Place>>
-
-        @Query("SELECT * FROM places WHERE placeId = :placeId")
-        fun getPlaceById(placeId: Long): Flow<Place>
-    }
 
     @Dao
     interface ObjectDAO {

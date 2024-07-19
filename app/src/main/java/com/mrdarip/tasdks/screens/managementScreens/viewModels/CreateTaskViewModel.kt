@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
 import com.mrdarip.tasdks.data.entity.Object
-import com.mrdarip.tasdks.data.entity.Place
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -19,9 +18,6 @@ class CreateTaskViewModel(
     var state by mutableStateOf(CreateTaskState())
         private set
 
-    fun getPlaceName(placeId: Long?): Flow<String> {
-        return repository.getPlaceName(placeId)
-    }
 
     fun deleteTask(task: Task) {
         viewModelScope.launch {
@@ -61,7 +57,6 @@ class CreateTaskViewModel(
 data class CreateTaskState(
     val tasks: List<Task> = emptyList(),
     val objects: List<Object> = emptyList(),
-    val places: List<Place> = emptyList(),
     val tasksOrderedByLastDone: List<Task> = emptyList(),
     val tasksOrderedByUsuallyAtThisTime: List<Task> = emptyList(),
     //TODO: Add other entities video 6/7

@@ -48,7 +48,14 @@ fun ManageActivatorsBodyContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(viewModel.state.activeActivators) { activator ->
-                val taskToActivate = viewModel.getTaskById(activator.taskToActivateId).collectAsState(initial = Task(name = "...", comment = null, iconEmoji = null, placeId = null)).value
+                val taskToActivate = viewModel.getTaskById(activator.taskToActivateId)
+                    .collectAsState(
+                        initial = Task(
+                            name = "...",
+                            comment = null,
+                            iconEmoji = null
+                        )
+                    ).value
                 TwoButtonsListItem(
                     title = taskToActivate.name,
                     subTitle = activator.comment?:"No comment provided",

@@ -15,7 +15,6 @@ data class Task(
     var name: String = "",
     val comment: String? = null, //iconEmoji can be null so later on you can know what tasks weren't given an emoji
     val iconEmoji: String? = null,
-    val placeId: Long? = null,
     val archived: Boolean = false,
     val createdTime: Double = System.currentTimeMillis() / 1000.0,
 
@@ -24,18 +23,11 @@ data class Task(
     val allowParallelTasks: Boolean = false, //for tasks that can be done at the same time as other tasks
 )
 
-@Entity(tableName = "places")
-data class Place(
-    @PrimaryKey(autoGenerate = true) val placeId: Long = 0,
-    val name: String = "Place " + Date(System.currentTimeMillis()).toString(),
-    val parentPlaceId: Long? = null
-)
 
 @Entity(tableName = "objects")
 data class Object(
     @PrimaryKey(autoGenerate = true) val objectId: Long = 0,
     val name: String = "Object " + Date(System.currentTimeMillis()).toString(),
-    val placeId: Long? = null
 )
 
 enum class RepetitionUnit(val isExactDate: Boolean) {

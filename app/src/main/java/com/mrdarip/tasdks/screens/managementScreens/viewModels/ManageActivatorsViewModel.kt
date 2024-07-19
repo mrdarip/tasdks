@@ -40,10 +40,6 @@ class ManageActivatorsViewModel(
         }
     }
 
-    fun getPlaceName(placeId: Long?): Flow<String> {
-        return repository.getPlaceName(placeId)
-    }
-
     fun getTaskById(taskId: Long): Flow<Task> {
         return repository.getTaskByIdAsFlow(taskId)
     }

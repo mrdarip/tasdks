@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 
 class TasdksRepository(
     private val taskDAO: DAOs.TaskDAO,
-    private val placeDAO: DAOs.PlaceDAO,
     private val objectDAO: DAOs.ObjectDAO,
     private val activatorDAO: DAOs.ActivatorDAO,
     private val executionDAO: DAOs.ExecutionDAO,
@@ -26,7 +25,6 @@ class TasdksRepository(
     val pendingTasks = activatorDAO.getPending()
     val tasksOrderByLastDone = taskDAO.getAllOrderByLastDone()
     val tasksOrderByUsuallyAtThisTime = taskDAO.getAllOrderByUsuallyAtThisTime()
-    val places = placeDAO.getAllPlaces()
     val objects = objectDAO.getAllObjects()
     val activators = activatorDAO.getAllActivators()
     val activeActivators = activatorDAO.getActiveActivators()
@@ -67,10 +65,6 @@ class TasdksRepository(
         activatorDAO.upsert(activator)
     }
 
-    fun getPlaceName(placeId: Long?): Flow<String> {
-        if (placeId == null) return emptyFlow()
-        return placeDAO.getPlaceById(placeId).mapNotNull { it.name }
-    }
 
     fun getSubTasksOfTask(taskId: Long): Flow<List<Task>> {
         return taskDAO.getSubTasks(taskId)

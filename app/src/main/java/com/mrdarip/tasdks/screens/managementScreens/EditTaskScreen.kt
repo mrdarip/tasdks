@@ -54,7 +54,7 @@ fun EditTaskBodyContent(
 
     val task by editTaskViewModel.getTaskById(taskId).collectAsState(
         initial = Task(
-            name = "", comment = null, iconEmoji = null, placeId = null
+            name = "", comment = null, iconEmoji = null
         )
     )
 
