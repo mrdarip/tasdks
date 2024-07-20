@@ -46,9 +46,12 @@ fun TwoButtonsListItem(
     onPrimaryClick: () -> Unit = {},
     secondaryIcon: ImageVector? = null,
     onSecondaryClick: () -> Unit = {},
+    onLiItemClick: () -> Unit = {}
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onLiItemClick),
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -127,7 +130,10 @@ fun MiniActivatorPlayer(
         primaryIcon = Icons.Filled.PlayArrow,
         secondaryIcon = Icons.Filled.Done,
         onPrimaryClick = onPrimaryClick,
-        onSecondaryClick = onSecondaryClick
+        onSecondaryClick = onSecondaryClick,
+        onLiItemClick = {
+            //TODO: Implement navigating to full screen play activator screen
+        }
     )
 }
 

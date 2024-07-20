@@ -54,6 +54,9 @@ fun ManageTasksBodyContent(navController: NavController, mainMenuViewModel: Main
                         navController.navigate(
                             "${AppScreens.CreateActivator.route}/${task.taskId}"
                         )
+                    },
+                    onLiItemClick = {
+                        //TODO: Implement navigating to task details
                     }
                 )
             }

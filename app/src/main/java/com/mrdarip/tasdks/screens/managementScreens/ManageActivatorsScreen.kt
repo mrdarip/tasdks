@@ -67,7 +67,10 @@ fun ManageActivatorsBodyContent(
                     onSecondaryClick = {
                         navController.navigate("${AppScreens.EditActivator.route}/${activator.activatorId}")
                     },
-                    secondaryIcon = Icons.Filled.Edit
+                    secondaryIcon = Icons.Filled.Edit,
+                    onLiItemClick = {
+                        //TODO: Implement navigating to activator details
+                    }
                 )
             }
         }
