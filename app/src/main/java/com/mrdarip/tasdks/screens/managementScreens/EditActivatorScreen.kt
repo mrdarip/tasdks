@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,9 +51,13 @@ fun EditActivatorBodyContent(
     activator: Activator,
     onActivatorChanged: (Activator) -> Unit
 ) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Text(text = "Edit activator", style = MaterialTheme.typography.headlineLarge)
+
         ActivatorFields(
             activator = activator,
             possibleTasksToActivate = viewModel.state.tasks,

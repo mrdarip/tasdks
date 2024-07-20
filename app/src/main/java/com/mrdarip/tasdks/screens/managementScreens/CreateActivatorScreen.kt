@@ -1,6 +1,5 @@
 package com.mrdarip.tasdks.screens.managementScreens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -48,8 +47,7 @@ fun CreateActivatorBodyContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.SpaceBetween
+            .verticalScroll(rememberScrollState())
     ) {
         var newActivator by remember {
             mutableStateOf(
