@@ -41,7 +41,8 @@ flowchart LR
     - This one sounds like a good idea, but it's not necessary
 - Allow doing tasks while you're in a waiting task
     - As specified by task.allowParallelTasks and task.waitTime
-- Re-implement creating one time activators from manage tasks screen
+- Re-implement creating one time activators from manage tasks screen (as removed
+  on [this commit](https://github.com/mrdarip/tasdks/commit/624e464fe49870422944f50097deffb4d75af12e))
 - Implement TTS on playActivatorScreen
 
 ### Code
