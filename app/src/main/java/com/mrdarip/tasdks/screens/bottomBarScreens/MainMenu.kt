@@ -1,10 +1,14 @@
 package com.mrdarip.tasdks.screens.bottomBarScreens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -31,36 +35,46 @@ fun BodyContent(
     mainMenuState: MainMenuState,
     navController: NavController
 ) {
-    Column(Modifier.verticalScroll(rememberScrollState())) {
-        ActivatorCardRow(
-            mainMenuState.overdueActivators,
-            "Overdue Tasks",
-            mainMenuViewModel,
-            navController
-        )
-        ActivatorCardRow(
-            mainMenuState.pendingActivators,
-            "Pending Tasks",
-            mainMenuViewModel,
-            navController
-        )
+    if (mainMenuState.activeTasks.isEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        TasksCardRow(mainMenuState.activeTasks, "All tasks", mainMenuViewModel, navController)
-        TasksCardRow(
-            mainMenuState.tasksOrderedByLastDone,
-            "Last done",
-            mainMenuViewModel,
-            navController
-        )
-        TasksCardRow(
-            mainMenuState.tasksOrderedByUsuallyAtThisTime,
-            "Usually at this time",
-            mainMenuViewModel,
-            navController
-        )
+            Text(text = "There's no task yet. Please add a task first.")
+        }
+    } else {
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            ActivatorCardRow(
+                mainMenuState.overdueActivators,
+                "Overdue Tasks",
+                mainMenuViewModel,
+                navController
+            )
+            ActivatorCardRow(
+                mainMenuState.pendingActivators,
+                "Pending Tasks",
+                mainMenuViewModel,
+                navController
+            )
+
+            TasksCardRow(mainMenuState.activeTasks, "All tasks", mainMenuViewModel, navController)
+            TasksCardRow(
+                mainMenuState.tasksOrderedByLastDone,
+                "Last done",
+                mainMenuViewModel,
+                navController
+            )
+            TasksCardRow(
+                mainMenuState.tasksOrderedByUsuallyAtThisTime,
+                "Usually at this time",
+                mainMenuViewModel,
+                navController
+            )
+        }
     }
 }
-
 
 
 
