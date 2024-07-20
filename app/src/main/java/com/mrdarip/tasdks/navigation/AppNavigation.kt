@@ -54,6 +54,8 @@ import com.mrdarip.tasdks.screens.managementScreens.CreateTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditActivatorScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageActivatorsScreen
+import com.mrdarip.tasdks.screens.managementScreens.ManageExecutionsScreen
+import com.mrdarip.tasdks.screens.managementScreens.ManageResourcesScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
 import com.mrdarip.tasdks.screens.playScreens.PlayActivatorScreen
 import kotlinx.coroutines.CoroutineScope
@@ -237,6 +239,13 @@ fun MainNavHost(navController: NavHostController) {
             StatsMenu(navController)
         }
 
+        composable(route = AppScreens.ManageResources.route) {
+            ManageResourcesScreen(navController = navController)
+        }
+
+        composable(route = AppScreens.ManageExecutions.route) {
+            ManageExecutionsScreen(navController = navController)
+        }
         composable(
             "${AppScreens.EditTask.route}/{taskId}",
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
