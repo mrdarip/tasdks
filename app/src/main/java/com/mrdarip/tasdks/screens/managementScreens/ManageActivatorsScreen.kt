@@ -43,7 +43,7 @@ fun ManageActivatorsBodyContent(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
-            modifier = Modifier.padding(0.dp, 8.dp),
+            modifier = Modifier.padding(0.dp, 16.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
