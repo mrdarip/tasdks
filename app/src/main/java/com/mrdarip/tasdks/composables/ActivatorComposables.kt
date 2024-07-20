@@ -107,15 +107,20 @@ fun TwoButtonsListItem(
 @Preview
 @Composable
 fun MiniActivatorPlayer(
-    topActivator: Activator = Activator(taskToActivateId = 1),
-    currentActivator: Activator = Activator(taskToActivateId = 2)
+    activator: Activator = Activator(taskToActivateId = 1),
+    topTask: Task = Task(name = "Top Task"),
+    currentTask: Task = Task(name = "Current Task"),
+    onPrimaryClick: () -> Unit = {},
+    onSecondaryClick: () -> Unit = {}
 ) {
     TwoButtonsListItem(
-        title = "hol",
-        subTitle = "a",
-        emoji = "m",
+        title = currentTask.name,
+        subTitle = "From: ${topTask.name}",
+        emoji = currentTask.iconEmoji ?: "",
         primaryIcon = Icons.Filled.PlayArrow,
-        secondaryIcon = Icons.Filled.Done
+        secondaryIcon = Icons.Filled.Done,
+        onPrimaryClick = onPrimaryClick,
+        onSecondaryClick = onSecondaryClick
     )
 }
 
