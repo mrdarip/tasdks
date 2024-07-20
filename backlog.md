@@ -29,7 +29,7 @@ flowchart LR
     - This should be on the stats screen as a composable
     - This is a perfect alternative to manage activators screen
 - Implement a progress bar on playActivatorScreen
-    - This could go against the 'don't show the user how much time is left' rule
+  - This could go against the "don't show the user how much time is left" rule
 
 - Playlists need to be implemented
     - Allow skipping to next subtask
@@ -42,6 +42,7 @@ flowchart LR
 - Allow doing tasks while you're in a waiting task
     - As specified by task.allowParallelTasks and task.waitTime
 - Implement TTS on playActivatorScreen
+- Warn user when archiving a task that it has active activators if applicable
 
 ### Code
 
