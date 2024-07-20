@@ -39,7 +39,7 @@ fun BodyContent(
     mainMenuState: MainMenuState,
     navController: NavController
 ) {
-    if (mainMenuState.activeTasks.isEmpty()) {
+    if (mainMenuState.activeTasks.isEmpty() && mainMenuState.overdueActivators.isEmpty() && mainMenuState.pendingActivators.isEmpty()) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
