@@ -24,6 +24,12 @@ flowchart LR
 - Implement a feedback screen
 - Implement a tutorial screen
 - Implement a statistics screen
+- Implement a history screen
+    - Implement a calendar view too?
+    - This should be on the stats screen as a composable
+    - This is a perfect alternative to manage activators screen
+- Implement a progress bar on playActivatorScreen
+    - This could go against the 'don't show the user how much time is left' rule
 
 - Playlists need to be implemented
     - Allow skipping to next subtask
@@ -35,10 +41,12 @@ flowchart LR
     - This one sounds like a good idea, but it's not necessary
 - Allow doing tasks while you're in a waiting task
     - As specified by task.allowParallelTasks and task.waitTime
+- Re-implement creating one time activators from manage tasks screen
+- Implement TTS on playActivatorScreen
 
 ### Code
 
 - Background-running code should be moved to its viewmodel
     - Prioritize starting with play activator screen
-- remove resources entity?
+- Remove resources entity?
 - Replace all hardcoded strings with resources
