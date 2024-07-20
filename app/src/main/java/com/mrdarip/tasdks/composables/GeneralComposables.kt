@@ -94,3 +94,92 @@ fun TwoButtonsListItem(
         }
     }
 }
+
+@Composable
+fun ThreeButtonsListItem(
+    title: String,
+    subTitle: String,
+    emoji: String? = null,
+    primaryIcon: ImageVector? = null,
+    onPrimaryClick: () -> Unit = {},
+    secondaryIcon: ImageVector? = null,
+    onSecondaryClick: () -> Unit = {},
+    tertiaryIcon: ImageVector? = null,
+    onTertiaryClick: () -> Unit = {},
+    onLiItemClick: () -> Unit = {}
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onLiItemClick),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
+                modifier = Modifier.weight(1f), // This row will occupy the left space
+            ) {
+
+                if (emoji != null) {
+                    Text(
+                        emoji,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Text(
+                        text = subTitle,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+            Row {
+                if (tertiaryIcon != null) {
+                    IconButton(onClick = { onTertiaryClick() }) {
+                        Icon(
+                            imageVector = tertiaryIcon,
+                            contentDescription = "Edit Activator",
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
+
+                            )
+                    }
+                }
+                if (secondaryIcon != null) {
+                    IconButton(onClick = { onSecondaryClick() }) {
+                        Icon(
+                            imageVector = secondaryIcon,
+                            contentDescription = "Edit Activator",
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
+
+                            )
+                    }
+                }
+                if (primaryIcon != null) {
+                    IconButton(onClick = { onPrimaryClick() }) {
+                        Icon(
+                            imageVector = primaryIcon,
+                            contentDescription = "Play Activator",
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
