@@ -59,7 +59,7 @@ fun ManageActivatorsBodyContent(
                 TwoButtonsListItem(
                     title = taskToActivate.name,
                     subTitle = activator.comment?:"No comment provided",
-                    emoji = taskToActivate.iconEmoji?:"🔨",
+                    emoji = taskToActivate.iconEmoji,
                     onPrimaryClick = {
                         navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
                     },

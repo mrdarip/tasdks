@@ -41,10 +41,10 @@ import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
 fun TwoButtonsListItem(
     title: String,
     subTitle: String,
-    emoji: String,
-    primaryIcon: ImageVector,
+    emoji: String? = null,
+    primaryIcon: ImageVector? = null,
     onPrimaryClick: () -> Unit = {},
-    secondaryIcon: ImageVector,
+    secondaryIcon: ImageVector? = null,
     onSecondaryClick: () -> Unit = {},
 ) {
     Card(
@@ -61,12 +61,16 @@ fun TwoButtonsListItem(
                 horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
                 modifier = Modifier.weight(1f), // This row will occupy the left space
             ) {
-                Text(
-                    emoji,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
+
+                if (emoji != null) {
+                    Text(
+                        emoji,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                }
+
                 Column {
                     Text(
                         text = title,
@@ -83,21 +87,24 @@ fun TwoButtonsListItem(
                 }
             }
             Row {
-                IconButton(onClick = { onSecondaryClick() }) {
-                    Icon(
-                        imageVector = secondaryIcon,
-                        contentDescription = "Edit Activator",
-                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                if (secondaryIcon != null) {
+                    IconButton(onClick = { onSecondaryClick() }) {
+                        Icon(
+                            imageVector = secondaryIcon,
+                            contentDescription = "Edit Activator",
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
 
-                        )
+                            )
+                    }
                 }
-
-                IconButton(onClick = { onPrimaryClick() }) {
-                    Icon(
-                        imageVector = primaryIcon,
-                        contentDescription = "Play Activator",
-                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
-                    )
+                if (primaryIcon != null) {
+                    IconButton(onClick = { onPrimaryClick() }) {
+                        Icon(
+                            imageVector = primaryIcon,
+                            contentDescription = "Play Activator",
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                        )
+                    }
                 }
             }
         }
@@ -116,7 +123,7 @@ fun MiniActivatorPlayer(
     TwoButtonsListItem(
         title = currentTask.name,
         subTitle = "From: ${topTask.name}",
-        emoji = currentTask.iconEmoji ?: "",
+        emoji = currentTask.iconEmoji,
         primaryIcon = Icons.Filled.PlayArrow,
         secondaryIcon = Icons.Filled.Done,
         onPrimaryClick = onPrimaryClick,

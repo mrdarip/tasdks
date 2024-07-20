@@ -46,8 +46,8 @@ fun ManageTasksBodyContent(navController: NavController, mainMenuViewModel: Main
             items(mainMenuState.activeTasks) { task ->
                 TwoButtonsListItem(
                     title = task.name,
-                    subTitle = "",
-                    emoji = task.iconEmoji ?: "🔨",
+                    subTitle = task.comment ?: "No comment",
+                    emoji = task.iconEmoji,
                     primaryIcon = Icons.Filled.PlayArrow,
                     secondaryIcon = Icons.Filled.Add,
                     onPrimaryClick = {
