@@ -1,6 +1,7 @@
 package com.mrdarip.tasdks.screens.managementScreens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -64,12 +65,28 @@ fun EditActivatorBodyContent(
             onActivatorChanged = onActivatorChanged
         )
 
-        Button(onClick = {
-            viewModel.upsertActivator(activator)
-            navController.popBackStack()
-        }, modifier = Modifier.padding(horizontal = 16.dp)) {
-            Icon(Icons.Filled.Edit, contentDescription = "Localized description")
-            Text("Save")
+        Row {
+            Button(onClick = {
+                viewModel.upsertActivator(activator)
+                navController.popBackStack()
+            }, modifier = Modifier.padding(horizontal = 16.dp)) {
+                Icon(Icons.Filled.Edit, contentDescription = "Localized description")
+                Text("Save")
+            }
+
+            Button(onClick = {
+                navController.popBackStack()
+            }, modifier = Modifier.padding(horizontal = 16.dp)) {
+                Text("Cancel")
+            }
+
+            Button(onClick = {
+                navController.popBackStack()
+                viewModel.deleteActivator(activator)
+            }, modifier = Modifier.padding(horizontal = 16.dp)) {
+                Text("Delete")
+            }
         }
+
     }
 }

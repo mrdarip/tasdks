@@ -59,6 +59,12 @@ class EditActivatorViewModel(
         return newTaskId
     }
 
+    fun deleteActivator(activator: Activator) {
+        viewModelScope.launch {
+            repository.deleteActivator(activator)
+        }
+    }
+
     fun getTaskById(taskId: Long): Flow<Task>{
         return repository.getTaskByIdAsFlow(taskId)
     }

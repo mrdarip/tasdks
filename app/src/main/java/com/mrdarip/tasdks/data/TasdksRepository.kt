@@ -63,6 +63,12 @@ class TasdksRepository(
         activatorDAO.upsert(activator)
     }
 
+    suspend fun deleteActivator(activator: Activator) {
+        withContext(Dispatchers.IO) {
+            activatorDAO.delete(activator)
+        }
+    }
+
 
     fun getSubTasksOfTask(taskId: Long): Flow<List<Task>> {
         return taskDAO.getSubTasks(taskId)
