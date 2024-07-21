@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -56,44 +55,6 @@ fun TaskCard(task: Task = Task(), onClick: () -> Unit = {}) {
         subTitle = task.comment,
         onClick = onClick
     )
-}
-
-@Composable
-fun TasdksCard(emoji: String, title: String, subTitle: String?, onClick: () -> Unit) {
-    Box {
-        Column(
-            verticalArrangement = Arrangement.Top, modifier = Modifier
-                .width(150.dp)
-                .height(120.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .clickable(onClick = onClick)
-                .padding(16.dp)
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 2
-            )
-            if (subTitle != null) {
-                Text(
-                    text = subTitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
-            }
-        }
-        Text(
-            text = emoji,
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.absoluteOffset(12.dp, (-14).dp)
-        )
-    }
 }
 
 @Preview
