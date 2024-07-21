@@ -50,6 +50,16 @@ import kotlinx.coroutines.withContext
 @Preview
 @Composable
 fun TaskCard(task: Task = Task(), onClick: () -> Unit = {}) {
+    TasdksCard(
+        emoji = task.iconEmoji ?: "🍪",
+        title = task.name,
+        subTitle = task.comment,
+        onClick = onClick
+    )
+}
+
+@Composable
+fun TasdksCard(emoji: String, title: String, subTitle: String?, onClick: () -> Unit) {
     Box {
         Column(
             verticalArrangement = Arrangement.Top, modifier = Modifier
@@ -61,22 +71,24 @@ fun TaskCard(task: Task = Task(), onClick: () -> Unit = {}) {
                 .padding(16.dp)
         ) {
             Text(
-                text = task.name,
+                text = title,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2
             )
-            Text(
-                text = task.comment ?: "",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-            )
+            if (subTitle != null) {
+                Text(
+                    text = subTitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
         }
         Text(
-            text = task.iconEmoji ?: "🗒️",
+            text = emoji,
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.absoluteOffset(12.dp, (-14).dp)
