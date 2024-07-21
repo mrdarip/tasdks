@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TwoButtonsListItem(
     title: String,
-    subTitle: String,
+    subTitle: String?,
     emoji: String? = null,
     primaryIcon: ImageVector? = null,
     onPrimaryClick: () -> Unit = {},
@@ -69,12 +69,14 @@ fun TwoButtonsListItem(
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.headlineSmall
                     )
-                    Text(
-                        text = subTitle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    if (subTitle != null) {
+                        Text(
+                            text = subTitle,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
             Row {
@@ -105,7 +107,7 @@ fun TwoButtonsListItem(
 @Composable
 fun ThreeButtonsListItem(
     title: String,
-    subTitle: String,
+    subTitle: String?,
     emoji: String? = null,
     primaryIcon: ImageVector? = null,
     onPrimaryClick: () -> Unit = {},
@@ -148,12 +150,14 @@ fun ThreeButtonsListItem(
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.headlineSmall
                     )
-                    Text(
-                        text = subTitle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    if (subTitle != null) {
+                        Text(
+                            text = subTitle,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
             Row {
