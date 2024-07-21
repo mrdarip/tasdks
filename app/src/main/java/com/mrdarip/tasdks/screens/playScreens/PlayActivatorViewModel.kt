@@ -143,86 +143,86 @@ class PlayActivatorViewModel(
     }
 
 
-    fun start(newTask: Task, parentExecution: Execution?, vm: PlayActivatorViewModel) {
-        vm.addToTasksList(newTask)
+    fun start(newTask: Task, parentExecution: Execution?) {
+        addToTasksList(newTask)
         Log.i("PlayActivatorScreen", "Tarea actual: ${newTask.name}")
-        val currentExecutionId = vm.insertExecution(
+        val currentExecutionId = insertExecution(
             Execution(
                 start = unixEpochTime(),
                 end = unixEpochTime(),
                 successfullyEnded = false,
-                activatorId = vm.topActivatorId.value, //TODO: Check is read only
+                activatorId = topActivatorId.value, //TODO: Check is read only
                 resourceId = null, //by now we don't implement resources
                 parentExecution = parentExecution?.executionId,
                 taskId = newTask.taskId
             )
         )
-        vm.setCurrentExecutionId(currentExecutionId)
+        setCurrentExecutionId(currentExecutionId)
 
-        val currentTaskSubtasks = vm.getSubTasksOfTaskAsList(newTask.taskId)
+        val currentTaskSubtasks = getSubTasksOfTaskAsList(newTask.taskId)
         if (currentTaskSubtasks.isNotEmpty()) {
             Log.i("PlayActivatorScreen", "Tenía hijos!")
-            vm.appendPosition(0)
-            start(currentTaskSubtasks[0], vm.getExecutionById(currentExecutionId), vm)
+            appendPosition(0)
+            start(currentTaskSubtasks[0], getExecutionById(currentExecutionId))
         }
     }
 
 
-    fun checkExecution(execution: Execution, viewModel: PlayActivatorViewModel, onEnd: () -> Unit) {
+    fun checkExecution(execution: Execution, onEnd: () -> Unit) {
         Log.i("PlayActivatorScreen", "Check ${execution.taskId} with id ${execution.executionId}")
-        Log.i("PlayActivatorScreen", "Entramos con la lista en ${viewModel.positions.value}")
+        Log.i("PlayActivatorScreen", "Entramos con la lista en ${positions.value}")
 
 
-        viewModel.removeFromTaskList()
+        removeFromTaskList()
 
-        viewModel.updateExecution(
+        updateExecution(
             executionId = execution.executionId,
             end = unixEpochTime(),
             successfullyEnded = true
         )
 
-        val hasBrothers = execution.parentExecution != null && viewModel.getSubTasksOfTaskAsList(
-            viewModel.getExecutionById(
+        val hasBrothers = execution.parentExecution != null && getSubTasksOfTaskAsList(
+            getExecutionById(
                 execution.parentExecution
             ).taskId
         ).size > 1
 
         val hasNextBrother =
-            execution.parentExecution != null && viewModel.positions.value.isNotEmpty() && viewModel.getSubTasksOfTaskAsList(
-                viewModel.getExecutionById(execution.parentExecution).taskId
-            ).size - 1 > viewModel.positions.value.last()
+            execution.parentExecution != null && positions.value.isNotEmpty() && getSubTasksOfTaskAsList(
+                getExecutionById(execution.parentExecution).taskId
+            ).size - 1 > positions.value.last()
 
         //TODO: try removing execution.parentExecution != null by the Distributive property
 
         if (execution.parentExecution != null && hasBrothers && hasNextBrother) {
-            viewModel.addOneToLastPosition()
+            addOneToLastPosition()
 
             val nextBrother =
-                viewModel.getSubTasksOfTaskAsList(viewModel.getExecutionById(execution.parentExecution).taskId)[viewModel.positions.value.last()]
+                getSubTasksOfTaskAsList(getExecutionById(execution.parentExecution).taskId)[positions.value.last()]
 
-            val parentExecution = viewModel.getExecutionById(execution.parentExecution)
+            val parentExecution = getExecutionById(execution.parentExecution)
 
-            start(nextBrother, parentExecution, viewModel)
+            start(nextBrother, parentExecution)
         } else {
-            viewModel.removeLastPosition()
+            removeLastPosition()
 
             if (execution.parentExecution != null) { //has parent
-                val parentExecution = viewModel.getExecutionById(execution.parentExecution)
+                val parentExecution = getExecutionById(execution.parentExecution)
                 checkExecution(
-                    parentExecution, viewModel, onEnd
+                    parentExecution, onEnd
                 )
             } else {
                 onEnd()
             }
         }
 
-        Log.i("PlayActivatorScreen", "Salimos con la lista en ${viewModel.positions.value}")
+        Log.i("PlayActivatorScreen", "Salimos con la lista en ${positions.value}")
     }
 
 
-    fun exit(viewModel: PlayActivatorViewModel) {
-        for (executionId in viewModel.runningExecutionsIds.value) {
-            viewModel.updateExecution(
+    fun exit() {
+        for (executionId in runningExecutionsIds.value) {
+            updateExecution(
                 executionId = executionId, end = unixEpochTime(), successfullyEnded = false
             )
         }

@@ -47,7 +47,6 @@ fun PlayActivatorBodyContent(
                 viewModel.viewModelScope.launch(Dispatchers.IO) {
                     viewModel.checkExecution(
                         viewModel.getExecutionById(viewModel.currentExecutionId.value),
-                        viewModel,
                         onEnd = {
                             viewModel.viewModelScope.launch {
                                 withContext(Dispatchers.Main) {
@@ -63,7 +62,7 @@ fun PlayActivatorBodyContent(
 
             Button(onClick = {
                 viewModel.viewModelScope.launch(Dispatchers.IO) {
-                    viewModel.exit(viewModel)
+                    viewModel.exit()
                     withContext(Dispatchers.Main) {
                         navController.navigate(AppScreens.FirstScreen.route)
                     }
@@ -77,8 +76,7 @@ fun PlayActivatorBodyContent(
                     started = true
                     viewModel.start(
                         viewModel.getTaskById(viewModel.getActivatorById(topActivatorId).taskToActivateId),
-                        null,
-                        viewModel
+                        null
                     )
                 }
             }) {
