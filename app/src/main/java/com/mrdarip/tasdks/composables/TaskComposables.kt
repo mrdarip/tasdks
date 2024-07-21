@@ -50,7 +50,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun TaskCard(task: Task = Task(), onClick: () -> Unit = {}) {
     TasdksCard(
-        emoji = task.iconEmoji ?: "🍪",
+        emoji = task.iconEmoji,
         title = task.name,
         subTitle = task.comment,
         onClick = onClick
