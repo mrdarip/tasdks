@@ -1,10 +1,11 @@
 package com.mrdarip.tasdks.screens.bottomBarScreens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -18,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -36,12 +38,25 @@ fun SearchMenu(navController: NavController) {
 
 @Composable
 fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        EntityLazyGrid(mainMenuState.activeTasks) { task ->
-            TaskCard(task = task)
+    Column(modifier = Modifier.fillMaxHeight()) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .background(Color.Red) // Just for visualization
+        ) {
+            EntityLazyGrid(mainMenuState.activeTasks) { task ->
+                TaskCard(task = task)
+            }
         }
-        EntityLazyGrid(mainMenuState.activeTasks) { task ->
-            TaskCard(task = task)
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .background(Color.Green) // Just for visualization
+        ) {
+            EntityLazyGrid(mainMenuState.activeTasks) { task ->
+                TaskCard(task = task)
+            }
         }
     }
 }
@@ -77,4 +92,9 @@ fun EntityLazyGrid(itemsToShow: List<Task> = listOf(), content: @Composable (Tas
             }
         }
     }
+}
+
+@Composable
+fun HalfHeightColumns() {
+
 }
