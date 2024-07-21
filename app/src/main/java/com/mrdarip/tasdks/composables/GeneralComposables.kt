@@ -192,7 +192,7 @@ fun ThreeButtonsListItem(
 }
 
 @Composable
-fun TasdksCard(emoji: String, title: String, subTitle: String?, onClick: () -> Unit) {
+fun TasdksCard(emoji: String?, title: String, subTitle: String?, onClick: () -> Unit) {
     Box {
         Column(
             verticalArrangement = Arrangement.Top, modifier = Modifier
@@ -220,11 +220,13 @@ fun TasdksCard(emoji: String, title: String, subTitle: String?, onClick: () -> U
                 )
             }
         }
-        Text(
-            text = emoji,
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.absoluteOffset(12.dp, (-14).dp)
-        )
+        if (emoji != null) {
+            Text(
+                text = emoji,
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.absoluteOffset(12.dp, (-14).dp)
+            )
+        }
     }
 }
