@@ -99,15 +99,13 @@ fun SelectableGridTask(
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(12.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer)
-                .apply {
-                    if (selected) {
-                        border(
-                            2.dp,
-                            MaterialTheme.colorScheme.secondary,
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                    }
-                }
+                .then(
+                    if (selected) Modifier.border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(12.dp)
+                    ) else Modifier
+                )
                 .clickable(onClick = onClick)
                 .padding(16.dp)
         ) {
