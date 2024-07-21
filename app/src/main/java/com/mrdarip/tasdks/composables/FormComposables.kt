@@ -103,6 +103,7 @@ fun TaskFields(
                 value = task.waitTime.toString(),
                 onValueChange = { onTaskChange(task.copy(waitTime = it.toIntOrNull() ?: 0)) },
                 label = { Text("Wait time") },
+                suffix = { Text("minutes") },
                 modifier = Modifier.fillMaxWidth()
             )
 
