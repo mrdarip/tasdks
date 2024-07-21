@@ -37,17 +37,26 @@ fun SearchMenu(navController: NavController) {
 @Composable
 fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
     Column(modifier = Modifier.fillMaxSize()) {
-        EntityLazyGrid(mainMenuState.activeTasks)
-        EntityLazyGrid(mainMenuState.activeTasks)
+        EntityLazyGrid(mainMenuState.activeTasks) { task ->
+            TaskCard(task = task)
+        }
+        EntityLazyGrid(mainMenuState.activeTasks) { task ->
+            TaskCard(task = task)
+        }
     }
 }
 
 @Composable
-fun EntityLazyGrid(itemsToShow: List<Task> = listOf()) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .height(300.dp)) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+fun EntityLazyGrid(itemsToShow: List<Task> = listOf(), content: @Composable (Task) -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Tasks", style = MaterialTheme.typography.headlineLarge)
             Button(onClick = { }) {
                 Icon(
@@ -64,13 +73,8 @@ fun EntityLazyGrid(itemsToShow: List<Task> = listOf()) {
             rows = GridCells.Fixed(2), contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             items(itemsToShow) { task ->
-                TaskCard(
-                    task = task,
-                    onClick = { }
-                )
+                content(task) // Invoke the composable function here
             }
         }
     }
 }
-
-
