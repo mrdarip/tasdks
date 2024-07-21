@@ -81,8 +81,8 @@ fun EditActivatorBodyContent(
             }
 
             Button(onClick = {
+                viewModel.upsertActivator(activator.copy(userCancelled = true))
                 navController.popBackStack()
-                viewModel.deleteActivator(activator)
             }, modifier = Modifier.padding(horizontal = 16.dp)) {
                 Text("Delete")
             }
