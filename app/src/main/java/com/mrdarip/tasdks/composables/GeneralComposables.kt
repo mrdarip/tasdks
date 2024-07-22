@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TwoButtonsListItem(
     title: String,
-    subTitle: String?,
+    subTitle: String? = null,
     emoji: String? = null,
     primaryIcon: ImageVector? = null,
     onPrimaryClick: () -> Unit = {},

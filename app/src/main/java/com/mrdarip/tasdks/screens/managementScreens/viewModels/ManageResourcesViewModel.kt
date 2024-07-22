@@ -7,9 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
-import com.mrdarip.tasdks.data.entity.Activator
-import com.mrdarip.tasdks.data.entity.Task
-import kotlinx.coroutines.flow.Flow
+import com.mrdarip.tasdks.data.entity.Resource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -20,32 +18,18 @@ class ManageResourcesViewModel(
         private set
 
     init {
-        getActivators()
-        getActiveActivators()
+        getAllResources()
     }
 
-    private fun getActivators() {
+    private fun getAllResources() {
         viewModelScope.launch {
-            repository.activators.collectLatest {
-                state = state.copy(allActivators = it)
+            repository.resources.collectLatest {
+                state = state.copy(allResources = it)
             }
         }
-    }
-
-    private fun getActiveActivators() {
-        viewModelScope.launch {
-            repository.activeActivators.collectLatest {
-                state = state.copy(activeActivators = it)
-            }
-        }
-    }
-
-    fun getTaskById(taskId: Long): Flow<Task> {
-        return repository.getTaskByIdAsFlow(taskId)
     }
 }
 
 data class ManageResourcesState(
-    val allActivators: List<Activator> = emptyList(),
-    val activeActivators: List<Activator> = emptyList()
+    val allResources: List<Resource> = emptyList()
 )

@@ -73,8 +73,11 @@ data class Execution(
     val taskId: Long
 )
 
-enum class ResourceType {
-    MUSIC, AUDIOBOOK, PODCAST, VIDEO
+enum class ResourceType(val emoji: String) {
+    MUSIC("🎵"),
+    AUDIOBOOK("📚"),
+    PODCAST("🎙️"),
+    VIDEO("📹")
 }
 
 @Entity(tableName = "resources")

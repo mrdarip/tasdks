@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.composables.TwoButtonsListItem
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageResourcesState
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageResourcesViewModel
@@ -40,12 +41,12 @@ fun ManageResourcesBodyContent(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
-            modifier = Modifier.padding(0.dp, 16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
+            modifier = Modifier.padding(16.dp, 0.dp),
+            contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(mainMenuState.allActivators) { task ->
-
+            items(mainMenuState.allResources) { resource ->
+                TwoButtonsListItem(title = resource.name, emoji = resource.resourceType.emoji)
             }
         }
 
@@ -55,7 +56,7 @@ fun ManageResourcesBodyContent(
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
         ) {
-            Text(text = "New Task")
+            Text(text = "New Resource")
         }
     }
 }
