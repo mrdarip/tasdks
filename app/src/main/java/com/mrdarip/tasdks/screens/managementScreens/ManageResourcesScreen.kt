@@ -51,7 +51,7 @@ fun ManageResourcesBodyContent(
         }
 
         Button(
-            onClick = { navController.navigate(AppScreens.CreateTask.route) },
+            onClick = { navController.navigate(AppScreens.CreateResource.route) },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)

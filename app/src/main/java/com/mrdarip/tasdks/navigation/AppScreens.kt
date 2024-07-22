@@ -7,6 +7,7 @@ sealed class AppScreens(val route: String) {
     data object EditActivator : AppScreens("EditActivator")
     data object ManageActivators : AppScreens("ManageActivators")
     data object CreateActivator : AppScreens("CreateActivator")
+    data object CreateResource : AppScreens("CreateResource")
     data object EditResource : AppScreens("EditResource")
     data object ManageResources : AppScreens("ManageResources")
     data object ManageExecutions : AppScreens("ManageExecutions")

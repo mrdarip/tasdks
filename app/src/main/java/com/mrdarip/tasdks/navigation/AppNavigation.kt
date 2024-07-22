@@ -243,6 +243,10 @@ fun MainNavHost(navController: NavHostController) {
             ManageResourcesScreen(navController = navController)
         }
 
+        composable(route = AppScreens.CreateResource.route) {
+            ManageResourcesScreen(navController = navController)
+        }
+
         composable(route = AppScreens.ManageExecutions.route) {
             ManageExecutionsScreen(navController = navController)
         }

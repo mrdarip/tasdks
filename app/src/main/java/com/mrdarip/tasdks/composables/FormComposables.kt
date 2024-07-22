@@ -34,6 +34,9 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -51,10 +54,59 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.RepetitionUnit
+import com.mrdarip.tasdks.data.entity.Resource
+import com.mrdarip.tasdks.data.entity.ResourceType
 import com.mrdarip.tasdks.data.entity.Task
 import java.util.Date
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ResourceFields(
+    resource: Resource = Resource(resourceType = ResourceType.VIDEO),
+    onResourceChanged: (Resource) -> Unit = {}
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        TextField(
+            value = resource.name,
+            onValueChange = { onResourceChanged(resource.copy(name = it)) },
+            label = { Text("Name") },
+            placeholder = { Text("Resource name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+
+        var selectedIndex = resource.resourceType.ordinal
+        val options = ResourceType.entries.map { it.name }
+        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+            SingleChoiceSegmentedButtonRow {
+                options.forEachIndexed { index, label ->
+                    SegmentedButton(
+                        shape = SegmentedButtonDefaults.itemShape(
+                            index = index,
+                            count = options.size
+                        ),
+                        onClick = {
+                            selectedIndex = index
+                            onResourceChanged(
+                                resource.copy(
+                                    resourceType = ResourceType.entries[index]
+                                )
+                            )
+                        },
+                        selected = index == selectedIndex
+                    ) {
+                        Text(label)
+                    }
+                }
+            }
+        }
+
+    }
+}
 
 @Composable
 @Preview
