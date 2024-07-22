@@ -11,9 +11,6 @@ flowchart LR
     A["hi mom"] --> B["this is mermaid!"]
 ```
 
-- Add paddings on search screen
-- Add paddings on play activator screen
-
 ### UX
 
 - Maybe approximating it to something like spotify UI would give user a familiar experience
