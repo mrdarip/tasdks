@@ -11,8 +11,14 @@ flowchart LR
     A["hi mom"] --> B["this is mermaid!"]
 ```
 
-- Fix padding on all screens
+- Fix padding on all management screens
+  - activators
+- Fix padding on form composables
+  - tasks
+  - activators
 - Implement Resources screens
+  - management
+  - creation
 ### UX
 
 - Maybe approximating it to something like spotify UI would give user a familiar experience
