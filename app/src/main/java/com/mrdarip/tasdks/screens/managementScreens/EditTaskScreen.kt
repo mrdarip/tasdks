@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
@@ -35,6 +36,7 @@ import com.mrdarip.tasdks.composables.SelectTaskGrid
 import com.mrdarip.tasdks.composables.TaskFields
 import com.mrdarip.tasdks.composables.TasksRow
 import com.mrdarip.tasdks.data.entity.Task
+import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
 
 @Composable
@@ -117,6 +119,14 @@ fun EditTaskBodyContent(
             }) {
                 Icon(Icons.Filled.Edit, contentDescription = "Localized description")
                 Text("Save")
+            }
+            Button(onClick = {
+                navController.navigate(
+                    "${AppScreens.CreateActivator.route}/${task.taskId}"
+                )
+            }) {
+                Icon(Icons.Filled.Add, contentDescription = "Localized description")
+                Text("Create activator")
             }
         }
     }

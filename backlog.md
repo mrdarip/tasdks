@@ -16,9 +16,6 @@ flowchart LR
 
 ### UX
 
-- Simplify manage tasks screen
-  - Remove the "create activator" button
-  - move it to the edit task screen
 - Maybe approximating it to something like spotify UI would give user a familiar experience
 - Main screen should be less monotone and more distinct
     - Design a new page layout
