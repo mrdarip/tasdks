@@ -11,11 +11,6 @@ flowchart LR
     A["hi mom"] --> B["this is mermaid!"]
 ```
 
-- Fix padding on all management screens
-  - activators
-- Fix padding on form composables
-  - tasks
-  - activators
 - Implement Resources screens
   - management
   - creation

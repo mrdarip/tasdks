@@ -244,7 +244,8 @@ private fun SelectActivatedTaskInput(
         modifier = Modifier.height(200.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        rows = GridCells.Adaptive(64.dp), contentPadding = PaddingValues(horizontal = 16.dp)
+        rows = GridCells.Adaptive(64.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         item {
             Column(
