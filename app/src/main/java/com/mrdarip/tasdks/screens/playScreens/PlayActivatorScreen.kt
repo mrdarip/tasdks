@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.navigation.AppScreens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,14 +27,15 @@ fun PlayActivatorScreen(activatorId: Long, navController: NavController) {
     Log.i("PlayActivatorScreen", "ActivatorId: $activatorId")
     val editTaskViewModel = viewModel(modelClass = PlayActivatorViewModel::class.java)
     editTaskViewModel.setTopActivatorId(activatorId)
+    val topActivator = editTaskViewModel.getActivatorById(activatorId)
     PlayActivatorBodyContent(
-        topActivatorId = activatorId, viewModel = editTaskViewModel, navController = navController
+        topActivator = topActivator, viewModel = editTaskViewModel, navController = navController
     )
 }
 
 @Composable
 fun PlayActivatorBodyContent(
-    topActivatorId: Long, viewModel: PlayActivatorViewModel, navController: NavController
+    topActivator: Activator, viewModel: PlayActivatorViewModel, navController: NavController
 ) {
     val startedTasksNames = viewModel.taskList.collectAsState().value.map { it.name }
     var started by remember { mutableStateOf(false) }
@@ -71,11 +73,13 @@ fun PlayActivatorBodyContent(
                 Text("Exit")
             }
         } else {
+            val topActivatorTask = viewModel.getTaskById(topActivator.taskToActivateId)
+            Text(text = "Activator's task: ${topActivatorTask.name}")
             Button(onClick = {
                 viewModel.viewModelScope.launch(Dispatchers.IO) {
                     started = true
                     viewModel.start(
-                        viewModel.getTaskById(viewModel.getActivatorById(topActivatorId).taskToActivateId),
+                        topActivatorTask,
                         null
                     )
                 }
