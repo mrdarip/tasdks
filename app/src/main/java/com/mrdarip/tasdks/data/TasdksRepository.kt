@@ -126,7 +126,7 @@ class TasdksRepository(
         executionDAO.update(executionId, end, successfullyEnded)
     }
 
-    fun insertResource(resource: Resource): Long {
+    suspend fun insertResource(resource: Resource): Long {
         return resourceDAO.insert(resource)
     }
 

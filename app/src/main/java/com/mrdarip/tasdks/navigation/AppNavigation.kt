@@ -50,6 +50,7 @@ import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
 import com.mrdarip.tasdks.screens.managementScreens.CreateActivatorScreen
+import com.mrdarip.tasdks.screens.managementScreens.CreateResourceScreen
 import com.mrdarip.tasdks.screens.managementScreens.CreateTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditActivatorScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
@@ -244,7 +245,7 @@ fun MainNavHost(navController: NavHostController) {
         }
 
         composable(route = AppScreens.CreateResource.route) {
-            ManageResourcesScreen(navController = navController)
+            CreateResourceScreen(navController = navController)
         }
 
         composable(route = AppScreens.ManageExecutions.route) {

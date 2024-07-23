@@ -54,6 +54,7 @@ fun CreateResourceBodyContent(
             )
         }
         Button(onClick = {
+
             viewModel.insertResource(resource)
         }
         ) {

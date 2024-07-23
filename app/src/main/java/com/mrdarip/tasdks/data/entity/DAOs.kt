@@ -256,7 +256,7 @@ class DAOs {
     @Dao
     interface ResourceDAO {
         @Insert
-        fun insert(resource: Resource): Long
+        suspend fun insert(resource: Resource): Long
 
         @Update
         fun update(resource: Resource)
