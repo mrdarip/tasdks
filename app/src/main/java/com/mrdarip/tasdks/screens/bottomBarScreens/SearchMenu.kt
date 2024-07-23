@@ -26,6 +26,7 @@ import com.mrdarip.tasdks.composables.TasdksCard
 import com.mrdarip.tasdks.composables.TaskCard
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Task
+import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuState
 import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
 
@@ -34,17 +35,31 @@ import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
 fun SearchMenu(navController: NavController) {
     val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
     val mainMenuState = mainMenuViewModel.state
-    SearchMenuBodyContent(mainMenuViewModel = mainMenuViewModel, mainMenuState = mainMenuState)
+    SearchMenuBodyContent(
+        mainMenuViewModel = mainMenuViewModel,
+        mainMenuState = mainMenuState,
+        navController = navController
+    )
 }
 
 @Composable
-fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
+fun SearchMenuBodyContent(
+    mainMenuViewModel: MainMenuViewModel,
+    mainMenuState: MainMenuState,
+    navController: NavController
+) {
     Column(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .weight(1f)
         ) {
-            EntityLazyGrid("Tasks", mainMenuState.activeTasks) { task ->
+            EntityLazyGrid(
+                "Tasks",
+                "Add Task",
+                AppScreens.CreateTask.route,
+                navController,
+                mainMenuState.activeTasks
+            ) { task ->
                 if (task is Task)
                     TaskCard(task = task)
             }
@@ -54,7 +69,13 @@ fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: M
             modifier = Modifier
                 .weight(1f)
         ) {
-            EntityLazyGrid("Activators", mainMenuState.overdueActivators) { activator ->
+            EntityLazyGrid(
+                "Activators",
+                "Add activator",
+                "${AppScreens.CreateActivator.route}/-1",
+                navController,
+                mainMenuState.overdueActivators
+            ) { activator ->
                 if (activator is Activator) {
                     val activatorTask = mainMenuViewModel.getTaskById(activator.taskToActivateId)
                         .collectAsState(initial = Task()).value
@@ -74,6 +95,9 @@ fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: M
 @Composable
 fun EntityLazyGrid(
     title: String,
+    addButtonText: String,
+    addButtonRoute: String,
+    navController: NavController,
     itemsToShow: List<Any> = listOf(),
     content: @Composable (Any) -> Unit
 ) {
@@ -88,12 +112,14 @@ fun EntityLazyGrid(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = title, style = MaterialTheme.typography.headlineLarge)
-            Button(onClick = { }) {
+            Button(onClick = {
+                navController.navigate(addButtonRoute)
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "Add Task"
+                    contentDescription = addButtonText
                 )
-                Text(text = "Add Task")
+                Text(text = addButtonText)
             }
         }
         LazyHorizontalGrid(
