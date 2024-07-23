@@ -37,6 +37,11 @@ class TasdksRepository(
         return taskDAO.getByIdAsFlow(taskId).mapNotNull { it }
     }
 
+    fun getResourceByIdAsFlow(taskId: Long?): Flow<Resource> {
+        if (taskId == null) return emptyFlow()
+        return resourceDAO.getByIdAsFlow(taskId).mapNotNull { it }
+    }
+
     fun getNotSubtasksOfTask(taskId:Long): Flow<List<Task>> {
         return taskWithTasksDAO.getTasksNotSubTasks(taskId)
     }
@@ -126,8 +131,8 @@ class TasdksRepository(
         executionDAO.update(executionId, end, successfullyEnded)
     }
 
-    suspend fun insertResource(resource: Resource): Long {
-        return resourceDAO.insert(resource)
+    suspend fun upsertResource(resource: Resource): Long {
+        return resourceDAO.upsert(resource)
     }
 
     fun insertActivator(activator: Activator): Long {

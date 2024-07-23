@@ -244,13 +244,18 @@ fun MainNavHost(navController: NavHostController) {
             ManageResourcesScreen(navController = navController)
         }
 
-        composable(route = AppScreens.CreateResource.route) {
-            CreateResourceScreen(navController = navController)
+        composable(
+            "${AppScreens.CreateResource.route}/{resourceId}",
+            arguments = listOf(navArgument("resourceId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val resourceId = backStackEntry.arguments?.getLong("resourceId")
+            CreateResourceScreen(navController, resourceId ?: -1)
         }
 
         composable(route = AppScreens.ManageExecutions.route) {
             ManageExecutionsScreen(navController = navController)
         }
+
         composable(
             "${AppScreens.EditTask.route}/{taskId}",
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })

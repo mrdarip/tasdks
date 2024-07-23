@@ -255,8 +255,8 @@ class DAOs {
 
     @Dao
     interface ResourceDAO {
-        @Insert
-        suspend fun insert(resource: Resource): Long
+        @Upsert
+        suspend fun upsert(resource: Resource): Long
 
         @Update
         fun update(resource: Resource)
@@ -269,6 +269,9 @@ class DAOs {
 
         @Query("SELECT * FROM resources WHERE resourceId = :resourceId")
         fun getResourceById(resourceId: Long): Resource
+
+        @Query("SELECT * FROM resources WHERE resourceId = :resourceId")
+        fun getByIdAsFlow(resourceId: Long): Flow<Resource>
     }
 
     @Dao

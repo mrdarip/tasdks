@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,9 +27,22 @@ import com.mrdarip.tasdks.data.entity.ResourceType
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateResourceViewModel
 
 @Composable
-fun CreateResourceScreen(navController: NavController) {
+fun CreateResourceScreen(navController: NavController, resourceId: Long = -1) {
     val createResourceViewModel = viewModel(modelClass = CreateResourceViewModel::class.java)
+
+
+    var resource by remember { mutableStateOf(Resource(resourceType = ResourceType.VIDEO)) }
+    if (resourceId != -1L) {
+        LaunchedEffect(createResourceViewModel) {
+            createResourceViewModel.getResourceById(resourceId).collect { fetchedResource ->
+                resource = fetchedResource
+            }
+        }
+    }
+
     CreateResourceBodyContent(
+        resource = resource,
+        onResourceChange = { resource = it },
         navController = navController,
         viewModel = createResourceViewModel
     )
@@ -36,10 +50,11 @@ fun CreateResourceScreen(navController: NavController) {
 
 @Composable
 fun CreateResourceBodyContent(
+    resource: Resource,
+    onResourceChange: (Resource) -> Unit,
     navController: NavController,
     viewModel: CreateResourceViewModel
 ) {
-    var resource by remember { mutableStateOf(Resource(resourceType = ResourceType.VIDEO)) }
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
@@ -50,11 +65,11 @@ fun CreateResourceBodyContent(
             Text(text = "Create Resource", style = MaterialTheme.typography.headlineLarge)
             ResourceFields(
                 resource = resource,
-                onResourceChanged = { resource = it }
+                onResourceChanged = onResourceChange
             )
         }
         Button(onClick = {
-            viewModel.insertResource(resource)
+            viewModel.upsertResource(resource)
         }
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Add Resource")

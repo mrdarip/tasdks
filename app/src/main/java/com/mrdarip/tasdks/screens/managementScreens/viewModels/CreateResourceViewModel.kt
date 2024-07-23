@@ -19,16 +19,16 @@ class CreateResourceViewModel(
         private set
 
 
-    fun insertResource(resource: Resource): Long {
+    fun upsertResource(resource: Resource): Long {
         var newResourceId = 0L
         viewModelScope.launch {
-            newResourceId = repository.insertResource(resource)
+            newResourceId = repository.upsertResource(resource)
         }
         return newResourceId
     }
 
-    fun getTaskById(taskId: Long): Flow<Task> {
-        return repository.getTaskByIdAsFlow(taskId)
+    fun getResourceById(resourceId: Long): Flow<Resource> {
+        return repository.getResourceByIdAsFlow(resourceId)
     }
 
 }
