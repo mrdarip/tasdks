@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +48,14 @@ fun ManageResourcesBodyContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(mainMenuState.allResources) { resource ->
-                TwoButtonsListItem(title = resource.name, emoji = resource.resourceType.emoji)
+                TwoButtonsListItem(
+                    title = resource.name,
+                    emoji = resource.resourceType.emoji,
+                    primaryIcon = Icons.Default.Edit,
+                    onPrimaryClick = {
+                        navController.navigate("${AppScreens.CreateResource.route}/${resource.resourceId}")
+                    }
+                )
             }
         }
 
