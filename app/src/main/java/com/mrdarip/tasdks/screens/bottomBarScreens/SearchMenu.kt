@@ -54,14 +54,14 @@ fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: M
             modifier = Modifier
                 .weight(1f)
         ) {
-            EntityLazyGrid(mainMenuState.overdueActivators) { a ->
-                if (a is Activator) {
-                    val activatorTask = mainMenuViewModel.getTaskById(a.taskToActivateId)
+            EntityLazyGrid(mainMenuState.overdueActivators) { activator ->
+                if (activator is Activator) {
+                    val activatorTask = mainMenuViewModel.getTaskById(activator.taskToActivateId)
                         .collectAsState(initial = Task()).value
                     TasdksCard(
-                        emoji = activatorTask.iconEmoji ?: "",
+                        emoji = activatorTask.iconEmoji,
                         title = activatorTask.name,
-                        subTitle = a.comment
+                        subTitle = activator.comment
                     ) {
 
                     }

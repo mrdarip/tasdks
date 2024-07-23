@@ -89,13 +89,15 @@ fun SelectableGridTask(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2
             )
-            Text(
-                text = task.comment ?: "",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-            )
+            if (task.comment != null) {
+                Text(
+                    text = task.comment,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
             if (placeName != null) {
                 Text(
                     text = placeName,
