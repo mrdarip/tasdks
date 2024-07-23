@@ -23,21 +23,21 @@ import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.ResourceFields
 import com.mrdarip.tasdks.data.entity.Resource
 import com.mrdarip.tasdks.data.entity.ResourceType
-import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateTaskViewModel
+import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateResourceViewModel
 
 @Composable
 fun CreateResourceScreen(navController: NavController) {
-    val createTaskViewModel = viewModel(modelClass = CreateTaskViewModel::class.java)
+    val createResourceViewModel = viewModel(modelClass = CreateResourceViewModel::class.java)
     CreateResourceBodyContent(
         navController = navController,
-        createTaskViewModel = createTaskViewModel
+        viewModel = createResourceViewModel
     )
 }
 
 @Composable
 fun CreateResourceBodyContent(
     navController: NavController,
-    createTaskViewModel: CreateTaskViewModel
+    viewModel: CreateResourceViewModel
 ) {
     var resource by remember { mutableStateOf(Resource(resourceType = ResourceType.VIDEO)) }
     Column(
@@ -54,7 +54,7 @@ fun CreateResourceBodyContent(
             )
         }
         Button(onClick = {
-            createTaskViewModel.insertResource(resource)
+            viewModel.insertResource(resource)
         }
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Add Resource")

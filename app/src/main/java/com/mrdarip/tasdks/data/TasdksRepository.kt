@@ -3,6 +3,7 @@ package com.mrdarip.tasdks.data
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.Execution
+import com.mrdarip.tasdks.data.entity.Resource
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -123,6 +124,10 @@ class TasdksRepository(
         successfullyEnded: Boolean
     ) {
         executionDAO.update(executionId, end, successfullyEnded)
+    }
+
+    fun insertResource(resource: Resource): Long {
+        return resourceDAO.insert(resource)
     }
 
     fun insertActivator(activator: Activator): Long {
