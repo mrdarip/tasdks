@@ -49,3 +49,4 @@ flowchart LR
 - Remove resources entity?
 - Replace all hardcoded strings with resources
 - privatise all bodyContent composables
+- convert create screens to edit screens
