@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,7 +44,7 @@ fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: M
             modifier = Modifier
                 .weight(1f)
         ) {
-            EntityLazyGrid(mainMenuState.activeTasks) { task ->
+            EntityLazyGrid("Tasks", mainMenuState.activeTasks) { task ->
                 if (task is Task)
                     TaskCard(task = task)
             }
@@ -54,7 +54,7 @@ fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: M
             modifier = Modifier
                 .weight(1f)
         ) {
-            EntityLazyGrid(mainMenuState.overdueActivators) { activator ->
+            EntityLazyGrid("Activators", mainMenuState.overdueActivators) { activator ->
                 if (activator is Activator) {
                     val activatorTask = mainMenuViewModel.getTaskById(activator.taskToActivateId)
                         .collectAsState(initial = Task()).value
@@ -72,7 +72,11 @@ fun SearchMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: M
 }
 
 @Composable
-fun EntityLazyGrid(itemsToShow: List<Any> = listOf(), content: @Composable (Any) -> Unit) {
+fun EntityLazyGrid(
+    title: String,
+    itemsToShow: List<Any> = listOf(),
+    content: @Composable (Any) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,10 +87,10 @@ fun EntityLazyGrid(itemsToShow: List<Any> = listOf(), content: @Composable (Any)
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Tasks", style = MaterialTheme.typography.headlineLarge)
+            Text(text = title, style = MaterialTheme.typography.headlineLarge)
             Button(onClick = { }) {
                 Icon(
-                    imageVector = Icons.Filled.Done,
+                    imageVector = Icons.Filled.Add,
                     contentDescription = "Add Task"
                 )
                 Text(text = "Add Task")
