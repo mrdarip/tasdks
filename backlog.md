@@ -11,9 +11,6 @@ flowchart LR
     A["hi mom"] --> B["this is mermaid!"]
 ```
 
-- Implement Resources screens
-  - management
-  - creation
 ### UX
 
 - Maybe approximating it to something like spotify UI would give user a familiar experience
@@ -51,3 +48,4 @@ flowchart LR
     - Prioritize starting with play activator screen
 - Remove resources entity?
 - Replace all hardcoded strings with resources
+- privatise all bodyContent composables
