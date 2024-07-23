@@ -34,9 +34,6 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -60,7 +57,6 @@ import com.mrdarip.tasdks.data.entity.Task
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResourceFields(
     resource: Resource = Resource(resourceType = ResourceType.VIDEO),
@@ -79,32 +75,46 @@ fun ResourceFields(
         )
 
 
-        var selectedIndex = resource.resourceType.ordinal
-        val options = ResourceType.entries.map { it.name }
-        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-            SingleChoiceSegmentedButtonRow {
-                options.forEachIndexed { index, label ->
-                    SegmentedButton(
-                        shape = SegmentedButtonDefaults.itemShape(
-                            index = index,
-                            count = options.size
-                        ),
-                        onClick = {
-                            selectedIndex = index
-                            onResourceChanged(
-                                resource.copy(
-                                    resourceType = ResourceType.entries[index]
-                                )
-                            )
-                        },
-                        selected = index == selectedIndex
-                    ) {
-                        Text(label)
-                    }
-                }
-            }
-        }
 
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp)
+        ) {
+            items(ResourceType.entries) { option ->
+                val selected = resource.resourceType == option
+                FilterChip(
+                    onClick = {
+                        onResourceChanged(
+                            resource.copy(
+                                resourceType = option
+                            )
+                        )
+                    },
+                    label = {
+                        Text(capitalized(option.name))
+                    },
+                    selected = selected,
+                    leadingIcon = {
+                        if (selected) {
+
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "Done icon",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+
+                        } else {
+                            Text(
+                                option.emoji,
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+
+                        }
+                    },
+                )
+            }
+
+        }
     }
 }
 
@@ -116,7 +126,8 @@ fun TaskFields(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TextField(
                 value = task.name,
@@ -143,7 +154,10 @@ fun TaskFields(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(text = "is playlist")
             Checkbox(
                 checked = task.isPlaylist,
