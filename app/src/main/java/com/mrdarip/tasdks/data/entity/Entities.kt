@@ -86,7 +86,7 @@ data class Resource(
     val resourceType: ResourceType
 )
 
-@Entity(primaryKeys = ["parentTaskId", "position"])
+@Entity(primaryKeys = ["parentId", "position"])
 data class TaskTaskCR(
     val parentId: Long,
     val childId: Long,
@@ -101,8 +101,8 @@ data class TaskWithTasks(
         entityColumn = "taskId",
         associateBy = Junction(
             value = TaskTaskCR::class,
-            parentColumn = "parentTaskId",
-            entityColumn = "childTaskId"
+            parentColumn = "parentId",
+            entityColumn = "childId"
         )
     )
     val tasks: List<Task>
