@@ -52,13 +52,13 @@ class DAOs {
         @Query("SELECT * FROM tasks WHERE taskId = :taskId")
         fun getById(taskId: Long): Task
 
-        @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.childTaskId WHERE TaskTaskCr.parentTaskId = :parentId ORDER BY TaskTaskCR.position ASC")
+        @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.childId WHERE TaskTaskCr.parentId = :parentId ORDER BY TaskTaskCR.position ASC")
         fun getSubTasks(parentId: Long): Flow<List<Task>>
 
-        @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.childTaskId WHERE TaskTaskCr.parentTaskId = :parentId ORDER BY TaskTaskCR.position ASC")
+        @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.childId WHERE TaskTaskCr.parentId = :parentId ORDER BY TaskTaskCR.position ASC")
         fun getSubTasksAsList(parentId: Long): List<Task>
 
-        @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.parentTaskId WHERE TaskTaskCr.childTaskId = :childId")
+        @Query("SELECT * FROM tasks INNER JOIN TaskTaskCr ON tasks.taskId = TaskTaskCR.parentId WHERE TaskTaskCr.childId = :childId")
         fun getParentTasks(childId: Long): Flow<List<Task>>
 
         @Transaction
@@ -85,17 +85,17 @@ class DAOs {
             decreasePositionGreaterThan(parentTaskId, position)
         }
 
-        @Query("UPDATE TaskTaskCR SET position = position-1 WHERE parentTaskId = :parentTaskId AND position>:position")
+        @Query("UPDATE TaskTaskCR SET position = position-1 WHERE parentId = :parentTaskId AND position>:position")
         fun decreasePositionGreaterThan(parentTaskId: Long, position: Long)
 
-        @Query("DELETE FROM TaskTaskCR WHERE parentTaskId = :parentTaskId AND position = :position")
+        @Query("DELETE FROM TaskTaskCR WHERE parentId = :parentTaskId AND position = :position")
         fun deleteTaskTaskCR(parentTaskId: Long, position: Long)
 
-        @Query("UPDATE TaskTaskCR SET position = :newPosition WHERE parentTaskId = :parentTaskId AND position = :position")
+        @Query("UPDATE TaskTaskCR SET position = :newPosition WHERE parentId = :parentTaskId AND position = :position")
         fun setTaskPosition(parentTaskId: Long, position: Long, newPosition: Long)
 
 
-        @Query("SELECT COUNT(*) FROM TaskTaskCR WHERE parentTaskId = :taskId")
+        @Query("SELECT COUNT(*) FROM TaskTaskCR WHERE parentId = :taskId")
         fun taskLength(taskId: Long): Long
 
         @Query("SELECT MAX(`end`- start) FROM executions WHERE taskId = :taskId ORDER BY `end`- start ASC LIMIT Round(((SELECT COUNT(*) FROM executions WHERE taskID = :taskId) * :percentile / 100.0),0)")
@@ -282,7 +282,7 @@ class DAOs {
             WITH RECURSIVE idk(taskId) AS (
                 SELECT :taskId
             UNION ALL
-                SELECT TaskTaskCR.parentTaskId FROM TaskTaskCR JOIN idk ON TaskTaskCR.childTaskId = idk.taskId
+                SELECT TaskTaskCR.parentId FROM TaskTaskCR JOIN idk ON TaskTaskCR.childId = idk.taskId
             )
             SELECT * FROM tasks WHERE taskId NOT IN (SELECT taskId FROM idk)
         """
@@ -296,9 +296,9 @@ class DAOs {
         @Query(
             """
     WITH RECURSIVE subtasks(taskId, path) AS (
-        SELECT childTaskId, ',' || childTaskId || ',' FROM TaskTaskCR WHERE parentTaskId = :taskId
+        SELECT childId, ',' || childId || ',' FROM TaskTaskCR WHERE parentId = :taskId
         UNION ALL
-        SELECT TaskTaskCR.childTaskId, path || TaskTaskCR.childTaskId || ',' FROM TaskTaskCR JOIN subtasks ON TaskTaskCR.parentTaskId = subtasks.taskId WHERE path NOT LIKE '%' || TaskTaskCR.childTaskId || '%'
+        SELECT TaskTaskCR.childId, path || TaskTaskCR.childId || ',' FROM TaskTaskCR JOIN subtasks ON TaskTaskCR.parentId = subtasks.taskId WHERE path NOT LIKE '%' || TaskTaskCR.childId || '%'
     )
     SELECT * FROM tasks WHERE taskId IN (SELECT taskId FROM subtasks)
 """
@@ -307,7 +307,7 @@ class DAOs {
 
 
         @Query(
-            "INSERT INTO TaskTaskCR (parentTaskId, childTaskId, position) VALUES " + "(:parentTaskId, :taskId, COALESCE(((SELECT MAX(position) FROM TaskTaskCR WHERE parentTaskId = :parentTaskId) + 1),0))"
+            "INSERT INTO TaskTaskCR (parentId, childId, position) VALUES " + "(:parentTaskId, :taskId, COALESCE(((SELECT MAX(position) FROM TaskTaskCR WHERE parentId = :parentTaskId) + 1),0))"
         )
         fun addTaskAsLastSubTask(taskId: Long, parentTaskId: Long)
     }
