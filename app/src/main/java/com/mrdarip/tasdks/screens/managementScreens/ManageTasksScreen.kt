@@ -40,7 +40,7 @@ fun ManageTasksScreen(navController: NavController) {
 }
 
 @Composable
-fun ManageTasksBodyContent(
+private fun ManageTasksBodyContent(
     navController: NavController,
     mainMenuViewModel: MainMenuViewModel,
     mainMenuState: MainMenuState

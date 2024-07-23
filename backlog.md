@@ -48,7 +48,6 @@ flowchart LR
     - Prioritize starting with play activator screen
 - Remove resources entity?
 - Replace all hardcoded strings with resources
-- privatise all bodyContent composables
 - Convert create screens to edit screens
   - Discovered that is a good idea to have
     - A create activator screen in which you can have task id as argument

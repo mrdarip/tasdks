@@ -43,7 +43,7 @@ fun SearchMenu(navController: NavController) {
 }
 
 @Composable
-fun SearchMenuBodyContent(
+private fun SearchMenuBodyContent(
     mainMenuViewModel: MainMenuViewModel,
     mainMenuState: MainMenuState,
     navController: NavController

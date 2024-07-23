@@ -37,7 +37,7 @@ fun ManageActivatorsScreen(navController: NavController) {
 }
 
 @Composable
-fun ManageActivatorsBodyContent(
+private fun ManageActivatorsBodyContent(
     navController: NavController,
     viewModel: ManageActivatorsViewModel
 ) {

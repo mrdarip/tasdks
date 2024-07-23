@@ -19,7 +19,10 @@ fun StatsMenu(navController: NavController) {
 }
 
 @Composable
-fun StatsMenuBodyContent(mainMenuViewModel: MainMenuViewModel, mainMenuState: MainMenuState) {
+private fun StatsMenuBodyContent(
+    mainMenuViewModel: MainMenuViewModel,
+    mainMenuState: MainMenuState
+) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         //TasksCardRow(mainMenuState.tasks, "Sample Text", mainMenuViewModel)
 

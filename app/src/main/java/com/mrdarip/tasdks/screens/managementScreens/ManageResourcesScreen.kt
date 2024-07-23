@@ -36,7 +36,7 @@ fun ManageResourcesScreen(navController: NavController) {
 }
 
 @Composable
-fun ManageResourcesBodyContent(
+private fun ManageResourcesBodyContent(
     navController: NavController,
     mainMenuState: ManageResourcesState,
     viewModel: ManageResourcesViewModel

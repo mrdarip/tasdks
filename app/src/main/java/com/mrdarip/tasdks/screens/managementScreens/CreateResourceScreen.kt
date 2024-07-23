@@ -49,7 +49,7 @@ fun CreateResourceScreen(navController: NavController, resourceId: Long = -1) {
 }
 
 @Composable
-fun CreateResourceBodyContent(
+private fun CreateResourceBodyContent(
     resource: Resource,
     onResourceChange: (Resource) -> Unit,
     navController: NavController,

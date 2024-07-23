@@ -34,7 +34,7 @@ fun PlayActivatorScreen(activatorId: Long, navController: NavController) {
 }
 
 @Composable
-fun PlayActivatorBodyContent(
+private fun PlayActivatorBodyContent(
     topActivator: Activator, viewModel: PlayActivatorViewModel, navController: NavController
 ) {
     val startedTasksNames = viewModel.taskList.collectAsState().value.map { it.name }

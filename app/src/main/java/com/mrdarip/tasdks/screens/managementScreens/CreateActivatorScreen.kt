@@ -39,7 +39,7 @@ fun CreateActivatorScreen(navController: NavController, preSelectedTaskId: Long)
 }
 
 @Composable
-fun CreateActivatorBodyContent(
+private fun CreateActivatorBodyContent(
     navController: NavController,
     createActivatorViewModel: CreateActivatorViewModel,
     preSelectedTaskId: Long

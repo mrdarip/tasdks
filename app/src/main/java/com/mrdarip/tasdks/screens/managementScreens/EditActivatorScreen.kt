@@ -46,7 +46,7 @@ fun EditActivatorScreen(navController: NavController, activatorId: Long) {
 }
 
 @Composable
-fun EditActivatorBodyContent(
+private fun EditActivatorBodyContent(
     navController: NavController,
     viewModel: EditActivatorViewModel,
     activator: Activator,

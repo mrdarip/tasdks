@@ -17,7 +17,7 @@ fun ManageExecutionsScreen(navController: NavController) {
 }
 
 @Composable
-fun ManageExecutionsBodyContent(
+private fun ManageExecutionsBodyContent(
     navController: NavController,
     viewModel: ManageActivatorsViewModel
 ) {

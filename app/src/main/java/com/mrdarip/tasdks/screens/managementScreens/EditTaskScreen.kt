@@ -49,7 +49,7 @@ fun EditTaskScreen(navController: NavController, taskId: Long) {
 
 
 @Composable
-fun EditTaskBodyContent(
+private fun EditTaskBodyContent(
     navController: NavController, editTaskViewModel: EditTaskViewModel, taskId: Long
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }

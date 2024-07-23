@@ -34,7 +34,7 @@ fun MainMenu(navController: NavController) {
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun BodyContent(
+private fun BodyContent(
     mainMenuViewModel: MainMenuViewModel,
     mainMenuState: MainMenuState,
     navController: NavController

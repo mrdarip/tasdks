@@ -34,7 +34,10 @@ fun CreateTaskScreen(navController: NavController) {
 }
 
 @Composable
-fun CreateTaskBodyContent(navController: NavController, createTaskViewModel: CreateTaskViewModel) {
+private fun CreateTaskBodyContent(
+    navController: NavController,
+    createTaskViewModel: CreateTaskViewModel
+) {
     var task by remember { mutableStateOf(Task()) }
     Column(
         Modifier
