@@ -87,6 +87,5 @@ fun EditActivatorBodyContent(
                 Text("Delete")
             }
         }
-
     }
 }
