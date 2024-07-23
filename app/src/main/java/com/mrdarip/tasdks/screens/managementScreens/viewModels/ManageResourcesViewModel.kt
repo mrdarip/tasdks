@@ -23,7 +23,7 @@ class ManageResourcesViewModel(
 
     private fun getAllResources() {
         viewModelScope.launch {
-            repository.resources.collectLatest {
+            repository.allResources.collectLatest {
                 state = state.copy(allResources = it)
             }
         }

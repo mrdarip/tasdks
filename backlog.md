@@ -52,3 +52,5 @@ flowchart LR
   - Discovered that is a good idea to have
     - A create activator screen in which you can have task id as argument
     - An Edit activator screen in which you can have activator id as argument
+- Make viewModels protected
+- Clean viewmodels

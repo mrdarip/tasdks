@@ -27,13 +27,13 @@ import com.mrdarip.tasdks.composables.TaskCard
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
-import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuState
-import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
+import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.SearchMenuState
+import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.SearchMenuViewModel
 
 
 @Composable
 fun SearchMenu(navController: NavController) {
-    val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
+    val mainMenuViewModel = viewModel(modelClass = SearchMenuViewModel::class.java)
     val mainMenuState = mainMenuViewModel.state
     SearchMenuBodyContent(
         mainMenuViewModel = mainMenuViewModel,
@@ -44,8 +44,8 @@ fun SearchMenu(navController: NavController) {
 
 @Composable
 private fun SearchMenuBodyContent(
-    mainMenuViewModel: MainMenuViewModel,
-    mainMenuState: MainMenuState,
+    mainMenuViewModel: SearchMenuViewModel,
+    mainMenuState: SearchMenuState,
     navController: NavController
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -87,6 +87,22 @@ private fun SearchMenuBodyContent(
 
                     }
                 }
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            EntityLazyGrid(
+                "Resources",
+                "Add Resource",
+                "${AppScreens.CreateTask.route}/-1",
+                navController,
+                mainMenuState.allResources
+            ) { task ->
+                if (task is Task)
+                    TaskCard(task = task)
             }
         }
     }

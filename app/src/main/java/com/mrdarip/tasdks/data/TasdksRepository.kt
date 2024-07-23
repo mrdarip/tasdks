@@ -27,7 +27,7 @@ class TasdksRepository(
     val tasksOrderByUsuallyAtThisTime = taskDAO.getAllOrderByUsuallyAtThisTime()
     val activators = activatorDAO.getAllActivators()
     val activeActivators = activatorDAO.getActiveActivators()
-    val resources = resourceDAO.getAllResources()
+    val allResources = resourceDAO.getAllResources()
 
     //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
 
