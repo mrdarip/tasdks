@@ -61,7 +61,6 @@ fun TaskCard(task: Task = Task(), onClick: () -> Unit = {}) {
 @Composable
 fun SelectableGridTask(
     task: Task = Task(),
-    placeName: String? = null,
     selected: Boolean = false,
     onClick: () -> Unit = {}
 ) {
@@ -92,15 +91,6 @@ fun SelectableGridTask(
             if (task.comment != null) {
                 Text(
                     text = task.comment,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
-            }
-            if (placeName != null) {
-                Text(
-                    text = placeName,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     overflow = TextOverflow.Ellipsis,
