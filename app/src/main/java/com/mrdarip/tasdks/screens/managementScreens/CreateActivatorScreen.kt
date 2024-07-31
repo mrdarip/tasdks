@@ -27,6 +27,7 @@ import com.mrdarip.tasdks.data.entity.RepetitionRange
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateActivatorViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun CreateActivatorScreen(navController: NavController, preSelectedTaskId: Long) {
@@ -76,6 +77,9 @@ private fun CreateActivatorBodyContent(
                 if (newActivator.taskToActivateId != -1L) {//if task to activate is -1 it means that no task was selected
                     createActivatorViewModel.viewModelScope.launch(Dispatchers.IO) {
                         createActivatorViewModel.insertActivator(newActivator)
+                        withContext(Dispatchers.Main) {
+                            navController.popBackStack()//todo: should this be moved outside the coroutine?
+                        }
                     }
                 }
             },

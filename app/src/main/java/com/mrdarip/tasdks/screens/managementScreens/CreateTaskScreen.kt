@@ -54,6 +54,7 @@ private fun CreateTaskBodyContent(
         }
         Button(onClick = {
             createTaskViewModel.insertTask(task)
+            navController.popBackStack()
         }
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Add Task")

@@ -70,6 +70,7 @@ private fun CreateResourceBodyContent(
         }
         Button(onClick = {
             viewModel.upsertResource(resource)
+            navController.popBackStack()
         }
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Add Resource")
