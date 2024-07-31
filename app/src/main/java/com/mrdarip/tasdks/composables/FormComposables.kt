@@ -336,7 +336,6 @@ private fun SelectActivatedTaskInput(
         items(possibleTasksToActivate) { task ->
             SelectableGridTask(
                 task = task,
-                placeName = "changeme",
                 selected = (task.taskId == activator.taskToActivateId),
                 onClick = {
                     onActivatorChanged(activator.copy(taskToActivateId = task.taskId))
