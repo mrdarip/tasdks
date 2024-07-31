@@ -48,7 +48,7 @@ private fun PlayActivatorBodyContent(
                 Log.i("PlayActivatorScreen", "Check!")
                 viewModel.viewModelScope.launch(Dispatchers.IO) {
                     viewModel.checkExecution(
-                        viewModel.getExecutionById(viewModel.currentExecutionId.value),
+                        viewModel.getExecutionById(viewModel.currentExecutionId.value), //this could be causing errors in the thread
                         onEnd = {
                             viewModel.viewModelScope.launch {
                                 withContext(Dispatchers.Main) {
