@@ -40,8 +40,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -165,12 +167,26 @@ fun TaskFields(
             )
         }
         if (!task.isPlaylist) {
+            var tempWaitTime by remember {
+                mutableStateOf(
+                    task.waitTime.toString()
+                )
+            }
             TextField(
-                value = task.waitTime.toString(),
-                onValueChange = { onTaskChange(task.copy(waitTime = it.toIntOrNull() ?: 0)) },
+                value = tempWaitTime,
+                onValueChange = {
+                    tempWaitTime = it
+                    if (it.toIntOrNull() != null) onTaskChange(
+                        task.copy(
+                            waitTime = it.toInt()
+                        )
+                    )
+                },
                 label = { Text("Wait time") },
                 suffix = { Text("minutes") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                isError = tempWaitTime.toIntOrNull() == null
             )
 
             Row(
