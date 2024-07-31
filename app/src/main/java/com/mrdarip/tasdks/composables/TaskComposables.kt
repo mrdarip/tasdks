@@ -154,7 +154,7 @@ fun TasksCardRow(
 }
 
 @Composable
-fun TaskLiItem(task: Task, placeName: String, onClick: () -> Unit = {}) {
+fun TaskLiItem(task: Task, onClick: () -> Unit = {}) { // TODO: remove if not used?
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,18 +177,14 @@ fun TaskLiItem(task: Task, placeName: String, onClick: () -> Unit = {}) {
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.headlineSmall
                 )
-                Text(
-                    text = task.comment ?: "NO DESCRIPTION",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = placeName,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                if (task.comment != null) {
+                    Text(
+                        text = task.comment,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
     }
@@ -202,8 +198,7 @@ fun TaskLiItemPreview() {
             name = "Task name",
             comment = "Task comment",
             iconEmoji = "🐱"
-        ),
-        placeName = "Place name"
+        )
     )
 }
 
