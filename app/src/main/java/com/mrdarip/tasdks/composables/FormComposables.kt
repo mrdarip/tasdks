@@ -2,6 +2,7 @@ package com.mrdarip.tasdks.composables
 
 import android.icu.text.BreakIterator
 import android.text.format.DateFormat
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -173,14 +174,17 @@ fun TaskFields(
                 )
             }
             TextField(
-                value = tempWaitTime,
+                value = task.waitTime.toString(),
                 onValueChange = {
                     tempWaitTime = it
-                    if (it.toIntOrNull() != null) onTaskChange(
-                        task.copy(
-                            waitTime = it.toInt()
+                    if (it.toIntOrNull() != null || it.isBlank()) {
+                        Log.i("TaskFields", "waitTime: ${it.toIntOrNull() ?: 9999}")
+                        onTaskChange(
+                            task.copy(
+                                waitTime = it.toIntOrNull() ?: 0
+                            )
                         )
-                    )
+                    }
                 },
                 label = { Text("Wait time") },
                 suffix = { Text("minutes") },
