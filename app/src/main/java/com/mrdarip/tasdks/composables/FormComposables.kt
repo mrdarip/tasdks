@@ -574,6 +574,9 @@ fun NumberInput(
         placeholder = { Text(placeholder) },
         suffix = suffix,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        isError = displayedValue.toIntOrNull() == null && displayedValue.isNotBlank(),
         modifier = modifier
     )
+
+    //would be cool to implement evaluating its value if an expression like 1+1 is prompted
 }
