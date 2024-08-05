@@ -10,13 +10,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -35,10 +30,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.OrderTaskLiItem
 import com.mrdarip.tasdks.composables.SelectTaskGrid
-import com.mrdarip.tasdks.composables.TasksRow
+import com.mrdarip.tasdks.composables.forms.ExtendedTaskFields
+import com.mrdarip.tasdks.composables.forms.SavingTaskActionBar
 import com.mrdarip.tasdks.composables.forms.TaskFields
 import com.mrdarip.tasdks.data.entity.Task
-import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
 
 @Composable
@@ -94,82 +89,9 @@ private fun EditTaskBodyContent(
             taskId = taskId
         )
 
-        finalActions(editTaskViewModel, initialTask, modifiedTask, navController)
+        SavingTaskActionBar(editTaskViewModel, initialTask, modifiedTask, navController)
     }
 }
-
-@Composable
-fun finalActions(
-    editTaskViewModel: EditTaskViewModel,
-    initialTask: Task,
-    modifiedTask: Task,
-    navController: NavController
-) {
-    Row {
-        Button(onClick = {
-            editTaskViewModel.upsertTask(
-                initialTask.copy(
-                    archived = !initialTask.archived
-                )
-            )
-            navController.popBackStack()
-        }) {
-            Icon(Icons.Filled.Delete, contentDescription = "Localized description")
-            Text(if (initialTask.archived) "Unarchive" else "Archive")
-        }
-
-        Button(onClick = {
-            editTaskViewModel.upsertTask(
-                modifiedTask
-            )
-            navController.popBackStack()
-        }) {
-            Icon(Icons.Filled.Edit, contentDescription = "Localized description")
-            Text("Save")
-        }
-        Button(onClick = {
-            navController.navigate(
-                "${AppScreens.CreateActivator.route}/${initialTask.taskId}"
-            )
-        }) {
-            Icon(Icons.Filled.Add, contentDescription = "Localized description")
-            Text("Create activator")
-        }
-    }
-}
-
-@Composable
-fun ExtendedTaskFields(
-    parentTasks: List<Task>,
-    subTasks: List<Task>,
-    navController: NavController,
-    editTaskViewModel: EditTaskViewModel,
-    taskId: Long
-) {
-    var showBottomSheet by remember { mutableStateOf(false) }
-
-    if (parentTasks.isNotEmpty()) {
-        Text(text = "Parent tasks", style = MaterialTheme.typography.headlineSmall)
-        TasksRow(tasks = parentTasks, navController, showEditButton = false, onClickEdit = {
-            showBottomSheet = true
-        })//parent tasks
-    }
-
-    Text(text = "Subtasks", style = MaterialTheme.typography.headlineSmall)
-    TasksRow(tasks = subTasks, navController, showEditButton = true, onClickEdit = {
-        showBottomSheet = true
-    }) //subtasks
-
-    if (showBottomSheet) {
-        EditTasksBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
-            editTaskViewModel = editTaskViewModel,
-            taskId = taskId,
-            subTasks = subTasks
-        )
-    }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
