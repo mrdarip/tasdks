@@ -105,6 +105,10 @@ class PlayActivatorViewModel(
         return repository.getTaskById(taskId)
     }
 
+    fun getTaskByIdAsFlow(taskId: Long): Flow<Task> {
+        return repository.getTaskByIdAsFlow(taskId)
+    }
+
     fun getSubTasksOfTask(taskId: Long): Flow<List<Task>> {
         return repository.getSubTasksOfTask(taskId)
     }

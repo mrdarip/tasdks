@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
+import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,7 +75,10 @@ private fun PlayActivatorBodyContent(
                 Text("Exit")
             }
         } else {
-            val topActivatorTask = viewModel.getTaskById(topActivator.taskToActivateId)
+            val topActivatorTask =
+                viewModel.getTaskByIdAsFlow(topActivator.taskToActivateId).collectAsState(
+                    initial = Task()
+                ).value
             Text(text = "Activator's task: ${topActivatorTask.name}")
             Button(onClick = {
                 viewModel.viewModelScope.launch(Dispatchers.IO) {
