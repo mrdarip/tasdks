@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.screens.managementScreens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,6 +74,7 @@ private fun EditTaskBodyContent(
         Text("Edit task", style = MaterialTheme.typography.headlineMedium)
         TaskFields(task,
             onTaskChange = {
+                Log.i("EditTaskScreen", "Task changed: $it")
                 editTaskViewModel.upsertTask(it)
             } //TODO: upsert only when the save button is clicked
         )
