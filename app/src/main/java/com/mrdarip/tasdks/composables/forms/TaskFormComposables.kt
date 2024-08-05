@@ -87,6 +87,7 @@ fun TaskFields(
                 label = "Wait time",
                 suffix = { Text("minutes") },
                 placeholder = "Minutes to wait",
+                modifier = Modifier.fillMaxWidth()
             )
 
             Row(

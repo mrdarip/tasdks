@@ -17,12 +17,12 @@ import java.util.Locale
 
 @Composable
 fun NumberInput(
+    modifier: Modifier = Modifier,
     value: Int,
     onValidValueChange: (Int) -> Unit,
     label: String,
     placeholder: String,
-    suffix: @Composable (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    suffix: @Composable (() -> Unit)? = null
 ) {
     var displayedValue by remember {
         mutableStateOf(value.toString())
