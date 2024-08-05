@@ -40,6 +40,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -554,6 +555,10 @@ fun NumberInput(
 ) {
     var displayedValue by remember {
         mutableStateOf(value.toString())
+    }
+
+    LaunchedEffect(value) {
+        displayedValue = value.toString()
     }
 
     TextField(
