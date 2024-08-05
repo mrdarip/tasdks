@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mrdarip.tasdks.data.entity.Resource
 import com.mrdarip.tasdks.data.entity.ResourceType
-import java.util.Locale
 
 @Composable
 fun ResourceFields(
@@ -78,14 +77,5 @@ fun ResourceFields(
                 )
             }
         }
-    }
-}
-
-//todo: move to utils?
-fun capitalized(text: String): String {
-    return text.lowercase().replaceFirstChar {
-        if (it.isLowerCase()) it.titlecase(
-            Locale.ROOT
-        ) else it.toString()
     }
 }
