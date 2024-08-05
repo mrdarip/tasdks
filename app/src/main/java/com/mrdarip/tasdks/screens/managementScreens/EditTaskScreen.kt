@@ -22,6 +22,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,16 +56,23 @@ private fun EditTaskBodyContent(
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    val task by editTaskViewModel.getTaskById(taskId).collectAsState(
+    val initialTask by editTaskViewModel.getTaskById(taskId).collectAsState(
         initial = Task(
             name = "", comment = null, iconEmoji = null
         )
     )
 
+    var modifiedTask = initialTask
+    LaunchedEffect(initialTask) {
+        modifiedTask = initialTask
+    }
+
     val parentTasks = editTaskViewModel.getParentTasksOfTask(taskId)
         .collectAsState(initial = emptyList()).value
     val subTasks =
         editTaskViewModel.getSubTasksOfTask(taskId).collectAsState(initial = emptyList()).value
+
+
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
@@ -72,10 +80,11 @@ private fun EditTaskBodyContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Edit task", style = MaterialTheme.typography.headlineMedium)
-        TaskFields(task,
+        TaskFields(
+            modifiedTask,
             onTaskChange = {
                 Log.i("EditTaskScreen", "Task changed: $it")
-                editTaskViewModel.upsertTask(it)
+                modifiedTask = it
             } //TODO: upsert only when the save button is clicked
         )
 
@@ -103,19 +112,19 @@ private fun EditTaskBodyContent(
         Row {
             Button(onClick = {
                 editTaskViewModel.upsertTask(
-                    task.copy(
-                        archived = !task.archived
+                    initialTask.copy(
+                        archived = !initialTask.archived
                     )
                 )
                 navController.popBackStack()
             }) {
                 Icon(Icons.Filled.Delete, contentDescription = "Localized description")
-                Text(if (task.archived) "Unarchive" else "Archive")
+                Text(if (initialTask.archived) "Unarchive" else "Archive")
             }
 
             Button(onClick = {
                 editTaskViewModel.upsertTask(
-                    task
+                    modifiedTask
                 )
                 navController.popBackStack()
             }) {
@@ -124,7 +133,7 @@ private fun EditTaskBodyContent(
             }
             Button(onClick = {
                 navController.navigate(
-                    "${AppScreens.CreateActivator.route}/${task.taskId}"
+                    "${AppScreens.CreateActivator.route}/${initialTask.taskId}"
                 )
             }) {
                 Icon(Icons.Filled.Add, contentDescription = "Localized description")
