@@ -54,8 +54,6 @@ fun EditTaskScreen(navController: NavController, taskId: Long) {
 private fun EditTaskBodyContent(
     navController: NavController, editTaskViewModel: EditTaskViewModel, taskId: Long
 ) {
-    var showBottomSheet by remember { mutableStateOf(false) }
-
     val initialTask by editTaskViewModel.getTaskById(taskId).collectAsState(
         initial = Task(
             name = "", comment = null, iconEmoji = null
@@ -88,58 +86,87 @@ private fun EditTaskBodyContent(
             } //TODO: upsert only when the save button is clicked
         )
 
-        if (parentTasks.isNotEmpty()) {
-            Text(text = "Parent tasks", style = MaterialTheme.typography.headlineSmall)
-            TasksRow(tasks = parentTasks, navController, showEditButton = false, onClickEdit = {
-                showBottomSheet = true
-            })//parent tasks
-        }
+        ExtendedTaskFields(
+            parentTasks = parentTasks,
+            subTasks = subTasks,
+            navController = navController,
+            editTaskViewModel = editTaskViewModel,
+            taskId = taskId
+        )
 
-        Text(text = "Subtasks", style = MaterialTheme.typography.headlineSmall)
-        TasksRow(tasks = subTasks, navController, showEditButton = true, onClickEdit = {
-            showBottomSheet = true
-        }) //subtasks
+        finalActions(editTaskViewModel, initialTask, modifiedTask, navController)
+    }
+}
 
-        if (showBottomSheet) {
-            EditTasksBottomSheet(
-                onDismissRequest = { showBottomSheet = false },
-                editTaskViewModel = editTaskViewModel,
-                taskId = taskId,
-                subTasks = subTasks
+@Composable
+fun finalActions(
+    editTaskViewModel: EditTaskViewModel,
+    initialTask: Task,
+    modifiedTask: Task,
+    navController: NavController
+) {
+    Row {
+        Button(onClick = {
+            editTaskViewModel.upsertTask(
+                initialTask.copy(
+                    archived = !initialTask.archived
+                )
             )
+            navController.popBackStack()
+        }) {
+            Icon(Icons.Filled.Delete, contentDescription = "Localized description")
+            Text(if (initialTask.archived) "Unarchive" else "Archive")
         }
 
-        Row {
-            Button(onClick = {
-                editTaskViewModel.upsertTask(
-                    initialTask.copy(
-                        archived = !initialTask.archived
-                    )
-                )
-                navController.popBackStack()
-            }) {
-                Icon(Icons.Filled.Delete, contentDescription = "Localized description")
-                Text(if (initialTask.archived) "Unarchive" else "Archive")
-            }
-
-            Button(onClick = {
-                editTaskViewModel.upsertTask(
-                    modifiedTask
-                )
-                navController.popBackStack()
-            }) {
-                Icon(Icons.Filled.Edit, contentDescription = "Localized description")
-                Text("Save")
-            }
-            Button(onClick = {
-                navController.navigate(
-                    "${AppScreens.CreateActivator.route}/${initialTask.taskId}"
-                )
-            }) {
-                Icon(Icons.Filled.Add, contentDescription = "Localized description")
-                Text("Create activator")
-            }
+        Button(onClick = {
+            editTaskViewModel.upsertTask(
+                modifiedTask
+            )
+            navController.popBackStack()
+        }) {
+            Icon(Icons.Filled.Edit, contentDescription = "Localized description")
+            Text("Save")
         }
+        Button(onClick = {
+            navController.navigate(
+                "${AppScreens.CreateActivator.route}/${initialTask.taskId}"
+            )
+        }) {
+            Icon(Icons.Filled.Add, contentDescription = "Localized description")
+            Text("Create activator")
+        }
+    }
+}
+
+@Composable
+fun ExtendedTaskFields(
+    parentTasks: List<Task>,
+    subTasks: List<Task>,
+    navController: NavController,
+    editTaskViewModel: EditTaskViewModel,
+    taskId: Long
+) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    if (parentTasks.isNotEmpty()) {
+        Text(text = "Parent tasks", style = MaterialTheme.typography.headlineSmall)
+        TasksRow(tasks = parentTasks, navController, showEditButton = false, onClickEdit = {
+            showBottomSheet = true
+        })//parent tasks
+    }
+
+    Text(text = "Subtasks", style = MaterialTheme.typography.headlineSmall)
+    TasksRow(tasks = subTasks, navController, showEditButton = true, onClickEdit = {
+        showBottomSheet = true
+    }) //subtasks
+
+    if (showBottomSheet) {
+        EditTasksBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            editTaskViewModel = editTaskViewModel,
+            taskId = taskId,
+            subTasks = subTasks
+        )
     }
 }
 
