@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.composables.ActivatorFields
+import com.mrdarip.tasdks.composables.forms.ActivatorFields
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditActivatorViewModel
 

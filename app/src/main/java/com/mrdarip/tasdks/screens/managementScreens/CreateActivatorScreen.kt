@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.composables.ActivatorFields
+import com.mrdarip.tasdks.composables.forms.ActivatorFields
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.RepetitionRange
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateActivatorViewModel

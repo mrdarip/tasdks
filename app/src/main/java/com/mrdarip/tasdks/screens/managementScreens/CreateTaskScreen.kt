@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.composables.TaskFields
+import com.mrdarip.tasdks.composables.forms.TaskFields
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateTaskViewModel
 

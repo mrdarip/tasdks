@@ -35,8 +35,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.OrderTaskLiItem
 import com.mrdarip.tasdks.composables.SelectTaskGrid
-import com.mrdarip.tasdks.composables.TaskFields
 import com.mrdarip.tasdks.composables.TasksRow
+import com.mrdarip.tasdks.composables.forms.TaskFields
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreens
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel

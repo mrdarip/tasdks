@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.composables.ResourceFields
+import com.mrdarip.tasdks.composables.forms.ResourceFields
 import com.mrdarip.tasdks.data.entity.Resource
 import com.mrdarip.tasdks.data.entity.ResourceType
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.CreateResourceViewModel
