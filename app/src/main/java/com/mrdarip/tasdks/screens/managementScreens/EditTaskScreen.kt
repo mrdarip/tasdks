@@ -55,7 +55,9 @@ private fun EditTaskBodyContent(
         )
     )
 
-    var modifiedTask = initialTask
+    var modifiedTask by remember {
+        mutableStateOf(initialTask)
+    }
     LaunchedEffect(initialTask) {
         modifiedTask = initialTask
     }

@@ -159,6 +159,7 @@ fun SavingTaskActionBar(
             editTaskViewModel.upsertTask(
                 modifiedTask
             )
+            Log.i("SavingTaskActionBar", "onSave: $modifiedTask")
             navController.popBackStack()
         }) {
             Icon(Icons.Filled.Edit, contentDescription = "Localized description")
