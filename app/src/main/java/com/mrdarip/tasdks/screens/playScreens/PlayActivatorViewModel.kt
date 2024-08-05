@@ -138,6 +138,10 @@ class PlayActivatorViewModel(
         return repository.getActivatorById(activatorId)
     }
 
+    fun getActivatorByIdAsFlow(activatorId: Long): Flow<Activator> {
+        return repository.getActivatorByIdAsFlow(activatorId)
+    }
+
     fun getExecutionById(executionId: Long): Execution {
         return repository.getExecutionById(executionId)
     }

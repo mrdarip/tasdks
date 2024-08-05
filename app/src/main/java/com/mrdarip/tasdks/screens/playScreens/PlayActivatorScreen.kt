@@ -27,7 +27,8 @@ fun PlayActivatorScreen(activatorId: Long, navController: NavController) {
     Log.i("PlayActivatorScreen", "ActivatorId: $activatorId")
     val editTaskViewModel = viewModel(modelClass = PlayActivatorViewModel::class.java)
     editTaskViewModel.setTopActivatorId(activatorId)
-    val topActivator = editTaskViewModel.getActivatorById(activatorId)
+    val topActivator = editTaskViewModel.getActivatorByIdAsFlow(activatorId)
+        .collectAsState(initial = Activator(taskToActivateId = 1)).value
     PlayActivatorBodyContent(
         topActivator = topActivator, viewModel = editTaskViewModel, navController = navController
     )
