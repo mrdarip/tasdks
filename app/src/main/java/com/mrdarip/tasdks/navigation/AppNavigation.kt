@@ -119,56 +119,60 @@ fun AppNavigation() {
 
 @Composable
 fun DrawerContent(navController: NavController, drawerState: DrawerState, scope: CoroutineScope) {
-    Text("Manage", modifier = Modifier.padding(16.dp))
-    HorizontalDivider()
-    val labels = listOf(
-        "Manage Tasks",
-        "Manage Activators",
-        "Manage Resources"
-    )
+    Column {
+        Text("Manage", modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp))
+        HorizontalDivider()
+        val labels = listOf(
+            "Manage Tasks",
+            "Manage Activators",
+            "Manage Resources"
+        )
 
-    val icons = listOf(
-        Icons.Filled.Build,
-        Icons.Filled.PlayArrow,
-        Icons.Filled.Star
-    )
+        val icons = listOf(
+            Icons.Filled.Build,
+            Icons.Filled.PlayArrow,
+            Icons.Filled.Star
+        )
 
-    val screens = listOf(
-        AppScreens.ManageTasks,
-        AppScreens.ManageActivators,
-        AppScreens.ManageResources
-    )
+        val screens = listOf(
+            AppScreens.ManageTasks,
+            AppScreens.ManageActivators,
+            AppScreens.ManageResources
+        )
 
-    labels.forEachIndexed { index, item ->
+        labels.forEachIndexed { index, item ->
+            NavigationDrawerItem(
+                label = { Text(item) },
+                icon = {
+                    Icon(
+                        icons[index],
+                        contentDescription = item
+                    )
+                },
+                selected = false,
+                onClick = {
+                    navController.navigate(screens[index].route)
+                    scope.launch { drawerState.close() }
+                },
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+
+        HorizontalDivider()
+
         NavigationDrawerItem(
-            label = { Text(item) },
+            label = { Text(text = "Settings") },
             icon = {
                 Icon(
-                    icons[index],
-                    contentDescription = item
+                    Icons.Filled.Settings,
+                    contentDescription = "Settings"
                 )
             },
             selected = false,
-            onClick = {
-                navController.navigate(screens[index].route)
-                scope.launch { drawerState.close() }
-            }
+            onClick = { /*TODO*/ },
+            modifier = Modifier.padding(horizontal = 8.dp)
         )
     }
-
-    HorizontalDivider()
-
-    NavigationDrawerItem(
-        label = { Text(text = "Settings") },
-        icon = {
-            Icon(
-                Icons.Filled.Settings,
-                contentDescription = "Settings"
-            )
-        },
-        selected = false,
-        onClick = { /*TODO*/ }
-    )
 }
 
 @Composable
@@ -263,7 +267,7 @@ fun MainNavHost(navController: NavHostController) {
             val taskId = backStackEntry.arguments?.getLong("taskId")
             EditTaskScreen(
                 navController = navController,
-                taskId = taskId?:0
+                taskId = taskId ?: 0
             )
         }
 
@@ -293,7 +297,8 @@ fun MainNavHost(navController: NavHostController) {
             ManageActivatorsScreen(navController = navController)
         }
 
-        composable("${AppScreens.CreateActivator.route}/{taskId}",
+        composable(
+            "${AppScreens.CreateActivator.route}/{taskId}",
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
         ) {
             CreateActivatorScreen(
