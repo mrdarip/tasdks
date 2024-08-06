@@ -48,8 +48,39 @@ fun NumberInput(
         isError = displayedValue.toIntOrNull() == null && displayedValue.isNotBlank(),
         modifier = modifier
     )
-
     //would be cool to implement evaluating its value if an expression like 1+1 is prompted
+}
+
+@Composable
+fun TextInput(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    placeholder: String,
+    singleLine: Boolean = true
+) {
+    var displayedValue by remember {
+        mutableStateOf(value)
+    }
+
+    LaunchedEffect(value) {
+        displayedValue = value
+    }
+
+    TextField(
+        value = displayedValue,
+        onValueChange = {
+            displayedValue = it
+            //its always valid so theres no if statement
+            onValueChange(it)
+        },
+        label = { Text(label) },
+        placeholder = { Text(placeholder) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        modifier = modifier,
+        singleLine = singleLine
+    )
 }
 
 //todo: move to utils?

@@ -42,13 +42,12 @@ fun TaskFields(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            TextField(
+            TextInput(
+                modifier = Modifier.weight(3f),
                 value = task.name,
                 onValueChange = { onTaskChange(task.copy(name = it)) },
-                label = { Text("Name") },
-                placeholder = { Text("Task name") },
-                modifier = Modifier.weight(3f),
-                singleLine = true
+                label = "Name",
+                placeholder = "Task name"
             )
             TextField(
                 value = task.iconEmoji.orEmpty(),
