@@ -204,27 +204,8 @@ fun BottomBar(navController: NavController) {
                 selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
-                    // Check if the current screen is not one of the bottom bar screens
-                    if (!bottomBarScreenRoutes.contains(
-                            navController.currentDestination?.route ?: ""
-                        )
-                    ) {
-                        // If it is, pop the back stack to close the EditTask screen
-                        navController.popBackStack()
-                    }
 
-                    navController.navigate(
-                        bottomBarScreenRoutes.getOrElse(index) { AppScreens.FirstScreen.route }
-                    ) {
-                        // Avoid recreating the screen if it's already on the back stack
-                        launchSingleTop = true
-                        // Pop up to the start destination before navigating
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        // Restore state when reusing a screen
-                        restoreState = true
-                    }
+                    navController.navigate(bottomBarScreenRoutes[index])
                 }
             )
         }
