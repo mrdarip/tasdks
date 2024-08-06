@@ -41,7 +41,12 @@ flowchart LR
     - As specified by task.allowParallelTasks and task.waitTime
 - Implement TTS on playActivatorScreen
 - Warn user when archiving a task that it has active activators if applicable
-
+- Fix navigation
+  - if navigating from edit x task (0) to manage activators (1), if you pop back you should get to
+    screen in -1 position instead of 0
+  - if trying to pop back from any edit screen (or from play activator screen) you should be
+    prompted to save changes
+  - pop back shouldnt take you to a edit/create screen
 ### Code
 
 - Background-running code should be moved to its viewmodel
