@@ -151,7 +151,12 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
                 },
                 selected = false,
                 onClick = {
-                    navController.navigate(screens[index].route)
+                    navController.navigate(screens[index].route) {
+                        popUpTo(screens[index].route) {
+                            inclusive = true
+                        }
+                    }
+
                     scope.launch { drawerState.close() }
                 },
                 modifier = Modifier.padding(horizontal = 8.dp)
