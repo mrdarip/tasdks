@@ -58,11 +58,11 @@ fun TaskFields(
                 isError = !isValidEmoji(task.iconEmoji.orEmpty())
             )
         }
-        TextField(
+        TextInput(
             value = task.comment.orEmpty(),
             onValueChange = { onTaskChange(task.copy(comment = it.ifBlank { null })) },
-            label = { Text("Comment") },
-            placeholder = { Text("Task comment") },
+            label = "Comment",
+            placeholder = "Task comment",
             modifier = Modifier.fillMaxWidth()
         )
 
