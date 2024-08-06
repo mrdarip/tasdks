@@ -82,11 +82,11 @@ private fun ActivatorDescriptionInput(
     activator: Activator,
     onActivatorChanged: (Activator) -> Unit
 ) {
-    TextField(
+    TextInput(
         value = activator.comment ?: "",
         onValueChange = { onActivatorChanged(activator.copy(comment = it)) },
-        label = { Text("Description") },
-        placeholder = { Text("Activator Description") },
+        label = "Description",
+        placeholder = "Activator Description",
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
@@ -328,20 +328,19 @@ private fun RepetitionsRangeInput(
                         )
                     })
             } else {
-                TextField(
-                    value = activator.repetitionRange.start.toString(),
-                    onValueChange = {
+                NumberInput(
+                    value = activator.repetitionRange.start,
+                    onValidValueChange = {
                         onActivatorChanged(
                             activator.copy(
                                 repetitionRange = activator.repetitionRange.copy(
-                                    start = it.toIntOrNull() ?: 0
+                                    start = it
                                 )
                             )
                         )
                     },
-                    label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until start") },
-                    placeholder = { Text("Activator Description") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    label = capitalized(activator.repetitionRange.repetitionUnit.name) + " until start",
+                    placeholder = "Activator Description",
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -357,20 +356,19 @@ private fun RepetitionsRangeInput(
                         )
                     })
             } else {
-                TextField(
-                    value = activator.repetitionRange.end.toString(),
-                    onValueChange = {
+                NumberInput(
+                    value = activator.repetitionRange.end,
+                    onValidValueChange = {
                         onActivatorChanged(
                             activator.copy(
                                 repetitionRange = activator.repetitionRange.copy(
-                                    end = it.toIntOrNull() ?: 0
+                                    end = it
                                 )
                             )
                         )
                     },
-                    label = { Text(capitalized(activator.repetitionRange.repetitionUnit.name) + " until deadline") },
-                    placeholder = { Text("Activator Description") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    label = capitalized(activator.repetitionRange.repetitionUnit.name) + " until deadline",
+                    placeholder = "Activator Description",
                     modifier = Modifier.weight(1f)
                 )
             }
