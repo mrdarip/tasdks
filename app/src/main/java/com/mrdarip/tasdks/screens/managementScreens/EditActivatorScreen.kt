@@ -25,7 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.forms.ActivatorFields
 import com.mrdarip.tasdks.data.entity.Activator
-import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.navigation.AppScreen
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditActivatorViewModel
 
 @Composable
@@ -33,7 +33,7 @@ fun EditActivatorScreen(navController: NavController, activatorId: Long) {
     BackHandler {
         val lastScreen = navController.previousBackStackEntry?.destination?.route
         //get last screen from backstack as AppScreens object
-        val lastAppScreen = AppScreens.valueOf(lastScreen!!)
+        val lastAppScreen = AppScreen.valueOf(lastScreen!!)
         //if last screen isEntityScreen = true, remove it from backstack
         if (lastAppScreen.isEntityScreen) {
             navController.popBackStack()

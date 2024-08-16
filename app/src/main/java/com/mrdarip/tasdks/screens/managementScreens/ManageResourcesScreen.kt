@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
-import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.navigation.AppScreen
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageResourcesState
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageResourcesViewModel
 
@@ -53,14 +53,14 @@ private fun ManageResourcesBodyContent(
                     emoji = resource.resourceType.emoji,
                     primaryIcon = Icons.Default.Edit,
                     onPrimaryClick = {
-                        navController.navigate("${AppScreens.CreateResource.route}/${resource.resourceId}")
+                        navController.navigate("${AppScreen.CreateResource.route}/${resource.resourceId}")
                     }
                 )
             }
         }
 
         Button(
-            onClick = { navController.navigate("${AppScreens.CreateResource.route}/-1") },
+            onClick = { navController.navigate("${AppScreen.CreateResource.route}/-1") },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)

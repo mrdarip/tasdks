@@ -18,7 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Task
-import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.navigation.AppScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -54,7 +54,7 @@ private fun PlayActivatorBodyContent(
                         onEnd = {
                             viewModel.viewModelScope.launch {
                                 withContext(Dispatchers.Main) {
-                                    navController.navigate(AppScreens.FirstScreen.route)
+                                    navController.navigate(AppScreen.FirstScreen.route)
                                 }
                             }
                         }
@@ -68,7 +68,7 @@ private fun PlayActivatorBodyContent(
                 viewModel.viewModelScope.launch(Dispatchers.IO) {
                     viewModel.exit()
                     withContext(Dispatchers.Main) {
-                        navController.navigate(AppScreens.FirstScreen.route)
+                        navController.navigate(AppScreen.FirstScreen.route)
                     }
                 }
             }) {

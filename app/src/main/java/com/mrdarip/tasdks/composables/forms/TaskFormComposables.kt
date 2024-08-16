@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.TasksRow
 import com.mrdarip.tasdks.data.entity.Task
-import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.navigation.AppScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditTasksBottomSheet
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.EditTaskViewModel
 
@@ -167,7 +167,7 @@ fun SavingTaskActionBar(
         }
         Button(onClick = {
             navController.navigate(
-                "${AppScreens.CreateActivator.route}/${initialTask.taskId}"
+                "${AppScreen.CreateActivator.route}/${initialTask.taskId}"
             )
         }) {
             Icon(Icons.Filled.Add, contentDescription = "Localized description")

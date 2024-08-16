@@ -40,7 +40,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Task
-import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.navigation.AppScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -143,7 +143,7 @@ fun TasksCardRow(
                             )
 
                             withContext(Dispatchers.Main) {
-                                navController.navigate("${AppScreens.PlayActivator.route}/$activatorId")
+                                navController.navigate("${AppScreen.PlayActivator.route}/$activatorId")
                             }
                         }
                     }
@@ -238,7 +238,7 @@ fun TasksRow(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(onClick = { navController.navigate(AppScreens.EditTask.route + "/${task.taskId}") })
+                    .clickable(onClick = { navController.navigate(AppScreen.EditTask.route + "/${task.taskId}") })
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(space = 8.dp),

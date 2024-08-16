@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Task
-import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.navigation.AppScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
 
 @Preview
@@ -77,7 +77,7 @@ fun ActivatorCardRow(
                     title = task.name,
                     subTitle = activator.comment,
                     onClick = {
-                        navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
+                        navController.navigate("${AppScreen.PlayActivator.route}/${activator.activatorId}")
                     }
                 )
             }

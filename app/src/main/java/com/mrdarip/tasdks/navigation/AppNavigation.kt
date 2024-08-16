@@ -135,9 +135,9 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
         )
 
         val screens = listOf(
-            AppScreens.ManageTasks,
-            AppScreens.ManageActivators,
-            AppScreens.ManageResources
+            AppScreen.ManageTasks,
+            AppScreen.ManageActivators,
+            AppScreen.ManageResources
         )
 
         labels.forEachIndexed { index, item ->
@@ -187,9 +187,9 @@ fun BottomBar(navController: NavController) {
     val items = listOf("Menu", "Search", "Stats")
     val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.AccountCircle)
     val bottomBarScreenRoutes = listOf(
-        AppScreens.FirstScreen.route,
-        AppScreens.SecondScreen.route,
-        AppScreens.ThirdScreen.route,
+        AppScreen.FirstScreen.route,
+        AppScreen.SecondScreen.route,
+        AppScreen.ThirdScreen.route,
     )
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -219,35 +219,35 @@ fun BottomBar(navController: NavController) {
 
 @Composable
 fun MainNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppScreens.FirstScreen.route) {
-        composable(route = AppScreens.FirstScreen.route) {
+    NavHost(navController = navController, startDestination = AppScreen.FirstScreen.route) {
+        composable(route = AppScreen.FirstScreen.route) {
             MainMenu(navController)
         }
-        composable(route = AppScreens.SecondScreen.route) {
+        composable(route = AppScreen.SecondScreen.route) {
             SearchMenu(navController)
         }
-        composable(route = AppScreens.ThirdScreen.route) {
+        composable(route = AppScreen.ThirdScreen.route) {
             StatsMenu(navController)
         }
 
-        composable(route = AppScreens.ManageResources.route) {
+        composable(route = AppScreen.ManageResources.route) {
             ManageResourcesScreen(navController = navController)
         }
 
         composable(
-            "${AppScreens.CreateResource.route}/{resourceId}",
+            "${AppScreen.CreateResource.route}/{resourceId}",
             arguments = listOf(navArgument("resourceId") { type = NavType.LongType })
         ) { backStackEntry ->
             val resourceId = backStackEntry.arguments?.getLong("resourceId")
             CreateResourceScreen(navController, resourceId ?: -1)
         }
 
-        composable(route = AppScreens.ManageExecutions.route) {
+        composable(route = AppScreen.ManageExecutions.route) {
             ManageExecutionsScreen(navController = navController)
         }
 
         composable(
-            "${AppScreens.EditTask.route}/{taskId}",
+            "${AppScreen.EditTask.route}/{taskId}",
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
         ) { backStackEntry ->
             val taskId = backStackEntry.arguments?.getLong("taskId")
@@ -258,19 +258,19 @@ fun MainNavHost(navController: NavHostController) {
         }
 
         composable(
-            route = AppScreens.ManageTasks.route,
+            route = AppScreen.ManageTasks.route,
         ) {
             ManageTasksScreen(navController = navController)
         }
 
         composable(
-            route = AppScreens.CreateTask.route,
+            route = AppScreen.CreateTask.route,
         ) {
             CreateTaskScreen(navController = navController)
         }
 
         composable(
-            "${AppScreens.PlayActivator.route}/{activatorId}",
+            "${AppScreen.PlayActivator.route}/{activatorId}",
             arguments = listOf(navArgument("activatorId") { type = NavType.LongType })
         ) { backStackEntry ->
             val activatorId = backStackEntry.arguments?.getLong("activatorId")
@@ -278,13 +278,13 @@ fun MainNavHost(navController: NavHostController) {
         }
 
         composable(
-            AppScreens.ManageActivators.route,
+            AppScreen.ManageActivators.route,
         ) {
             ManageActivatorsScreen(navController = navController)
         }
 
         composable(
-            "${AppScreens.CreateActivator.route}/{taskId}",
+            "${AppScreen.CreateActivator.route}/{taskId}",
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
         ) {
             CreateActivatorScreen(
@@ -294,7 +294,7 @@ fun MainNavHost(navController: NavHostController) {
         }
 
         composable(
-            "${AppScreens.EditActivator.route}/{activatorId}",
+            "${AppScreen.EditActivator.route}/{activatorId}",
             arguments = listOf(navArgument("activatorId") { type = NavType.LongType })
         ) { backStackEntry ->
             val activatorId = backStackEntry.arguments?.getLong("activatorId")

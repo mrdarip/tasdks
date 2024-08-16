@@ -26,7 +26,7 @@ import com.mrdarip.tasdks.composables.TasdksCard
 import com.mrdarip.tasdks.composables.TaskCard
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Task
-import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.navigation.AppScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.SearchMenuState
 import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.SearchMenuViewModel
 
@@ -56,7 +56,7 @@ private fun SearchMenuBodyContent(
             EntityLazyGrid(
                 "Tasks",
                 "Add Task",
-                AppScreens.CreateTask.route,
+                AppScreen.CreateTask.route,
                 navController,
                 mainMenuState.activeTasks
             ) { task ->
@@ -72,7 +72,7 @@ private fun SearchMenuBodyContent(
             EntityLazyGrid(
                 "Activators",
                 "Add activator",
-                "${AppScreens.CreateActivator.route}/-1",
+                "${AppScreen.CreateActivator.route}/-1",
                 navController,
                 mainMenuState.overdueActivators
             ) { activator ->
@@ -97,7 +97,7 @@ private fun SearchMenuBodyContent(
             EntityLazyGrid(
                 "Resources",
                 "Add Resource",
-                "${AppScreens.CreateTask.route}/-1",
+                "${AppScreen.CreateTask.route}/-1",
                 navController,
                 mainMenuState.allResources
             ) { task ->

@@ -23,7 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
 import com.mrdarip.tasdks.data.entity.Task
-import com.mrdarip.tasdks.navigation.AppScreens
+import com.mrdarip.tasdks.navigation.AppScreen
 import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageActivatorsViewModel
 
 
@@ -61,11 +61,11 @@ private fun ManageActivatorsBodyContent(
                     subTitle = activator.comment?:"No comment provided",
                     emoji = taskToActivate.iconEmoji,
                     onPrimaryClick = {
-                        navController.navigate("${AppScreens.PlayActivator.route}/${activator.activatorId}")
+                        navController.navigate("${AppScreen.PlayActivator.route}/${activator.activatorId}")
                     },
                     primaryIcon = Icons.Filled.PlayArrow,
                     onSecondaryClick = {
-                        navController.navigate("${AppScreens.EditActivator.route}/${activator.activatorId}")
+                        navController.navigate("${AppScreen.EditActivator.route}/${activator.activatorId}")
                     },
                     secondaryIcon = Icons.Filled.Edit,
                     onLiItemClick = {
@@ -76,7 +76,7 @@ private fun ManageActivatorsBodyContent(
         }
 
         Button(
-            onClick = { navController.navigate("${AppScreens.CreateActivator.route}/-1") },
+            onClick = { navController.navigate("${AppScreen.CreateActivator.route}/-1") },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
