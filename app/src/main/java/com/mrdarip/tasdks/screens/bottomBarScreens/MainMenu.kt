@@ -1,6 +1,8 @@
 package com.mrdarip.tasdks.screens.bottomBarScreens
 
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,18 @@ import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
 
 @Composable
 fun MainMenu(navController: NavController) {
+    BackHandler {
+        val lastScreen = navController.previousBackStackEntry?.destination?.route
+        Log.i("EditActivatorScreen", "lastScreen: $lastScreen")
+
+        val lastAppScreen = AppScreen.valueOf(lastScreen!!)
+        Log.i("EditActivatorScreen", "lastAppScreen: $lastAppScreen")
+
+        if (lastAppScreen.isEntityScreen) {
+            navController.popBackStack()
+        }
+        navController.popBackStack()
+    }
     val mainMenuViewModel = viewModel(modelClass = MainMenuViewModel::class.java)
     val mainMenuState = mainMenuViewModel.state
     BodyContent(
