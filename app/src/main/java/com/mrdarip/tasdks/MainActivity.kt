@@ -1,9 +1,7 @@
 package com.mrdarip.tasdks
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -26,27 +24,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-
-        // Handle back button press
-        onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (backPressedTime + 2000 > System.currentTimeMillis()) {
-                        isEnabled = false
-                        onBackPressed()
-                    } else {
-                        Toast.makeText(
-                            applicationContext,
-                            "Press back again to exit",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    backPressedTime = System.currentTimeMillis()
-                }
-            }
-        )
     }
 
 }
