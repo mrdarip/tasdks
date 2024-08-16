@@ -32,3 +32,24 @@ create_activator;main_menu;search;stats;manage_tasks;manage_activators;manage_re
 create_resource;main_menu;search;stats;manage_tasks;manage_activators;manage_resources;settings
 play_activator;main_menu;search;stats;manage_tasks;manage_activators;manage_resources;settings
 ```
+
+lets make it by hand for now
+
+- all screens
+  - manage_tasks
+    - create_task
+    - play_activator
+    - edit_task
+  - manage_activators
+    - create_activator
+    - play_activator
+    - edit_activator
+  - manage_resources
+    - create_resource
+  - settings
+  - main_menu
+  - search
+  - stats
+
+If we are in any of the edit, play or create screens and hit move to ANY other screen,
+apart from being prompted to save changes, the screen should be popped back to that screen
