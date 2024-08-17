@@ -75,7 +75,10 @@ fun AppNavigation() {
         currentRoute = destination.route ?: "Default Screen"
     }
 
-    EntitiesBackHandler(navController = navController)
+    EntitiesBackHandler(
+        navController = navController,
+        currentRoute = navController.currentBackStackEntry?.destination?.route
+    )
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {

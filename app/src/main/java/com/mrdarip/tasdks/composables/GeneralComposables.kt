@@ -240,10 +240,9 @@ fun TasdksCard(emoji: String?, title: String, subTitle: String?, onClick: () -> 
 }
 
 @Composable
-fun EntitiesBackHandler(navController: NavController) {
-    val screenRoute =
-        navController.currentBackStackEntry?.destination?.route?.split(".")?.last()?.split("/")
-            ?.first()
+fun EntitiesBackHandler(navController: NavController, currentRoute: String?) {
+    val screenRoute = currentRoute?.split(".")?.last()?.split("/")?.first()
+    Log.i("EditActivatorScreen", "screenRoute: $screenRoute")
     val routeAppScreen = AppScreen.valueOf(
         screenRoute ?: "FirstScreen"
     ) //TODO: check why screenRoute is null on app start (or if its always null), remove the default value
