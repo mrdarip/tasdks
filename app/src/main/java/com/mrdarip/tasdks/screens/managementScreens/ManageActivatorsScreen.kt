@@ -1,7 +1,5 @@
 package com.mrdarip.tasdks.screens.managementScreens
 
-import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,20 +29,6 @@ import com.mrdarip.tasdks.screens.managementScreens.viewModels.ManageActivatorsV
 
 @Composable
 fun ManageActivatorsScreen(navController: NavController) {
-    BackHandler {
-        val lastScreen =
-            navController.previousBackStackEntry?.destination?.route?.split(".")?.last()?.split("/")
-                ?.first()
-        Log.i("EditActivatorScreen", "lastScreen: $lastScreen")
-
-        val lastAppScreen = AppScreen.valueOf(lastScreen!!)
-        Log.i("EditActivatorScreen", "lastAppScreen: $lastAppScreen")
-
-        if (lastAppScreen.isEntityScreen) {
-            navController.popBackStack()
-        }
-        navController.popBackStack()
-    }
     val mainMenuViewModel = viewModel(modelClass = ManageActivatorsViewModel::class.java)
     ManageActivatorsBodyContent(
         navController = navController,
