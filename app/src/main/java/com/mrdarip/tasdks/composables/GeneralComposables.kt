@@ -1,5 +1,7 @@
 package com.mrdarip.tasdks.composables
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +26,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.mrdarip.tasdks.navigation.AppScreen
 
 @Composable
 fun TwoButtonsListItem(
@@ -231,6 +235,37 @@ fun TasdksCard(emoji: String?, title: String, subTitle: String?, onClick: () -> 
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.absoluteOffset(12.dp, (-14).dp)
             )
+        }
+    }
+}
+
+@Composable
+fun EntitiesBackHandler(navController: NavController) {
+    val screenRoute =
+        navController.currentBackStackEntry?.destination?.route?.split(".")?.last()?.split("/")
+            ?.first()
+    val routeAppScreen = AppScreen.valueOf(
+        screenRoute ?: "FirstScreen"
+    ) //TODO: check why screenRoute is null on app start (or if its always null), remove the default value
+
+    Log.i("EditActivatorScreen", "routeAppScreen: $routeAppScreen")
+    if (!routeAppScreen.isEntityScreen) {
+        Log.i("EditActivatorScreen", "routeAppScreen is not entity screen")
+        BackHandler {
+            Log.i("EditActivatorScreen", "BackHandler")
+            val lastScreen =
+                navController.previousBackStackEntry?.destination?.route?.split(".")?.last()
+                    ?.split("/")
+                    ?.first()
+            Log.i("EditActivatorScreen", "lastScreen: $lastScreen")
+
+            val lastAppScreen = AppScreen.valueOf(lastScreen!!)
+            Log.i("EditActivatorScreen", "lastAppScreen: $lastAppScreen")
+
+            if (lastAppScreen.isEntityScreen) {
+                navController.popBackStack()
+            }
+            navController.popBackStack()
         }
     }
 }

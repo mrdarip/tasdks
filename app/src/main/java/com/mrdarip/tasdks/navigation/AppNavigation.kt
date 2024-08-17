@@ -1,7 +1,5 @@
 package com.mrdarip.tasdks.navigation
 
-import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -48,6 +46,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.mrdarip.tasdks.composables.EntitiesBackHandler
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
@@ -75,6 +74,8 @@ fun AppNavigation() {
     navController.addOnDestinationChangedListener { _, destination, _ ->
         currentRoute = destination.route ?: "Default Screen"
     }
+
+    EntitiesBackHandler(navController = navController)
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {
@@ -221,30 +222,6 @@ fun BottomBar(navController: NavController) {
 
 @Composable
 fun MainNavHost(navController: NavHostController) {
-    val screenRoute =
-        navController.currentBackStackEntry?.destination?.route?.split(".")?.last()?.split("/")
-            ?.first()
-    val routeAppScreen = AppScreen.valueOf(
-        screenRoute ?: "FirstScreen"
-    ) //TODO: check why screenRoute is null on app start (or if its always null), remove the default value
-
-    if (!routeAppScreen.isEntityScreen) {
-        BackHandler {
-            val lastScreen =
-                navController.previousBackStackEntry?.destination?.route?.split(".")?.last()
-                    ?.split("/")
-                    ?.first()
-            Log.i("EditActivatorScreen", "lastScreen: $lastScreen")
-
-            val lastAppScreen = AppScreen.valueOf(lastScreen!!)
-            Log.i("EditActivatorScreen", "lastAppScreen: $lastAppScreen")
-
-            if (lastAppScreen.isEntityScreen) {
-                navController.popBackStack()
-            }
-            navController.popBackStack()
-        }
-    }
     NavHost(navController = navController, startDestination = AppScreen.FirstScreen.route) {
         composable(route = AppScreen.FirstScreen.route) {
             MainMenu(navController)
