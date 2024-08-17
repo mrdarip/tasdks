@@ -14,7 +14,8 @@ enum class AppScreen(val route: String, val isEntityScreen: Boolean = false) {
     EditTask("EditTask", true),
     ManageTasks("ManageTasks", false),
     CreateTask("CreateTask", true),
-    PlayActivator("PlayActivator", true), ;
+    PlayActivator("PlayActivator", true),
+    NotFound("NotFound", false);
 
     companion object {
         fun fromRoute(route: String): AppScreen {

@@ -47,6 +47,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mrdarip.tasdks.composables.EntitiesBackHandler
+import com.mrdarip.tasdks.screens.NotFoundScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
@@ -306,5 +307,12 @@ fun MainNavHost(navController: NavHostController) {
             val activatorId = backStackEntry.arguments?.getLong("activatorId")
             EditActivatorScreen(navController = navController, activatorId = activatorId ?: 0)
         }
+
+        composable(
+            AppScreen.NotFound.route
+        ) {
+            NotFoundScreen()
+        }
+
     }
 }
