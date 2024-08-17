@@ -1,6 +1,5 @@
 package com.mrdarip.tasdks.composables
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -242,24 +241,19 @@ fun TasdksCard(emoji: String?, title: String, subTitle: String?, onClick: () -> 
 @Composable
 fun EntitiesBackHandler(navController: NavController, currentRoute: String?) {
     val screenRoute = currentRoute?.split(".")?.last()?.split("/")?.first()
-    Log.i("EditActivatorScreen", "screenRoute: $screenRoute")
+
     val routeAppScreen = AppScreen.valueOf(
         screenRoute ?: "FirstScreen"
     ) //TODO: check why screenRoute is null on app start (or if its always null), remove the default value
 
-    Log.i("EditActivatorScreen", "routeAppScreen: $routeAppScreen")
     if (!routeAppScreen.isEntityScreen) {
-        Log.i("EditActivatorScreen", "routeAppScreen is not entity screen")
         BackHandler {
-            Log.i("EditActivatorScreen", "BackHandler")
             val lastScreen =
                 navController.previousBackStackEntry?.destination?.route?.split(".")?.last()
                     ?.split("/")
                     ?.first()
-            Log.i("EditActivatorScreen", "lastScreen: $lastScreen")
 
             val lastAppScreen = AppScreen.valueOf(lastScreen!!)
-            Log.i("EditActivatorScreen", "lastAppScreen: $lastAppScreen")
 
             if (lastAppScreen.isEntityScreen) {
                 navController.popBackStack()
