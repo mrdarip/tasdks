@@ -70,14 +70,14 @@ fun AppNavigation() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    var currentRoute by rememberSaveable { mutableStateOf("Default Screen") }
+    var currentRoute by rememberSaveable { mutableStateOf("FirstScreen") }
     navController.addOnDestinationChangedListener { _, destination, _ ->
-        currentRoute = destination.route ?: "Default Screen"
+        currentRoute = destination.route ?: "FirstScreen"
     }
 
     EntitiesBackHandler(
         navController = navController,
-        currentRoute = navController.currentBackStackEntry?.destination?.route
+        currentRoute = currentRoute
     )
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
