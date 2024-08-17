@@ -15,4 +15,10 @@ enum class AppScreen(val route: String, val isEntityScreen: Boolean = false) {
     ManageTasks("ManageTasks", false),
     CreateTask("CreateTask", true),
     PlayActivator("PlayActivator", true), ;
+
+    companion object {
+        fun fromRoute(route: String): AppScreen {
+            return valueOf(route.split(".").last().split("/").first())
+        }
+    }
 }

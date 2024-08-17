@@ -240,24 +240,22 @@ fun TasdksCard(emoji: String?, title: String, subTitle: String?, onClick: () -> 
 
 @Composable
 fun EntitiesBackHandler(navController: NavController, currentRoute: String?) {
-    val screenRoute = currentRoute?.split(".")?.last()?.split("/")?.first()
 
-    val routeAppScreen = AppScreen.valueOf(
-        screenRoute ?: "FirstScreen"
+    val routeAppScreen = AppScreen.fromRoute(
+        currentRoute ?: AppScreen.FirstScreen.route
     ) //TODO: check why screenRoute is null on app start (or if its always null), remove the default value
 
     if (!routeAppScreen.isEntityScreen) {
         BackHandler {
-            val lastScreen =
-                navController.previousBackStackEntry?.destination?.route?.split(".")?.last()
-                    ?.split("/")
-                    ?.first()
-
-            val lastAppScreen = AppScreen.valueOf(lastScreen!!)
+            val lastAppScreen = AppScreen.fromRoute(
+                navController.previousBackStackEntry?.destination?.route
+                    ?: AppScreen.FirstScreen.route
+            )
 
             if (lastAppScreen.isEntityScreen) {
                 navController.popBackStack()
             }
+
             navController.popBackStack()
         }
     }
