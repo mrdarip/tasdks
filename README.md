@@ -3,6 +3,11 @@
 Don't ever forget any steps of a task, neither underestimate its duration.
 Add everything you want to have done, like sweeping th floor or playing the piano! The app will learn from you and distribute all your tasks for every day!
 
+
+## Building
+
+Clone and build it in Android Studio, as it was made there
+
 ## Features
 
 - Organise and simplify your tasks.
