@@ -82,11 +82,19 @@ class DAOs {
         @Transaction
         fun removeSubTask(parentTaskId: Long, position: Long) {
             deleteTaskTaskCR(parentTaskId, position)
-            decreasePositionGreaterThan(parentTaskId, position)
+            negatePositions(parentTaskId)
+            increasePositionLowerThan(parentTaskId, -position)
+            negatePositions(parentTaskId)
         }
+
+        @Query("UPDATE TaskTaskCR SET position = -position WHERE parentId = :parentTaskId")
+        fun negatePositions(parentTaskId: Long)
 
         @Query("UPDATE TaskTaskCR SET position = position-1 WHERE parentId = :parentTaskId AND position>:position")
         fun decreasePositionGreaterThan(parentTaskId: Long, position: Long)
+
+        @Query("UPDATE TaskTaskCR SET position = position+1 WHERE parentId = :parentTaskId AND position<:position")
+        fun increasePositionLowerThan(parentTaskId: Long, position: Long)
 
         @Query("DELETE FROM TaskTaskCR WHERE parentId = :parentTaskId AND position = :position")
         fun deleteTaskTaskCR(parentTaskId: Long, position: Long)
