@@ -105,8 +105,21 @@ class DAOs {
         @Query("SELECT COUNT(*) FROM TaskTaskCR WHERE parentId = :taskId")
         fun taskLength(taskId: Long): Long
 
-        @Query("SELECT MAX(`end`- start) FROM executions WHERE taskId = :taskId ORDER BY `end`- start ASC LIMIT Round(((SELECT COUNT(*) FROM executions WHERE taskID = :taskId) * :percentile / 100.0),0)")
-        fun maxETA(taskId: Long, percentile: Double = 95.0): Long
+        //to get top and from from a percentile you must convert it to a fraction, so the numerator is top and from is the denominator. For example the 95% (0.95) percentile is 19/20 so top = 19 and from = 20
+        @Query("""
+            WITH LastExecutions AS (
+                SELECT `end` - start AS duration
+                FROM executions
+                WHERE taskId = :taskId
+                ORDER BY start DESC
+                LIMIT :from
+            )
+            SELECT duration/60
+            FROM LastExecutions
+            ORDER BY duration ASC
+            LIMIT 1 OFFSET :top-1
+            """)
+        fun maxETA(taskId: Long, top: Int, from: Int): Long
     }
 
     @Dao
