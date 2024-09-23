@@ -72,10 +72,13 @@ fun ActivatorCardRow(
                 val task = mainMenuViewModel.getTaskById(activator.taskToActivateId)
                     .collectAsState(initial = Task()).value
 
+                val taskETA = mainMenuViewModel.getTaskETA(activator.taskToActivateId)
+                    .collectAsState(initial = 0).value
+
                 TasdksCard(
                     emoji = task.iconEmoji,
                     title = task.name,
-                    subTitle = activator.comment,
+                    subTitle = "ETA: $taskETA min\n" + activator.comment,
                     onClick = {
                         navController.navigate("${AppScreen.PlayActivator.route}/${activator.activatorId}")
                     }

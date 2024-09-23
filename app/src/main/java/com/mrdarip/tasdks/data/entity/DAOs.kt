@@ -119,7 +119,7 @@ class DAOs {
             ORDER BY duration ASC
             LIMIT 1 OFFSET :top-1
             """)
-        fun maxETA(taskId: Long, top: Int, from: Int): Long
+        fun maxETA(taskId: Long, top: Int, from: Int): Flow<Long>
     }
 
     @Dao

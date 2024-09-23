@@ -76,6 +76,10 @@ class MainMenuViewModel(
         }
     }
 
+    fun getTaskETA(taskId: Long): Flow<Long> {
+        return repository.getTaskETA(taskId)
+    }
+
     fun getTaskById(taskId: Long): Flow<Task> {
         return repository.getTaskByIdAsFlow(taskId)
     }

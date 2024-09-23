@@ -223,7 +223,7 @@ fun TasdksCard(emoji: String?, title: String, subTitle: String?, onClick: () -> 
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
+                    maxLines = 2
                 )
             }
         }
