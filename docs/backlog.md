@@ -47,6 +47,7 @@ flowchart LR
   - if trying to pop back from any edit screen (or from play activator screen) you should be
     prompted to save changes
   - pop back shouldnt take you to a edit/create screen
+
 ### Code
 
 - Background-running code should be moved to its viewmodel
