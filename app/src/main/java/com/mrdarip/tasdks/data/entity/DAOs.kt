@@ -119,7 +119,7 @@ class DAOs {
             ORDER BY duration ASC
             LIMIT 1 OFFSET :top-1
             """)
-        fun maxETA(taskId: Long, top: Int, from: Int): Flow<Long>
+        fun maxTaskETA(taskId: Long, top: Int, from: Int): Flow<Long>
 
         @Query("""
             WITH ActivatorExecutions AS (
@@ -146,7 +146,7 @@ class DAOs {
             ORDER BY duration ASC
             LIMIT 1 OFFSET :top - 1
         """)
-        fun calculateETA(activatorId: Long, top: Int, from: Int): Flow<Long>
+        fun maxActivatorETA(activatorId: Long, top: Int, from: Int): Flow<Long>
     }
 
     @Dao

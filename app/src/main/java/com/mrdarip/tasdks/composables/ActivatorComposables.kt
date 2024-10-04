@@ -72,7 +72,7 @@ fun ActivatorCardRow(
                 val task = mainMenuViewModel.getTaskById(activator.taskToActivateId)
                     .collectAsState(initial = Task()).value
 
-                val taskETA = mainMenuViewModel.getTaskETA(activator.taskToActivateId)
+                val taskETA = mainMenuViewModel.getMaxActivatorETA(activator.activatorId)
                     .collectAsState(initial = 0).value
 
                 TasdksCard(
