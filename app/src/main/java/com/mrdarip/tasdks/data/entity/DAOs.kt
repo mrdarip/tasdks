@@ -119,7 +119,34 @@ class DAOs {
             ORDER BY duration ASC
             LIMIT 1 OFFSET :top-1
             """)
-        fun maxETA(taskId: Long, top: Int, from: Int): Flow<Long>
+        fun maxTaskETA(taskId: Long, top: Int, from: Int): Flow<Long>
+
+        @Query("""
+            WITH ActivatorExecutions AS (
+                SELECT `end` - start AS duration
+                FROM executions
+                WHERE activatorId = :activatorId
+                ORDER BY start DESC
+                LIMIT :from
+            ),
+            TaskExecutions AS (
+                SELECT `end` - start AS duration
+                FROM executions
+                WHERE taskId = (SELECT taskToActivateId FROM activators WHERE activatorId = :activatorId)
+                ORDER BY start DESC
+                LIMIT :from
+            )
+            SELECT duration / 60
+            FROM (
+                SELECT * FROM ActivatorExecutions
+                UNION ALL
+                SELECT * FROM TaskExecutions
+                WHERE (SELECT COUNT(*) FROM ActivatorExecutions) < :from
+            )
+            ORDER BY duration ASC
+            LIMIT 1 OFFSET :top - 1
+        """)
+        fun maxActivatorETA(activatorId: Long, top: Int, from: Int): Flow<Long>
     }
 
     @Dao
