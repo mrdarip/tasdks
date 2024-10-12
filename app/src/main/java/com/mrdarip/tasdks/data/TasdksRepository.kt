@@ -37,8 +37,8 @@ class TasdksRepository(
         return taskDAO.getByIdAsFlow(taskId).mapNotNull { it }
     }
 
-    fun getTaskETA(taskId: Long): Flow<Long> {
-        return taskDAO.maxETA(taskId, 9, 10)
+    fun getMaxActivatorETA(taskId: Long): Flow<Long> {
+        return taskDAO.maxActivatorETA(taskId, 9, 10)
     }
 
     fun getResourceByIdAsFlow(taskId: Long?): Flow<Resource> {
