@@ -154,55 +154,6 @@ fun TasksCardRow(
 }
 
 @Composable
-fun TaskLiItem(task: Task, onClick: () -> Unit = {}) { // TODO: remove if not used?
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-    ) {// TODO: Add task min/opt/max
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                task.iconEmoji ?: "🤕",
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-            Column {
-                Text(
-                    text = task.name,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                if (task.comment != null) {
-                    Text(
-                        text = task.comment,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-fun TaskLiItemPreview() {
-    TaskLiItem(
-        task = Task(
-            name = "Task name",
-            comment = "Task comment",
-            iconEmoji = "🐱"
-        )
-    )
-}
-
-@Composable
 fun TasksRow(
     tasks: List<Task>,
     navController: NavController,
