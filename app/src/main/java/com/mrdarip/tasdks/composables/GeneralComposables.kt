@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -33,6 +35,7 @@ fun TwoButtonsListItem(
     title: String,
     subTitle: String? = null,
     emoji: String? = null,
+    surfaceColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
     primaryIcon: ImageVector? = null,
     onPrimaryClick: () -> Unit = {},
     secondaryIcon: ImageVector? = null,
@@ -43,12 +46,15 @@ fun TwoButtonsListItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onLiItemClick),
+        colors = CardDefaults.cardColors(
+            containerColor = surfaceColor
+        )
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
@@ -70,14 +76,14 @@ fun TwoButtonsListItem(
                         text = title,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.labelLarge
                     )
                     if (subTitle != null) {
                         Text(
                             text = subTitle,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
                 }
@@ -112,6 +118,7 @@ fun ThreeButtonsListItem(
     title: String,
     subTitle: String?,
     emoji: String? = null,
+    surfaceColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
     primaryIcon: ImageVector? = null,
     onPrimaryClick: () -> Unit = {},
     secondaryIcon: ImageVector? = null,
@@ -124,12 +131,15 @@ fun ThreeButtonsListItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onLiItemClick),
+        colors = CardDefaults.cardColors(
+            containerColor = surfaceColor
+        )
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
