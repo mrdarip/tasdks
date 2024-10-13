@@ -1,7 +1,14 @@
 package com.mrdarip.tasdks.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -25,6 +32,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,7 +45,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -47,6 +57,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mrdarip.tasdks.composables.EntitiesBackHandler
+import com.mrdarip.tasdks.composables.TwoButtonsListItem
 import com.mrdarip.tasdks.screens.NotFoundScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
@@ -118,7 +129,24 @@ fun AppNavigation() {
                     16.dp
                 ),
             ) {
-                MainNavHost(navController = navController)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    MainNavHost(navController)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalArrangement =
+                        Arrangement.spacedBy(8.dp, Alignment.Bottom), // Space and align to bottom
+                        horizontalAlignment =
+                        Alignment.CenterHorizontally // Optional: center horizontally
+                    ) {
+                        TwoButtonsListItem("Bye", "World", "👋", primaryIcon = Icons.Filled.Home)
+                        TwoButtonsListItem("Hello", "World", "👋", primaryIcon = Icons.Filled.Home)
+                    }
+                }
             }
         }
     })
