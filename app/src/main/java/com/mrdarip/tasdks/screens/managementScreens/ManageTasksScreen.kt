@@ -1,19 +1,16 @@
 package com.mrdarip.tasdks.screens.managementScreens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
@@ -45,53 +42,52 @@ private fun ManageTasksBodyContent(
     mainMenuViewModel: MainMenuViewModel,
     mainMenuState: MainMenuState
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier.padding(16.dp, 0.dp),
-            contentPadding = PaddingValues(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(mainMenuState.activeTasks) { task ->
-                TwoButtonsListItem(
-                    title = task.name,
-                    subTitle = task.comment ?: "No comment",
-                    emoji = task.iconEmoji,
-                    primaryIcon = Icons.Filled.PlayArrow,
-                    secondaryIcon = Icons.Filled.Edit,
-                    onPrimaryClick = {
-                        mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
-                            val activatorId = mainMenuViewModel.insertActivator(
-                                Activator(
-                                    comment = "Created for one time execution",
-                                    taskToActivateId = task.taskId,
-                                    endRep = 1
-                                )
-                            )
-
-                            withContext(Dispatchers.Main) {
-                                navController.navigate("${AppScreen.PlayActivator.route}/$activatorId")
-                            }
-                        }
-                    },
-                    onSecondaryClick = {
-                        navController.navigate(
-                            "${AppScreen.EditTask.route}/${task.taskId}"
-                        )
-                    },
-                    onLiItemClick = {
-                        //TODO: Implement navigating to task details
-                    }
-                )
-            }
+    LazyColumn(
+        modifier = Modifier.padding(16.dp, 0.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item { //TODO: make it work when clicking the card, not the icon
+            TwoButtonsListItem(
+                "New task", onPrimaryClick = {
+                    navController.navigate(AppScreen.CreateTask.route)
+                },
+                primaryIcon = Icons.Filled.Add,
+                surfaceColor = MaterialTheme.colorScheme.secondaryContainer
+            )
         }
+        items(mainMenuState.activeTasks) { task ->
+            TwoButtonsListItem(
+                title = task.name,
+                subTitle = task.comment ?: "No comment",
+                emoji = task.iconEmoji,
+                primaryIcon = Icons.Filled.PlayArrow,
+                secondaryIcon = Icons.Filled.Edit,
+                onPrimaryClick = {
+                    mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
+                        val activatorId = mainMenuViewModel.insertActivator(
+                            Activator(
+                                comment = "Created for one time execution",
+                                taskToActivateId = task.taskId,
+                                endRep = 1
+                            )
+                        )
 
-        Button(
-            onClick = { navController.navigate(AppScreen.CreateTask.route) },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        ) {
-            Text(text = "New Task")
+                        withContext(Dispatchers.Main) {
+                            navController.navigate("${AppScreen.PlayActivator.route}/$activatorId")
+                        }
+                    }
+                },
+                onSecondaryClick = {
+                    navController.navigate(
+                        "${AppScreen.EditTask.route}/${task.taskId}"
+                    )
+                },
+                onLiItemClick = {
+                    //TODO: Implement navigating to task details
+                },
+                surfaceColor = MaterialTheme.colorScheme.tertiaryContainer
+            )
         }
     }
 }
