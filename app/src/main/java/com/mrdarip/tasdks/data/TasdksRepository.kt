@@ -28,6 +28,7 @@ class TasdksRepository(
     val activators = activatorDAO.getAllActivators()
     val activeActivators = activatorDAO.getActiveActivators()
     val allResources = resourceDAO.getAllResources()
+    val runningExecutions = activatorDAO.getParentRunningExecutions()
 
     //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
 
