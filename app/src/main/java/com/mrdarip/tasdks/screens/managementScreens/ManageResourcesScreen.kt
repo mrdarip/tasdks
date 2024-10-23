@@ -2,18 +2,15 @@ package com.mrdarip.tasdks.screens.managementScreens
 
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,31 +38,32 @@ private fun ManageResourcesBodyContent(
     mainMenuState: ManageResourcesState,
     viewModel: ManageResourcesViewModel
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier.padding(16.dp, 0.dp),
-            contentPadding = PaddingValues(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(mainMenuState.allResources) { resource ->
-                TwoButtonsListItem(
-                    title = resource.name,
-                    emoji = resource.resourceType.emoji,
-                    primaryIcon = Icons.Default.Edit,
-                    onPrimaryClick = {
-                        navController.navigate("${AppScreen.CreateResource.route}/${resource.resourceId}")
-                    }
-                )
-            }
-        }
+    LazyColumn(
+        modifier = Modifier.padding(16.dp, 0.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item { //TODO: make it work when clicking the card, not the icon
+            TwoButtonsListItem(
+                title = "Create new", onPrimaryClick = {
+                    navController.navigate("${AppScreen.CreateResource.route}/-1")
+                },
+                primaryIcon = Icons.Default.Add,
+                surfaceColor = MaterialTheme.colorScheme.secondaryContainer
+            )
 
-        Button(
-            onClick = { navController.navigate("${AppScreen.CreateResource.route}/-1") },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        ) {
-            Text(text = "New Resource")
+        }
+        items(mainMenuState.allResources) { resource ->
+            TwoButtonsListItem(
+                title = resource.name,
+                emoji = resource.resourceType.emoji,
+                primaryIcon = Icons.Default.Edit,
+                onPrimaryClick = {
+                    navController.navigate("${AppScreen.CreateResource.route}/${resource.resourceId}")
+                },
+                surfaceColor = MaterialTheme.colorScheme.tertiaryContainer
+            )
         }
     }
 }
+
