@@ -60,17 +60,76 @@ data class Activator(
     val createdTime: Double = System.currentTimeMillis() / 1000.0
 )
 
+/**
+ * @param start the time the execution started in seconds since epoch
+ * @param end the time the execution ended in seconds since epoch
+ * @param endReason the reason the execution ended
+ * @param activatorId activator that triggered the the root of the execution tree or null if it was a one-time execution
+ * @param resourceId the resource used in the execution
+ * @param parentExecution the parent execution of the execution, null if it was the root
+ * @param taskId the task that was executed
+ */
 @Entity(tableName = "executions")
 data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long = 0,
-    val start: Int? = null, //In seconds since epoch
-    val end: Int? = null,//In seconds since epoch
-    val successfullyEnded: Boolean = false,
-    val activatorId: Long, //activator that triggered the the root of the execution tree
+    val start: Int? = null,
+    val end: Int? = null,
+    val endReason: EndReason,
+    val activatorId: Long?,
     val resourceId: Long? = null,
     val parentExecution: Long?,
     val taskId: Long
 )
+
+/**
+ * @param successfullyEnded if the execution was successful
+ * @param killsExecution if the execution should
+ */
+enum class EndReason(
+    val successfullyEnded: Boolean,
+    val killsExecution: Boolean
+) { //if successfullyEnded is true, the time is valid
+
+    SUCCESSFULLY(
+        true, false
+    ), //Successfully ended
+
+    RAN_OUT_OF_TIME(
+        false, true
+    ), //for when the user has to leave because of deadlines
+
+    FORGOT_TO_STOP(
+        true, false
+    ), //for when the user forgot to stop the execution
+
+    FORGOT_TO_STOP_AND_THE_NEXT_EXECUTIONS(
+        false, true
+    ), //for when the user forgot to stop the execution and the next executions
+
+    DID_NOT_TRACK_IT(
+        true, false
+    ), //for when the user did the execution but didn't track it
+
+    I_WAS_NOT_ABLE_TO_DO_IT(
+        false, true
+    ), //for when the user wasn't able to do the execution because of external reasons
+
+    CHANGED_MY_MIND(
+        false, true
+    ), //for when the user changed his mind
+
+    SKIPPED(
+        false, false
+    ), //for when the user skips a task that allows it. The time is valid as the user did the task and marked it as skipped
+
+    MIXED_REASONS_UNSUCCESSFULLY(
+        false, true
+    ), //for when any of the above reasons are mixed resulting in an unsuccessful execution
+
+    MIXED_REASONS_SUCCESSFULLY(
+        true, false
+    ) //for when any of the above reasons are mixed but resulting in a successful execution
+}
 
 enum class ResourceType(val emoji: String) {
     MUSIC("🎵"),
