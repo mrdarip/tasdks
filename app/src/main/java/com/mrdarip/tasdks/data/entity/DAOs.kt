@@ -303,26 +303,6 @@ class DAOs {
         fun getExecutionById(executionId: Long): Execution
     }
 
-    @Dao
-    interface ResourceDAO {
-        @Upsert
-        suspend fun upsert(resource: Resource): Long
-
-        @Update
-        fun update(resource: Resource)
-
-        @Delete
-        fun delete(resource: Resource)
-
-        @Query("SELECT * FROM resources")
-        fun getAllResources(): Flow<List<Resource>>
-
-        @Query("SELECT * FROM resources WHERE resourceId = :resourceId")
-        fun getResourceById(resourceId: Long): Resource
-
-        @Query("SELECT * FROM resources WHERE resourceId = :resourceId")
-        fun getByIdAsFlow(resourceId: Long): Flow<Resource>
-    }
 
     @Dao
     interface TaskWithTasksDAO {

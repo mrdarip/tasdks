@@ -57,13 +57,11 @@ import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
 import com.mrdarip.tasdks.screens.managementScreens.CreateActivatorScreen
-import com.mrdarip.tasdks.screens.managementScreens.CreateResourceScreen
 import com.mrdarip.tasdks.screens.managementScreens.CreateTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditActivatorScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageActivatorsScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageExecutionsScreen
-import com.mrdarip.tasdks.screens.managementScreens.ManageResourcesScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
 import com.mrdarip.tasdks.screens.playScreens.PlayActivatorScreen
 import kotlinx.coroutines.CoroutineScope
@@ -154,8 +152,7 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
 
         val screens = listOf(
             AppScreen.ManageTasks,
-            AppScreen.ManageActivators,
-            AppScreen.ManageResources
+            AppScreen.ManageActivators
         )
 
         labels.forEachIndexed { index, item ->
@@ -246,18 +243,6 @@ fun MainNavHost(navController: NavHostController) {
         }
         composable(route = AppScreen.ThirdScreen.route) {
             StatsMenu(navController)
-        }
-
-        composable(route = AppScreen.ManageResources.route) {
-            ManageResourcesScreen(navController = navController)
-        }
-
-        composable(
-            "${AppScreen.CreateResource.route}/{resourceId}",
-            arguments = listOf(navArgument("resourceId") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val resourceId = backStackEntry.arguments?.getLong("resourceId")
-            CreateResourceScreen(navController, resourceId ?: -1)
         }
 
         composable(route = AppScreen.ManageExecutions.route) {

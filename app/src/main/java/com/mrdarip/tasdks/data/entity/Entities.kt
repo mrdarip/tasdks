@@ -64,9 +64,7 @@ data class Activator(
  * @param start the time the execution started in seconds since epoch
  * @param end the time the execution ended in seconds since epoch
  * @param endReason the reason the execution ended
- * @param activatorId activator that triggered the the root of the execution tree or null if it was a one-time execution
- * @param resourceId the resource used in the execution
- * @param parentExecution the parent execution of the execution, null if it was the root
+ * @param activatorId activator that triggered the the root of the execution tree or null if it was a one-time execution* @param parentExecution the parent execution of the execution, null if it was the root
  * @param taskId the task that was executed
  */
 @Entity(tableName = "executions")
@@ -76,7 +74,6 @@ data class Execution(
     val end: Int? = null,
     val endReason: EndReason,
     val activatorId: Long?,
-    val resourceId: Long? = null,
     val parentExecution: Long?,
     val taskId: Long
 )
@@ -131,19 +128,6 @@ enum class EndReason(
     ) //for when any of the above reasons are mixed but resulting in a successful execution
 }
 
-enum class ResourceType(val emoji: String) {
-    MUSIC("🎵"),
-    AUDIOBOOK("📚"),
-    PODCAST("🎙️"),
-    VIDEO("📹")
-}
-
-@Entity(tableName = "resources")
-data class Resource(
-    @PrimaryKey(autoGenerate = true) val resourceId: Long = 0,
-    val name: String = "",
-    val resourceType: ResourceType
-)
 
 @Entity(primaryKeys = ["parentId", "position"])
 data class TaskTaskCR(
