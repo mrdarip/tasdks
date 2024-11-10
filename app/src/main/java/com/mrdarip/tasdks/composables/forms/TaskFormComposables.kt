@@ -72,11 +72,11 @@ fun TaskFields(
         ) {
             Text(text = "is playlist")
             Checkbox(
-                checked = task.isPlaylist,
-                onCheckedChange = { onTaskChange(task.copy(isPlaylist = it)) }
+                checked = task.canBeSkipped,
+                onCheckedChange = { onTaskChange(task.copy(canBeSkipped = it)) }
             )
         }
-        if (!task.isPlaylist) {
+        if (!task.canBeSkipped) {
             NumberInput(
                 value = task.waitTime,
                 onValidValueChange = {

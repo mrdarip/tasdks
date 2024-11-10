@@ -166,7 +166,7 @@ class DAOs {
         @Query("SELECT * FROM activators")
         fun getAllActivators(): Flow<List<Activator>>
 
-        @Query("SELECT * FROM activators WHERE NOT userCancelled AND COALESCE(endDate > strftime('%s', 'now'),1) AND COALESCE(endRep > (SELECT COUNT(activatorId) FROM executions GROUP BY activatorId),1)")
+        @Query("SELECT * FROM activators WHERE NOT userCancelled AND COALESCE(endAfterDate > strftime('%s', 'now'),1) AND COALESCE(endAfterRepetitions > (SELECT COUNT(activatorId) FROM executions GROUP BY activatorId),1)")
         fun getActiveActivators(): Flow<List<Activator>>
 
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
@@ -185,8 +185,8 @@ class DAOs {
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId 
                 WHERE
                     activators.userCancelled = 0 AND
-                    COALESCE(endDate > strftime('%s', 'now'),1) AND
-                    COALESCE(endRep > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
+                    COALESCE(endAfterDate > strftime('%s', 'now'),1) AND
+                    COALESCE(endAfterRepetitions > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
                 GROUP BY activators.activatorId 
                 HAVING 
                     (
@@ -237,8 +237,8 @@ class DAOs {
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId
                 WHERE 
                     activators.userCancelled = 0 AND
-                    COALESCE(endDate > strftime('%s', 'now'),1) AND
-                    COALESCE(endRep > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
+                    COALESCE(endAfterDate > strftime('%s', 'now'),1) AND
+                    COALESCE(endAfterRepetitions > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
                 GROUP BY activators.activatorId
                 HAVING 
                     (

@@ -206,9 +206,9 @@ private fun EndAfterFactorInput(
     ) {
         Text(text = "Kill after repetitions")
         TextField(
-            value = activator.endRep?.toString() ?: "",
+            value = activator.endAfterRepetitions?.toString() ?: "",
             label = { Text("End after repetitions") },
-            onValueChange = { onActivatorChanged(activator.copy(endRep = it.toIntOrNull())) },
+            onValueChange = { onActivatorChanged(activator.copy(endAfterRepetitions = it.toIntOrNull())) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.weight(1f)
         )
@@ -221,8 +221,8 @@ private fun EndAfterFactorInput(
     ) {
         Text(text = "Kill after date")
         DateInput(
-            date = activator.endDate ?: -1,
-            onDateChanged = { onActivatorChanged(activator.copy(endDate = if (it < 0) null else it)) })
+            date = activator.endAfterDate ?: -1,
+            onDateChanged = { onActivatorChanged(activator.copy(endAfterDate = if (it < 0) null else it)) })
     }
 }
 

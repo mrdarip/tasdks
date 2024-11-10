@@ -69,7 +69,7 @@ private fun ManageTasksBodyContent(
                             Activator(
                                 comment = "Created for one time execution",
                                 taskToActivateId = task.taskId,
-                                endRep = 1
+                                endAfterRepetitions = 1
                             )
                         )
 

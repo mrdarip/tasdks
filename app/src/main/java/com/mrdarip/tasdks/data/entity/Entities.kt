@@ -14,7 +14,6 @@ import androidx.room.Relation
  * @param iconEmoji the emoji of the task
  * @param archived if the task is archived
  * @param createdTime the time the task was created in seconds since epoch (unix time)
- * @param isPlaylist if the task is a playlist
  * @param waitTime the time to wait before the task can be completed, in seconds
  * @param allowParallelTasks if the task allows parallel tasks
  */
@@ -26,7 +25,6 @@ data class Task(
     val iconEmoji: String? = null,
     val archived: Boolean = false,
     val createdTime: Double = System.currentTimeMillis() / 1000.0,
-    val isPlaylist: Boolean = false, //for tasks that allow skipping its direct subtasks
     val waitTime: Int = 0, //In seconds //for tasks that need waiting until you can do the next task
     val allowParallelTasks: Boolean = false, //for tasks that can be done at the same time as other tasks
 )
@@ -63,8 +61,8 @@ data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
     val comment: String? = null,
     @Embedded val repetitionRange: RepetitionRange = RepetitionRange(),
-    val endDate: Int? = null, //In seconds since epoch //TODO: implement 'x' button to make it null
-    val endRep: Int? = 1, //TODO: Restrict EndAfterRep so it can't be 0, should be null instead
+    val endAfterDate: Int? = null, //In seconds since epoch //TODO: implement 'x' button to make it null
+    val endAfterRepetitions: Int? = 1,
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
     val taskToActivateId: Long,
     val createdTime: Double = System.currentTimeMillis() / 1000.0
@@ -89,53 +87,48 @@ data class Execution(
 )
 
 /**
- * @param successfullyEnded if the execution was successful
- * @param killsExecution if the execution should
+ * @param successfullyEnded if the execution was completed
+ * @param killsExecution if the execution should be terminated
+ * @param timeIsAccurate if the time tracking is accurate
  */
+
 enum class EndReason(
     val successfullyEnded: Boolean,
-    val killsExecution: Boolean
-) { //if successfullyEnded is true, the time is valid
+    val killsExecution: Boolean, // Determines if the current execution halts further executions
+    val timeIsAccurate: Boolean  // Indicates if the tracked time is valid
+) {
+    /** Execution completed successfully and time tracking is accurate */
+    SUCCESS(true, false, true),
 
-    SUCCESSFULLY(
-        true, false
-    ), //Successfully ended
+    /** Execution ran out of time due to external deadlines; execution terminated */
+    TIME_EXPIRED(false, true, false),
 
-    RAN_OUT_OF_TIME(
-        false, true
-    ), //for when the user has to leave because of deadlines
+    /** Execution was completed, but user forgot to stop it, time may be inaccurate */
+    COMPLETED_WITH_FORGOTTEN_STOP(true, false, false),
 
-    FORGOT_TO_STOP(
-        true, false
-    ), //for when the user forgot to stop the execution
+    /** Execution not stopped by user, causing unintended continuation; execution terminated */
+    FORGOTTEN_STOP_INTERRUPTS(false, true, false),
 
-    FORGOT_TO_STOP_AND_THE_NEXT_EXECUTIONS(
-        false, true
-    ), //for when the user forgot to stop the execution and the next executions
+    /** Execution completed, but was not tracked */
+    UNTRACKED_COMPLETION(true, false, false),
 
-    DID_NOT_TRACK_IT(
-        true, false
-    ), //for when the user did the execution but didn't track it
+    /** Execution not completed due to external circumstances; execution terminated */
+    INCOMPLETE_DUE_TO_EXTERNAL_CAUSES(false, true, false),
 
-    I_WAS_NOT_ABLE_TO_DO_IT(
-        false, true
-    ), //for when the user wasn't able to do the execution because of external reasons
+    /** Execution terminated by user changing their mind */
+    USER_ABORTED(false, true, false),
 
-    CHANGED_MY_MIND(
-        false, true
-    ), //for when the user changed his mind
+    /** Execution skipped by user’s choice; valid as completed */
+    SKIPPED(true, false, true),
 
-    SKIPPED(
-        false, false
-    ), //for when the user skips a task that allows it. The time is valid as the user did the task and marked it as skipped
+    /** Execution skipped due to lack of time; does not halt further executions */
+    SKIPPED_DUE_TO_TIME(false, false, false),
 
-    MIXED_REASONS_UNSUCCESSFULLY(
-        false, true
-    ), //for when any of the above reasons are mixed resulting in an unsuccessful execution
+    /** Execution terminated due to mixed unsuccessful reasons */
+    UNSUCCESSFUL_MIXED_REASONS(false, true, false),
 
-    MIXED_REASONS_SUCCESSFULLY(
-        true, false
-    ) //for when any of the above reasons are mixed but resulting in a successful execution
+    /** Execution completed successfully despite mixed reasons; time may be inaccurate */
+    SUCCESSFUL_MIXED_REASONS(true, false, false)
 }
 
 
