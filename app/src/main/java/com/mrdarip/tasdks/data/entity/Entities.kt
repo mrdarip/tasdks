@@ -24,6 +24,7 @@ data class Task(
     val comment: String? = null,
     val iconEmoji: String? = null,
     val archived: Boolean = false,
+    val isFavourite: Boolean = false,
     val createdTime: Double = System.currentTimeMillis() / 1000.0,
     val waitTime: Int = 0, //In seconds //for tasks that need waiting until you can do the next task
     val allowParallelTasks: Boolean = false, //for tasks that can be done at the same time as other tasks
@@ -60,6 +61,7 @@ data class RepetitionRange(
 data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
     val comment: String? = null,
+    val isFavourite: Boolean = false,
     @Embedded val repetitionRange: RepetitionRange = RepetitionRange(),
     val endAfterDate: Int? = null, //In seconds since epoch //TODO: implement 'x' button to make it null
     val endAfterRepetitions: Int? = 1,
