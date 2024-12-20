@@ -1,11 +1,11 @@
 package com.mrdarip.tasdks.screens.playScreens
 
-import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.composables.TwoButtonsListItem
 
 @Composable
 fun ManageRunningExecutions(navController: NavController) {
@@ -24,7 +24,10 @@ private fun ManageRunningExecutionsBodyContent(
     //show all running executions
     LazyColumn {
         items(viewModel.state.executions) { execution ->
-            Log.i("ManageRunningExecutions", "Execution: $execution")
+            TwoButtonsListItem(
+                title = execution.executionId.toString()
+
+            )
         }
     }
 }

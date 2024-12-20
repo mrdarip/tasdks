@@ -8,11 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -63,6 +63,7 @@ import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageActivatorsScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageExecutionsScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
+import com.mrdarip.tasdks.screens.playScreens.ManageRunningExecutions
 import com.mrdarip.tasdks.screens.playScreens.PlayActivatorScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -141,18 +142,20 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
         val labels = listOf(
             "Manage Tasks",
             "Manage Activators",
-            "Manage Resources"
+            "Manage Running Executions"
         )
 
         val icons = listOf(
             Icons.Filled.Build,
             Icons.Filled.PlayArrow,
-            Icons.Filled.Star
+            Icons.Filled.Call
         )
 
         val screens = listOf(
             AppScreen.ManageTasks,
-            AppScreen.ManageActivators
+            AppScreen.ManageActivators,
+            AppScreen.ManageRunningExecutions
+
         )
 
         labels.forEachIndexed { index, item ->
@@ -284,6 +287,12 @@ fun MainNavHost(navController: NavHostController) {
             AppScreen.ManageActivators.route,
         ) {
             ManageActivatorsScreen(navController = navController)
+        }
+
+        composable(
+            AppScreen.ManageRunningExecutions.route,
+        ) {
+            ManageRunningExecutions(navController = navController)
         }
 
         composable(
