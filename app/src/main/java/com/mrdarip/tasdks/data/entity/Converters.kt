@@ -13,4 +13,14 @@ class Converters {
     fun dateToTimestamp(date: Date?): Long? {
         return date?.time
     }
+
+    @TypeConverter
+    fun fromEndReason(endReason: EndReason): String {
+        return endReason.name
+    }
+
+    @TypeConverter
+    fun toEndReason(value: String): EndReason {
+        return EndReason.valueOf(value)
+    }
 }
