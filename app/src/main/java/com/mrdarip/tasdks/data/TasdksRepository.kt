@@ -3,7 +3,6 @@ package com.mrdarip.tasdks.data
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.Execution
-import com.mrdarip.tasdks.data.entity.Resource
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +14,6 @@ class TasdksRepository(
     private val taskDAO: DAOs.TaskDAO,
     private val activatorDAO: DAOs.ActivatorDAO,
     private val executionDAO: DAOs.ExecutionDAO,
-    private val resourceDAO: DAOs.ResourceDAO,
     private val taskWithTasksDAO: DAOs.TaskWithTasksDAO
 ) {
 
@@ -27,7 +25,6 @@ class TasdksRepository(
     val tasksOrderByUsuallyAtThisTime = taskDAO.getAllOrderByUsuallyAtThisTime()
     val activators = activatorDAO.getAllActivators()
     val activeActivators = activatorDAO.getActiveActivators()
-    val allResources = resourceDAO.getAllResources()
     val runningExecutions = activatorDAO.getParentRunningExecutions()
 
     //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
@@ -40,11 +37,6 @@ class TasdksRepository(
 
     fun getMaxActivatorETA(taskId: Long): Flow<Long> {
         return taskDAO.maxActivatorETA(taskId, 9, 10)
-    }
-
-    fun getResourceByIdAsFlow(taskId: Long?): Flow<Resource> {
-        if (taskId == null) return emptyFlow()
-        return resourceDAO.getByIdAsFlow(taskId).mapNotNull { it }
     }
 
     fun getNotSubtasksOfTask(taskId:Long): Flow<List<Task>> {
@@ -136,11 +128,11 @@ class TasdksRepository(
         executionDAO.update(executionId, end, successfullyEnded)
     }
 
-    suspend fun upsertResource(resource: Resource): Long {
-        return resourceDAO.upsert(resource)
-    }
-
     fun insertActivator(activator: Activator): Long {
         return activatorDAO.insert(activator)
+    }
+
+    fun getRunningExecutions(): Flow<List<Execution>> {
+        return executionDAO.getRunningExecutions()
     }
 }

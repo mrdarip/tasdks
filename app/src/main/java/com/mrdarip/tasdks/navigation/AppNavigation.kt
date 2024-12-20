@@ -315,7 +315,7 @@ fun MainNavHost(navController: NavHostController) {
 
 @Composable
 fun RunningActivators() {
-    val viewModel = viewModel(modelClass = RunningActivatorsViewModel::class.java)
+    val viewModel = viewModel(modelClass = WidgetBottomBarViewModel::class.java)
     val viewModelState = viewModel.state
 
     Column(

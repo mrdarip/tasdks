@@ -11,7 +11,7 @@ import com.mrdarip.tasdks.data.entity.Execution
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class RunningActivatorsViewModel(
+class WidgetBottomBarViewModel(
     private val repository: TasdksRepository = Graph.repository
 ) : ViewModel() {
     var state by mutableStateOf(CreateActivatorState())

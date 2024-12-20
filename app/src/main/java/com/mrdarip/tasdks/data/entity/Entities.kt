@@ -20,7 +20,7 @@ import androidx.room.Relation
 @Entity(tableName = "tasks")
 data class Task(
     @PrimaryKey(autoGenerate = true) val taskId: Long = 0,
-    var name: String,
+    var name: String = "",
     val comment: String? = null,
     val iconEmoji: String? = null,
     val archived: Boolean = false,
@@ -86,7 +86,11 @@ data class Execution(
     val activatorId: Long?,
     val parentExecution: Long?,
     val taskId: Long
-)
+) {
+    fun isRunning(): Boolean {
+        return end == null
+    }
+}
 
 /**
  * @param successfullyEnded if the execution was completed

@@ -70,6 +70,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //Viewmodel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+
     //Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.core.ktx.v1120)

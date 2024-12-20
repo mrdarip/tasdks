@@ -301,6 +301,9 @@ class DAOs {
 
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
         fun getExecutionById(executionId: Long): Execution
+
+        @Query("SELECT * FROM executions WHERE parentExecution IS NULL AND `end` IS NULL")
+        fun getRunningExecutions(): Flow<List<Execution>>
     }
 
 
