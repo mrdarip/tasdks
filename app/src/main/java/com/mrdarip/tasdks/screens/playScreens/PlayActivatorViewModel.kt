@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
 import com.mrdarip.tasdks.data.entity.Activator
+import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.flow.Flow
@@ -128,9 +129,9 @@ class PlayActivatorViewModel(
     fun updateExecution(
         executionId: Long,
         end: Int,
-        successfullyEnded: Boolean
+        endReason: EndReason
     ) {
-        repository.updateExecution(executionId, end, successfullyEnded)
+        repository.updateExecution(executionId, end, endReason)
     }
 
     fun getSubTasksOfTaskAsList(taskId: Long): List<Task> {
@@ -158,9 +159,8 @@ class PlayActivatorViewModel(
             Execution(
                 start = unixEpochTime(),
                 end = unixEpochTime(),
-                successfullyEnded = false,
+                endReason = EndReason.UNTRACKED_COMPLETION,
                 activatorId = topActivatorId.value, //TODO: Check is read only
-                resourceId = null, //by now we don't implement resources
                 parentExecution = parentExecution?.executionId,
                 taskId = newTask.taskId
             )
@@ -186,7 +186,7 @@ class PlayActivatorViewModel(
         updateExecution(
             executionId = execution.executionId,
             end = unixEpochTime(),
-            successfullyEnded = true
+            endReason = EndReason.SUCCESS
         )
 
         val hasBrothers = execution.parentExecution != null && getSubTasksOfTaskAsList(
@@ -231,7 +231,7 @@ class PlayActivatorViewModel(
     fun exit() {
         for (executionId in runningExecutionsIds.value) {
             updateExecution(
-                executionId = executionId, end = unixEpochTime(), successfullyEnded = false
+                executionId = executionId, end = unixEpochTime(), endReason = EndReason.USER_ABORTED
             )
         }
     }

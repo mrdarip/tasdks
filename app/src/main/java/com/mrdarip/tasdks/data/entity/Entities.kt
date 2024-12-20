@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import androidx.room.TypeConverter
 
 
 /**
@@ -137,6 +138,15 @@ enum class EndReason(
     SUCCESSFUL_MIXED_REASONS(true, false, false)
 }
 
+@TypeConverter
+fun fromEndReason(endReason: EndReason): String {
+    return endReason.name
+}
+
+@TypeConverter
+fun toEndReason(value: String): EndReason {
+    return EndReason.valueOf(value)
+}
 
 @Entity(primaryKeys = ["parentId", "position"])
 data class TaskTaskCR(

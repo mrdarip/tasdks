@@ -2,6 +2,7 @@ package com.mrdarip.tasdks.data
 
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.DAOs
+import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +26,7 @@ class TasdksRepository(
     val tasksOrderByUsuallyAtThisTime = taskDAO.getAllOrderByUsuallyAtThisTime()
     val activators = activatorDAO.getAllActivators()
     val activeActivators = activatorDAO.getActiveActivators()
-    val runningExecutions = activatorDAO.getParentRunningExecutions()
+    val runningExecutionsFlow = activatorDAO.getParentRunningExecutions()
 
     //val getTaskWithTasks = TaskWithTaskDAO.getTasksWithTasks()
 
@@ -123,9 +124,9 @@ class TasdksRepository(
     fun updateExecution(
         executionId: Long,
         end: Int,
-        successfullyEnded: Boolean
+        endReason: EndReason
     ) {
-        executionDAO.update(executionId, end, successfullyEnded)
+        executionDAO.update(executionId, end, endReason)
     }
 
     fun insertActivator(activator: Activator): Long {

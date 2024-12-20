@@ -89,22 +89,6 @@ private fun SearchMenuBodyContent(
                 }
             }
         }
-
-        Column(
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            EntityLazyGrid(
-                "Resources",
-                "Add Resource",
-                "${AppScreen.CreateTask.route}/-1",
-                navController,
-                mainMenuState.allResources
-            ) { task ->
-                if (task is Task)
-                    TaskCard(task = task)
-            }
-        }
     }
 }
 

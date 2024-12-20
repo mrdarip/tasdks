@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
 import com.mrdarip.tasdks.data.entity.Activator
-import com.mrdarip.tasdks.data.entity.Resource
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -44,13 +43,7 @@ class SearchMenuViewModel(
         }
     }
 
-    private fun getAllResources() {
-        viewModelScope.launch {
-            repository.allResources.collectLatest {
-                state = state.copy(allResources = it)
-            }
-        }
-    }
+
 
     private fun getPendingTasks() {
         viewModelScope.launch {
@@ -88,7 +81,6 @@ data class SearchMenuState(
     val tasksOrderedByLastDone: List<Task> = emptyList(),
     val tasksOrderedByUsuallyAtThisTime: List<Task> = emptyList(),
     val overdueActivators: List<Activator> = emptyList(),
-    val pendingActivators: List<Activator> = emptyList(),
-    val allResources: List<Resource> = emptyList()
+    val pendingActivators: List<Activator> = emptyList()
     //TODO: Add other entities video 6/7
 )

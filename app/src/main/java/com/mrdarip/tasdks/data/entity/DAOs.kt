@@ -288,9 +288,9 @@ class DAOs {
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
         fun getById(executionId: Long): Execution
 
-        @Query("UPDATE executions SET 'end' = :end, successfullyEnded = :successfullyEnded WHERE executionId = :executionId")
+        @Query("UPDATE executions SET 'end' = :end, endReason = :endReason WHERE executionId = :executionId")
         fun update(
-            executionId: Long, end: Int, successfullyEnded: Boolean
+            executionId: Long, end: Int, endReason: EndReason
         )
 
         @Delete

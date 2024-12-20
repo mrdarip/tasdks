@@ -23,7 +23,7 @@ class ManageRunningExecutionsViewModel(
 
     private fun getExecutions() {
         viewModelScope.launch {
-            repository.runningExecutions.collectLatest {
+            repository.runningExecutionsFlow.collectLatest {
                 state = state.copy(executions = it)
             }
         }

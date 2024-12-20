@@ -66,17 +66,6 @@ fun TaskFields(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "is playlist")
-            Checkbox(
-                checked = task.canBeSkipped,
-                onCheckedChange = { onTaskChange(task.copy(canBeSkipped = it)) }
-            )
-        }
-        if (!task.canBeSkipped) {
             NumberInput(
                 value = task.waitTime,
                 onValidValueChange = {
@@ -99,7 +88,7 @@ fun TaskFields(
                     onCheckedChange = { onTaskChange(task.copy(allowParallelTasks = it)) }
                 )
             }
-        }
+
     }
 }
 
