@@ -4,6 +4,7 @@ import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
+import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -143,5 +144,9 @@ class TasdksRepository(
 
     fun getExecution(executionId: Long): Execution {
         return executionDAO.getById(executionId)
+    }
+
+    fun getExecutionWithTask(executionId: Long): ExecutionWithTask? {
+        return executionDAO.getExecutionWithTask(executionId)
     }
 }

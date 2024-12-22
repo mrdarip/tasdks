@@ -25,7 +25,7 @@ import androidx.navigation.NavController
 @Composable
 fun PlayExecutionScreen(executionId: Long, navController: NavController) {
     val playExecutionViewModel = viewModel(modelClass = PlayExecutionViewModel::class.java)
-    playExecutionViewModel.setContextExecution(executionId)
+    playExecutionViewModel.setTopExecution(executionId)
     PlayActivatorBodyContent(
         viewModel = playExecutionViewModel
     )
@@ -35,24 +35,28 @@ fun PlayExecutionScreen(executionId: Long, navController: NavController) {
 private fun PlayActivatorBodyContent(
     viewModel: PlayExecutionViewModel
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Row for title
-        Row {
-            Text(viewModel.getTopExecutionTask().name)
-        }
+    if (viewModel.state.topExecution != null) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Row for title
+            Row {
+                Text(viewModel.state.topExecution!!.task.name)
+            }
 
-        Icon(Icons.Default.MoreVert, contentDescription = "...")
-        IconButton(onClick = { }) {
-            Icon(Icons.Default.ArrowDropDown, contentDescription = "view parents")
-        }
-        Icon(Icons.Default.MoreVert, contentDescription = "...")
+            Icon(Icons.Default.MoreVert, contentDescription = "...")
+            IconButton(onClick = { }) {
+                Icon(Icons.Default.ArrowDropDown, contentDescription = "view parents")
+            }
+            Icon(Icons.Default.MoreVert, contentDescription = "...")
 
-        TaskPlayer(viewModel)
+            TaskPlayer(viewModel)
+        }
+    } else {
+        Text("Loading...")
     }
 }
 
@@ -61,10 +65,10 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
     Column(horizontalAlignment = Alignment.Start) {
         Card(modifier = Modifier.fillMaxWidth()) {
             Row {
-                if (viewModel.getActualExecutionTask().iconEmoji != null) {
-                    Text(viewModel.getActualExecutionTask().iconEmoji!!)
+                if (viewModel.state.actualExecution.task.iconEmoji != null) {
+                    Text(viewModel.state.actualExecution.task.iconEmoji!!)
                 }
-                Text(viewModel.getActualExecutionTask().name)
+                Text(viewModel.state.actualExecution.task.name)
             }
 
             // Row for actions
@@ -80,7 +84,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                     Icon(Icons.Default.Share, contentDescription = "go back")
                 }
                 IconButton(onClick = { viewModel.completeExecution() }) {
-                    if (viewModel.isRunning()) {
+                    if (viewModel.state.actualExecution.user.isRunning()) {
                         Icon(Icons.Default.Done, contentDescription = "complete")
                     } else {
                         Icon(Icons.Default.PlayArrow, contentDescription = "start")
@@ -91,6 +95,8 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 }
             }
         }
-        Text("Next: ${viewModel.getNextTask().name}")
+        if (viewModel.state.nextTask != null) {
+            Text("Next: ${viewModel.state.nextTask!!.name}")
+        }
     }
 }
