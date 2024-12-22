@@ -149,4 +149,8 @@ class TasdksRepository(
     fun getExecutionWithTask(executionId: Long): ExecutionWithTask? {
         return executionDAO.getExecutionWithTask(executionId)
     }
+
+    fun getRunningExecutionChildOf(executionId: Long): ExecutionWithTask {
+        return executionDAO.getRunningExecutionChildOf(executionId)
+    }
 }

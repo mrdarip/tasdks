@@ -56,7 +56,7 @@ private fun PlayActivatorBodyContent(
             TaskPlayer(viewModel)
         }
     } else {
-        Text("Loading...")
+        Text("Loading..., topExecution is null")
     }
 }
 

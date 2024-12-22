@@ -106,7 +106,8 @@ class DAOs {
         fun taskLength(taskId: Long): Long
 
         //to get top and from from a percentile you must convert it to a fraction, so the numerator is top and from is the denominator. For example the 95% (0.95) percentile is 19/20 so top = 19 and from = 20
-        @Query("""
+        @Query(
+            """
             WITH LastExecutions AS (
                 SELECT `end` - start AS duration
                 FROM executions
@@ -118,10 +119,12 @@ class DAOs {
             FROM LastExecutions
             ORDER BY duration ASC
             LIMIT 1 OFFSET :top-1
-            """)
+            """
+        )
         fun maxTaskETA(taskId: Long, top: Int, from: Int): Flow<Long>
 
-        @Query("""
+        @Query(
+            """
             WITH ActivatorExecutions AS (
                 SELECT `end` - start AS duration
                 FROM executions
@@ -145,7 +148,8 @@ class DAOs {
             )
             ORDER BY duration ASC
             LIMIT 1 OFFSET :top - 1
-        """)
+        """
+        )
         fun maxActivatorETA(activatorId: Long, top: Int, from: Int): Flow<Long>
     }
 
@@ -307,6 +311,20 @@ class DAOs {
 
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
         fun getExecutionWithTask(executionId: Long): ExecutionWithTask?
+
+        @Query(
+            """
+            SELECT * FROM executions 
+            WHERE parentExecution = :executionId AND `end` IS NULL
+            UNION
+            SELECT * FROM executions 
+            WHERE executionId = :executionId AND NOT EXISTS (
+                SELECT 1 FROM executions 
+                WHERE parentExecution = :executionId AND `end` IS NULL
+            )
+            """
+        )
+        fun getRunningExecutionChildOf(executionId: Long): ExecutionWithTask
     }
 
 

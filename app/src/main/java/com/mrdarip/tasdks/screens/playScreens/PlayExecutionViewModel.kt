@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.screens.playScreens
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,8 +30,14 @@ class PlayExecutionViewModel(
 
     fun setTopExecution(executionId: Long) {
         viewModelScope.launch(context = Dispatchers.IO) {
-            val execution = repository.getExecutionWithTask(executionId)
-            state = state.copy(topExecution = execution)
+            Log.w("PlayExecutionViewModel", "setTopExecution($executionId)")
+
+            val topExecution = repository.getExecutionWithTask(executionId)
+            Log.w("PlayExecutionViewModel", "setTopExecution($executionId) -> $topExecution")
+
+            val actualExecution = repository.getRunningExecutionChildOf(executionId)
+
+            state = state.copy(topExecution = topExecution, actualExecution = actualExecution)
         }
     }
 }
