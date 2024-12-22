@@ -10,6 +10,7 @@ import com.mrdarip.tasdks.data.TasdksRepository
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class PlayExecutionViewModel(
@@ -19,14 +20,21 @@ class PlayExecutionViewModel(
         private set
 
 
-    lateinit var currentExecution: Execution
+    val currentExecution = MutableStateFlow<Execution?>(null)
 
+    /**
+     * Get the parent of the current execution, null if there is no parent
+     */
 
     fun getCurrentExecutionParent(): Execution? {
+        val currentExecution = currentExecution.value ?: return null
+
         return repository.getParentExecution(currentExecution)
     }
 
     fun getCurrentExecutionBrothers(): List<Task> {
+        val currentExecution = currentExecution.value ?: return emptyList()
+
         val parentSubTasks = repository.getSubTasksOfTaskAsList(currentExecution.taskId)
         val currentExecutionIndex: Int =
             parentSubTasks.indexOfFirst { it.taskId == currentExecution.taskId }
@@ -42,7 +50,7 @@ class PlayExecutionViewModel(
 
     fun setExecution(executionId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            currentExecution = repository.getExecutionById(executionId)
+            currentExecution.value = repository.getExecutionById(executionId)
         }
     }
 }
