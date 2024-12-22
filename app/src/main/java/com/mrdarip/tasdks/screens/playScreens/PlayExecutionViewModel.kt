@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.screens.playScreens
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,36 +23,22 @@ class PlayExecutionViewModel(
 
     val currentExecution = MutableStateFlow<Execution?>(null)
 
-    /**
-     * Get the parent of the current execution, null if there is no parent
-     */
-
-    fun getCurrentExecutionParent(): Execution? {
-        val currentExecution = currentExecution.value ?: return null
-
-        return repository.getParentExecution(currentExecution)
-    }
-
-    fun getCurrentExecutionBrothers(): List<Task> {
-        val currentExecution = currentExecution.value ?: return emptyList()
-
-        val parentSubTasks = repository.getSubTasksOfTaskAsList(currentExecution.taskId)
-        val currentExecutionIndex: Int =
-            parentSubTasks.indexOfFirst { it.taskId == currentExecution.taskId }
-        return parentSubTasks.subList(
-            (currentExecutionIndex - 1).coerceAtLeast(0),
-            (currentExecutionIndex + 2).coerceAtMost(parentSubTasks.size)
-        )
-    }
-
     fun isRunning(): Boolean {
-        return false
+        return true
     }
 
-    fun setExecution(executionId: Long) {
+    fun setContextExecution(executionId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
+            Log.i("PlayExecutionViewModel", "setExecution: $executionId")
             currentExecution.value = repository.getExecutionById(executionId)
         }
+    }
+
+    fun getTopExecutionTask(): Task {
+        return Task(
+            name = "Task 1",
+            iconEmoji = "🎉"
+        )
     }
 }
 
