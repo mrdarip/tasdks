@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "executions")
 data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long = 0,
-    val start: Int? = null,
+    val start: Int? = null,  //TODO: use @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
     val end: Int? = null,
     val endReason: EndReason,
     val activatorId: Long?,

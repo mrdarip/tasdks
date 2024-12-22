@@ -64,7 +64,7 @@ import com.mrdarip.tasdks.screens.managementScreens.ManageActivatorsScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageExecutionsScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
 import com.mrdarip.tasdks.screens.playScreens.ManageRunningExecutions
-import com.mrdarip.tasdks.screens.playScreens.PlayActivatorScreen
+import com.mrdarip.tasdks.screens.playScreens.PlayExecutionScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -280,7 +280,7 @@ fun MainNavHost(navController: NavHostController) {
             arguments = listOf(navArgument("activatorId") { type = NavType.LongType })
         ) { backStackEntry ->
             val activatorId = backStackEntry.arguments?.getLong("activatorId")
-            PlayActivatorScreen(activatorId ?: 0, navController)
+            PlayExecutionScreen(activatorId ?: 0, navController)
         }
 
         composable(

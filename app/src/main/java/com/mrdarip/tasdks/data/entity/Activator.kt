@@ -17,7 +17,18 @@ data class Activator(
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
     val taskToActivateId: Long,
     val createdTime: Double = System.currentTimeMillis() / 1000.0
-)
+) {
+    fun getUnstartedExecution(): Execution {
+        return Execution(
+            activatorId = this.activatorId,
+            taskId = this.taskToActivateId,
+            endReason = EndReason.UNTRACKED_COMPLETION,
+            parentExecution = null,
+            end = null,
+            start = null
+        )
+    }
+}
 
 
 enum class RepetitionUnit(val isExactDate: Boolean) {

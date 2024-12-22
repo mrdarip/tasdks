@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
+import com.mrdarip.tasdks.navigation.AppScreen
 
 @Composable
 fun ManageRunningExecutions(navController: NavController) {
@@ -25,8 +26,10 @@ private fun ManageRunningExecutionsBodyContent(
     LazyColumn {
         items(viewModel.state.executions) { execution ->
             TwoButtonsListItem(
-                title = execution.executionId.toString()
-
+                title = execution.executionId.toString(),
+                onLiItemClick = {
+                    navController.navigate("${AppScreen.PlayActivator.route}/${execution.executionId}")
+                }
             )
         }
     }

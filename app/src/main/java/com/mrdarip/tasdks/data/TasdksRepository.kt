@@ -136,4 +136,12 @@ class TasdksRepository(
     fun getRunningExecutions(): Flow<List<Execution>> {
         return executionDAO.getRunningExecutions()
     }
+
+    fun getParentExecution(currentExecution: Execution): Execution? {
+        return this.getExecutionById(currentExecution.parentExecution ?: return null)
+    }
+
+    fun getExecution(executionId: Long): Execution {
+        return executionDAO.getById(executionId)
+    }
 }

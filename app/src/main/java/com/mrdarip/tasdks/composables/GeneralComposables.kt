@@ -209,7 +209,12 @@ fun ThreeButtonsListItem(
 }
 
 @Composable
-fun TasdksCard(emoji: String?, title: String, subTitle: String?, onClick: () -> Unit) {
+fun TasdksCard(
+    emoji: String? = null,
+    title: String,
+    subTitle: String? = null,
+    onClick: () -> Unit = {}
+) {
     Box {
         Column(
             verticalArrangement = Arrangement.Top, modifier = Modifier
