@@ -40,13 +40,32 @@ class PlayExecutionViewModel(
             iconEmoji = "🎉"
         )
     }
+
+    fun getActualExecutionTask(): Task {
+        return Task(
+            name = "Task 2",
+            iconEmoji = "🎉"
+        )
+    }
+
+    fun getNextTask(): Task {
+        return Task(
+            name = "Task 3",
+            iconEmoji = "🎉"
+        )
+    }
+
+    fun undoExecution() {
+        TODO("Not yet implemented")
+    }
+
+    fun completeExecution() {
+        TODO("Not yet implemented")
+    }
 }
 
 data class PlayActivatorState(
-    val tasks: List<Task> = emptyList(),
-    val tasksOrderedByLastDone: List<Task> = emptyList(),
-    val tasksOrderedByUsuallyAtThisTime: List<Task> = emptyList(),
-    //TODO: Add other entities video 6/7
+    val tasks: List<Task> = emptyList()
 )
 
 fun unixEpochTime(): Int {

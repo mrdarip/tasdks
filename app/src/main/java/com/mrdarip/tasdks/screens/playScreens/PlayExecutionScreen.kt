@@ -61,10 +61,10 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
     Column(horizontalAlignment = Alignment.Start) {
         Card(modifier = Modifier.fillMaxWidth()) {
             Row {
-                if (viewModel.getTopExecutionTask().iconEmoji != null) {
-                    Text(viewModel.getTopExecutionTask().iconEmoji!!)
+                if (viewModel.getActualExecutionTask().iconEmoji != null) {
+                    Text(viewModel.getActualExecutionTask().iconEmoji!!)
                 }
-                Text(viewModel.getTopExecutionTask().name)
+                Text(viewModel.getActualExecutionTask().name)
             }
 
             // Row for actions
@@ -76,21 +76,21 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                IconButton(onClick = { }) {
+                IconButton(onClick = { viewModel.undoExecution() }) {
                     Icon(Icons.Default.Share, contentDescription = "go back")
                 }
-                IconButton(onClick = { }) {
+                IconButton(onClick = { viewModel.completeExecution() }) {
                     if (viewModel.isRunning()) {
                         Icon(Icons.Default.Done, contentDescription = "complete")
                     } else {
                         Icon(Icons.Default.PlayArrow, contentDescription = "start")
                     }
                 }
-                IconButton(onClick = { }) {
+                IconButton(onClick = { TODO("implement skip modal") }) {
                     Icon(Icons.Default.PlayArrow, contentDescription = "skip")
                 }
             }
         }
-        Text("Next: ${viewModel.getTopExecutionTask().name}")
+        Text("Next: ${viewModel.getNextTask().name}")
     }
 }
