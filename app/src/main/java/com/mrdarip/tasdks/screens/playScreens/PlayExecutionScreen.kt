@@ -21,11 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.data.entity.Execution
 
 @Composable
-fun PlayExecutionScreen(executionId: Long, navController: NavController) {
+fun PlayExecutionScreen(execution: Execution, navController: NavController) {
     val playExecutionViewModel = viewModel(modelClass = PlayExecutionViewModel::class.java)
-    playExecutionViewModel.setTopExecution(executionId)
+    playExecutionViewModel.setTopExecution(execution)
     PlayActivatorBodyContent(
         viewModel = playExecutionViewModel
     )

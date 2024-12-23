@@ -20,10 +20,23 @@ data class Execution(
     val endReason: EndReason = EndReason.RUNNING, //TODO: rename to something that doesn't imply that the execution was completed, like "runningStatus"
     val activatorId: Long? = null,
     val parentExecution: Long? = null,
-    val taskId: Long
+    val taskId: Long //Could be removed as it is redundant as it is obtainable from the activator
 ) {
     fun isRunning(): Boolean {
         return end == null
+    }
+
+    companion object {
+        fun of(activator: Activator): Execution {
+            return Execution(
+                start = null,
+                end = null,
+                endReason = EndReason.UNSTARTED,
+                activatorId = activator.activatorId,
+                parentExecution = null,
+                taskId = activator.taskToActivateId
+            )
+        }
     }
 }
 

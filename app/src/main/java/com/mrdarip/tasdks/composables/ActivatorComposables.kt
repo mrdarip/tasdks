@@ -80,7 +80,7 @@ fun ActivatorCardRow(
                     title = task.name,
                     subTitle = "ETA: $taskETA min\n" + activator.comment,
                     onClick = {
-                        navController.navigate("${AppScreen.PlayActivator.route}/${activator.activatorId}")
+                        navController.navigate("${AppScreen.PlayActivator.route}/activator/${activator.activatorId}")
                     }
                 )
             }

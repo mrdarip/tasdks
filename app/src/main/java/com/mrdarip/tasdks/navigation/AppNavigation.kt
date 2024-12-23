@@ -52,6 +52,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mrdarip.tasdks.composables.EntitiesBackHandler
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
+import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.screens.NotFoundScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
@@ -276,11 +277,28 @@ fun MainNavHost(navController: NavHostController) {
         }
 
         composable(
-            "${AppScreen.PlayActivator.route}/{activatorId}",
+            "${AppScreen.PlayActivator.route}/activator/{activatorId}",
             arguments = listOf(navArgument("activatorId") { type = NavType.LongType })
         ) { backStackEntry ->
             val activatorId = backStackEntry.arguments?.getLong("activatorId")
-            PlayExecutionScreen(activatorId ?: 0, navController)
+            PlayExecutionScreen(
+                Execution(
+                    executionId = -1,
+                    taskId = -1,
+                    activatorId = activatorId ?: 0
+                ), navController
+            )
+        }
+
+        composable(
+            "${AppScreen.PlayActivator.route}/execution/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id")
+            PlayExecutionScreen(
+                Execution(executionId = id ?: 0, taskId = -1, activatorId = -1),
+                navController
+            )
         }
 
         composable(

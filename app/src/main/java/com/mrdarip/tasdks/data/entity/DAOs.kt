@@ -151,6 +151,9 @@ class DAOs {
         """
         )
         fun maxActivatorETA(activatorId: Long, top: Int, from: Int): Flow<Long>
+
+        @Query("SELECT t.* FROM tasks t JOIN activators a ON t.taskId = a.taskToActivateId WHERE a.activatorId = :activatorId")
+        fun getTaskByActivatorId(activatorId: Long): Task
     }
 
     @Dao
@@ -310,7 +313,7 @@ class DAOs {
         fun getRunningExecutions(): Flow<List<Execution>>
 
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
-        fun getExecutionWithTask(executionId: Long): ExecutionWithTask?
+        fun getExecutionWithTaskByExeId(executionId: Long): ExecutionWithTask?
 
         @Query(
             """

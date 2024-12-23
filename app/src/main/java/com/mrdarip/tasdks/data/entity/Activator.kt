@@ -17,6 +17,7 @@ data class Activator(
     @ColumnInfo(defaultValue = "0") val userCancelled: Boolean = false,
     val taskToActivateId: Long,
     val createdTime: Double = System.currentTimeMillis() / 1000.0
+    //Todo: add created fore one-time execution boolean
 ) {
     fun getUnstartedExecution(): Execution {
         return Execution(

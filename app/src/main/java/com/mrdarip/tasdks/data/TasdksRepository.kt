@@ -146,8 +146,8 @@ class TasdksRepository(
         return executionDAO.getById(executionId)
     }
 
-    fun getExecutionWithTask(executionId: Long): ExecutionWithTask? {
-        return executionDAO.getExecutionWithTask(executionId)
+    fun getExecutionWithTaskByExeId(executionId: Long): ExecutionWithTask? {
+        return executionDAO.getExecutionWithTaskByExeId(executionId)
     }
 
     fun getRunningExecutionChildOf(executionId: Long): ExecutionWithTask {
@@ -157,4 +157,9 @@ class TasdksRepository(
     fun upsertExecution(newExecution: Execution) {
         executionDAO.upsert(newExecution)
     }
+
+    fun getTaskByActivatorId(activatorId: Long): Task {
+        return taskDAO.getTaskByActivatorId(activatorId)
+    }
+
 }
