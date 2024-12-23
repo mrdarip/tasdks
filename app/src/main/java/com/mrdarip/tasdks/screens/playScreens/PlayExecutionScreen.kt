@@ -86,7 +86,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                     Icon(Icons.Default.Share, contentDescription = "go back")
                 }
                 IconButton(onClick = { viewModel.completeExecution() }) {
-                    if (viewModel.state.actualExecution.user.isRunning()) {
+                    if (viewModel.state.actualExecution.execution.isRunning()) {
                         Icon(Icons.Default.Done, contentDescription = "complete")
                     } else {
                         Icon(Icons.Default.PlayArrow, contentDescription = "start")

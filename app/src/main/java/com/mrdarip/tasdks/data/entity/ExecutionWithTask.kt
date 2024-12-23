@@ -5,7 +5,7 @@ import androidx.room.Relation
 
 
 data class ExecutionWithTask(
-    @Embedded val user: Execution,
+    @Embedded val execution: Execution,
     @Relation(
         parentColumn = "taskId",
         entityColumn = "taskId"
