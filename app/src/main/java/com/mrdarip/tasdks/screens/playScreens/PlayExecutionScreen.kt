@@ -42,16 +42,18 @@ private fun PlayActivatorBodyContent(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Row for title
-            Row {
-                Text(viewModel.state.topExecution!!.task.name)
-            }
+            if (viewModel.state.actualExecution != viewModel.state.topExecution) {
+                // Row for title
+                Row {
+                    Text(viewModel.state.topExecution!!.task.name)
+                }
 
-            Icon(Icons.Default.MoreVert, contentDescription = "...")
-            IconButton(onClick = { }) {
-                Icon(Icons.Default.ArrowDropDown, contentDescription = "view parents")
+                Icon(Icons.Default.MoreVert, contentDescription = "...")
+                IconButton(onClick = { }) {
+                    Icon(Icons.Default.ArrowDropDown, contentDescription = "view parents")
+                }
+                Icon(Icons.Default.MoreVert, contentDescription = "...")
             }
-            Icon(Icons.Default.MoreVert, contentDescription = "...")
 
             TaskPlayer(viewModel)
         }
