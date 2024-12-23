@@ -153,4 +153,8 @@ class TasdksRepository(
     fun getRunningExecutionChildOf(executionId: Long): ExecutionWithTask {
         return executionDAO.getRunningExecutionChildOf(executionId)
     }
+
+    fun upsertExecution(newExecution: Execution) {
+        executionDAO.upsert(newExecution)
+    }
 }

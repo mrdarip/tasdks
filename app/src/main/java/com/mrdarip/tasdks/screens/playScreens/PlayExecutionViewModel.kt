@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
+import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
@@ -25,7 +26,15 @@ class PlayExecutionViewModel(
     }
 
     fun completeExecution() {
-        TODO("Not yet implemented")
+        viewModelScope.launch(context = Dispatchers.IO) {
+            val actualExecution = state.actualExecution.execution
+            val newExecution = actualExecution.copy(
+                end = unixEpochTime(),
+                endReason = EndReason.SUCCESS
+            )
+
+            repository.upsertExecution(newExecution)
+        }
     }
 
     fun setTopExecution(executionId: Long) {
