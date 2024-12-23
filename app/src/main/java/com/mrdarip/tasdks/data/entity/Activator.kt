@@ -22,7 +22,7 @@ data class Activator(
         return Execution(
             activatorId = this.activatorId,
             taskId = this.taskToActivateId,
-            endReason = EndReason.UNTRACKED_COMPLETION,
+            endReason = EndReason.UNSTARTED,
             parentExecution = null,
             end = null,
             start = null

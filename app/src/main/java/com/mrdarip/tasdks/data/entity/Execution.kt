@@ -17,7 +17,7 @@ data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long = 0,
     val start: Int? = null,  //TODO: use @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
     val end: Int? = null,
-    val endReason: EndReason = EndReason.UNTRACKED_COMPLETION,
+    val endReason: EndReason = EndReason.RUNNING, //TODO: rename to something that doesn't imply that the execution was completed, like "runningStatus"
     val activatorId: Long? = null,
     val parentExecution: Long? = null,
     val taskId: Long
@@ -69,6 +69,12 @@ enum class EndReason(
     UNSUCCESSFUL_MIXED_REASONS(false, true, false),
 
     /** Execution completed successfully despite mixed reasons; time may be inaccurate */
-    SUCCESSFUL_MIXED_REASONS(true, false, false)
+    SUCCESSFUL_MIXED_REASONS(true, false, false),
+
+    /** Execution is running */
+    RUNNING(false, false, true),
+
+    /** Execution was created but never started */
+    UNSTARTED(false, false, false)
 }
 
