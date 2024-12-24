@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.devtools.ksp")
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -59,7 +60,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    //navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.ui.text.google.fonts)
     testImplementation(libs.junit)

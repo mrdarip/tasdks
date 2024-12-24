@@ -2,6 +2,7 @@ package com.mrdarip.tasdks.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 /**
  * @param name the name of the task
@@ -13,6 +14,7 @@ import androidx.room.PrimaryKey
  * @param allowParallelTasks if the task allows parallel tasks
  */
 @Entity(tableName = "tasks")
+@Serializable
 data class Task(
     @PrimaryKey(autoGenerate = true) val taskId: Long = 0,
     var name: String = "",

@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.navigation
 
+import PlayExecution
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,9 +51,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.mrdarip.tasdks.composables.EntitiesBackHandler
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
-import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.screens.NotFoundScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
@@ -277,31 +278,6 @@ fun MainNavHost(navController: NavHostController) {
         }
 
         composable(
-            "${AppScreen.PlayActivator.route}/activator/{activatorId}",
-            arguments = listOf(navArgument("activatorId") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val activatorId = backStackEntry.arguments?.getLong("activatorId")
-            PlayExecutionScreen(
-                Execution(
-                    executionId = -1,
-                    taskId = -1,
-                    activatorId = activatorId ?: 0
-                ), navController
-            )
-        }
-
-        composable(
-            "${AppScreen.PlayActivator.route}/execution/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getLong("id")
-            PlayExecutionScreen(
-                Execution(executionId = id ?: 0, taskId = -1, activatorId = -1),
-                navController
-            )
-        }
-
-        composable(
             AppScreen.ManageActivators.route,
         ) {
             ManageActivatorsScreen(navController = navController)
@@ -335,6 +311,14 @@ fun MainNavHost(navController: NavHostController) {
             AppScreen.NotFound.route
         ) {
             NotFoundScreen()
+        }
+
+        composable<PlayExecution> { backStackEntry ->
+            val playExecution: PlayExecution = backStackEntry.toRoute()
+            PlayExecutionScreen(
+                navigationArgs = playExecution,
+                navController
+            )
         }
 
     }

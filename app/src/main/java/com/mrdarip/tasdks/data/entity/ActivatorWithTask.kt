@@ -5,10 +5,10 @@ import androidx.room.Relation
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ExecutionWithTask(
-    @Embedded val execution: Execution,
+data class ActivatorWithTask(
+    @Embedded val activator: Activator,
     @Relation(
-        parentColumn = "taskId",
+        parentColumn = "taskToActivateId",
         entityColumn = "taskId"
     )
     val task: Task

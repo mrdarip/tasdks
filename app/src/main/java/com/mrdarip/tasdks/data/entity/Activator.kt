@@ -4,9 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 
 @Entity(tableName = "activators")
+@Serializable
 data class Activator(
     @PrimaryKey(autoGenerate = true) val activatorId: Long = 0,
     val comment: String? = null,
@@ -41,6 +43,7 @@ enum class RepetitionUnit(val isExactDate: Boolean) {
     YEARS(true)
 }
 
+@Serializable
 data class RepetitionRange(
     val firstTimeDone: Int = -1, //In seconds since epoch
     //min max activators: when will the first repetition occur

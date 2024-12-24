@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.screens.playScreens
 
+import PlayExecution
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,42 +38,20 @@ class PlayExecutionViewModel(
         }
     }
 
-    fun setTopExecution(execution: Execution) { //fixme: this code is horrible
+    fun setTopExecution(execution: PlayExecution) {
         viewModelScope.launch(context = Dispatchers.IO) {
             Log.w("PlayExecutionViewModel", "setTopExecution($execution)")
 
 
-            lateinit var topExecution: ExecutionWithTask
-            lateinit var actualExecution: ExecutionWithTask
-            if (execution.executionId != 0L) {
-                topExecution = repository.getExecutionWithTaskByExeId(execution.executionId)
-                    ?: ExecutionWithTask(Execution(taskId = -1), Task())
-
-                actualExecution =
-                    repository.getRunningExecutionChildOf(topExecution.execution.executionId)
-            } else {
-                if (execution.taskId != 0L) {
-                    topExecution =
-                        ExecutionWithTask(execution, repository.getTaskById(execution.taskId))
-                } else {
-                    if (execution.activatorId != null) {
-                        topExecution = ExecutionWithTask(
-                            execution,
-                            repository.getTaskByActivatorId(execution.activatorId)
-                        )
-                    } else {
-                        throw IllegalArgumentException("Execution must have a taskId or activatorId")
-                    }
-                }
-                actualExecution = topExecution
-            }
-
+            val topExecution: ExecutionWithTask = execution.getExecution()
+            val actualExecution: ExecutionWithTask =
+                if (topExecution.execution.executionId <= 0L) topExecution
+                else repository.getRunningExecutionChildOf(topExecution.execution.executionId)
 
             Log.w(
                 "PlayExecutionViewModel",
                 "setTopExecution($execution) topExecution=$topExecution"
             )
-
 
             state = state.copy(topExecution = topExecution, actualExecution = actualExecution)
         }

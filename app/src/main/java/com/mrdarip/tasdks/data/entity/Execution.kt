@@ -2,6 +2,7 @@ package com.mrdarip.tasdks.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 
 /**
@@ -13,6 +14,7 @@ import androidx.room.PrimaryKey
  */
 
 @Entity(tableName = "executions")
+@Serializable
 data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long = 0,
     val start: Int? = null,  //TODO: use @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
@@ -35,6 +37,17 @@ data class Execution(
                 activatorId = activator.activatorId,
                 parentExecution = null,
                 taskId = activator.taskToActivateId
+            )
+        }
+
+        fun of(task: Task): Execution {
+            return Execution(
+                start = null,
+                end = null,
+                endReason = EndReason.UNSTARTED,
+                activatorId = null,
+                parentExecution = null,
+                taskId = task.taskId
             )
         }
     }
