@@ -182,7 +182,7 @@ class DAOs {
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
         fun getActivatorByIdAsFlow(activatorId: Long): Flow<Activator>
 
-        @Query("SELECT * FROM executions WHERE parentExecution IS NULL AND start = `end` ")
+        @Query("SELECT * FROM executions WHERE parentExecution IS NULL AND endReason = 'RUNNING'")
         fun getParentRunningExecutions(): Flow<List<Execution>>
 
         @Query(
