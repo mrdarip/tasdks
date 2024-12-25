@@ -86,13 +86,20 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 IconButton(onClick = { viewModel.undoExecution() }) {
                     Icon(Icons.Default.Share, contentDescription = "go back")
                 }
-                IconButton(onClick = { viewModel.completeExecution() }) {
-                    if (viewModel.state.actualExecution.execution.isRunning()) {
-                        Icon(Icons.Default.Done, contentDescription = "complete")
-                    } else {
-                        Icon(Icons.Default.PlayArrow, contentDescription = "start")
-                    }
+
+                val isStarted = viewModel.state.actualExecution.execution.isStarted()
+                val onClickAction: () -> Unit = if (isStarted) {
+                    { viewModel.completeExecution() }
+                } else {
+                    { viewModel.startExecution() }
                 }
+                val icon = if (isStarted) Icons.Default.Done else Icons.Default.PlayArrow
+                val contentDescription = if (isStarted) "complete" else "start"
+
+                IconButton(onClick = onClickAction) {
+                    Icon(icon, contentDescription = contentDescription)
+                }
+
                 IconButton(onClick = { TODO("implement skip modal") }) {
                     Icon(Icons.Default.PlayArrow, contentDescription = "skip")
                 }

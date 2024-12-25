@@ -68,11 +68,28 @@ class PlayExecutionViewModel(
             state = state.copy(topExecution = topExecution, actualExecution = actualExecution)
         }
     }
+
+    fun startExecution() {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            state.actualExecution = state.actualExecution.copy(
+                execution = state.actualExecution.execution.copy(
+                    start = unixEpochTime(),
+                    endReason = EndReason.RUNNING
+                )
+            )
+
+            state.actualExecution = state.actualExecution.copy(
+                execution = state.actualExecution.execution.copy(
+                    executionId = repository.upsertExecution(state.actualExecution.execution)
+                )
+            )
+        }
+    }
 }
 
 data class PlayExecutionState(
-    val topExecution: ExecutionWithTask? = null,
-    val actualExecution: ExecutionWithTask = ExecutionWithTask(Execution(taskId = -1), Task()),
+    var topExecution: ExecutionWithTask? = null,
+    var actualExecution: ExecutionWithTask = ExecutionWithTask(Execution(taskId = -1), Task()),
     val nextTask: Task? = null
 )
 

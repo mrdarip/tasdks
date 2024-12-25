@@ -24,8 +24,8 @@ data class Execution(
     val parentExecution: Long? = null,
     val taskId: Long //Could be removed as it is redundant as it is obtainable from the activator
 ) {
-    fun isRunning(): Boolean {
-        return end == null
+    fun isStarted(): Boolean {
+        return start != null
     }
 
     companion object {

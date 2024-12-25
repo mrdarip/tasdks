@@ -333,7 +333,7 @@ class DAOs {
         fun getRunningExecutionChildOf(executionId: Long): ExecutionWithTask
 
         @Upsert
-        fun upsert(execution: Execution)
+        fun upsert(execution: Execution): Long
     }
 
 
