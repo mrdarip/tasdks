@@ -22,6 +22,10 @@ class PlayExecutionViewModel(
     var state by mutableStateOf(PlayExecutionState())
         private set
 
+    var isStarted by mutableStateOf(false)
+        private set
+
+
     fun undoExecution() {
         TODO("Not yet implemented")
     }
@@ -44,7 +48,6 @@ class PlayExecutionViewModel(
             val actualExecution: ExecutionWithTask
 
             if (execution.executionId != 0L) {
-
                 Log.i("PlayExecutionViewModel", "ExecutionId: ${execution.executionId}")
                 topExecution = repository.getExecutionWithTaskByExeId(execution.executionId)
                 actualExecution = repository.getRunningExecutionChildOf(execution.executionId)
@@ -66,6 +69,7 @@ class PlayExecutionViewModel(
             }
 
             state = state.copy(topExecution = topExecution, actualExecution = actualExecution)
+            evaluateIsStarted()
         }
     }
 
@@ -83,7 +87,12 @@ class PlayExecutionViewModel(
                     executionId = repository.upsertExecution(state.actualExecution.execution)
                 )
             )
+            isStarted = true
         }
+    }
+
+    private fun evaluateIsStarted() {
+        isStarted = state.actualExecution.execution.isStarted()
     }
 }
 

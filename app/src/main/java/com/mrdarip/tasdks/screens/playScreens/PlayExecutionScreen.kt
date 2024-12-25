@@ -87,14 +87,14 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                     Icon(Icons.Default.Share, contentDescription = "go back")
                 }
 
-                val isStarted = viewModel.state.actualExecution.execution.isStarted()
-                val onClickAction: () -> Unit = if (isStarted) {
+
+                val onClickAction: () -> Unit = if (viewModel.isStarted) {
                     { viewModel.completeExecution() }
                 } else {
                     { viewModel.startExecution() }
                 }
-                val icon = if (isStarted) Icons.Default.Done else Icons.Default.PlayArrow
-                val contentDescription = if (isStarted) "complete" else "start"
+                val icon = if (viewModel.isStarted) Icons.Default.Done else Icons.Default.PlayArrow
+                val contentDescription = if (viewModel.isStarted) "complete" else "start"
 
                 IconButton(onClick = onClickAction) {
                     Icon(icon, contentDescription = contentDescription)
