@@ -1,6 +1,5 @@
 package com.mrdarip.tasdks.screens.playScreens
 
-import PlayExecution
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,9 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.data.entity.Execution
 
 @Composable
-fun PlayExecutionScreen(navigationArgs: PlayExecution, navController: NavController) {
+fun PlayExecutionScreen(navigationArgs: Execution, navController: NavController) {
     val playExecutionViewModel = viewModel(modelClass = PlayExecutionViewModel::class.java)
     playExecutionViewModel.setTopExecution(navigationArgs)
     PlayActivatorBodyContent(

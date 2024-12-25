@@ -1,27 +1,38 @@
+import android.os.Bundle
+import androidx.navigation.NavType
 import com.mrdarip.tasdks.data.entity.ActivatorWithTask
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 @Serializable
-sealed class PlayExecution {
-    abstract fun getExecution(): ExecutionWithTask
+data class PlayExecution(val execution: ExecutionWithTask)
 
-    @Serializable
-    data class FromActivatorWithTaskNewExecution(val activatorWithTask: ActivatorWithTask) :
-        PlayExecution() {
-        override fun getExecution(): ExecutionWithTask =
-            ExecutionWithTask(Execution.of(activatorWithTask.activator), activatorWithTask.task)
+fun fromActivatorWithTaskNewExecution(activatorWithTask: ActivatorWithTask): PlayExecution {
+    return PlayExecution(
+        ExecutionWithTask(
+            Execution.of(activatorWithTask.activator),
+            activatorWithTask.task
+        )
+    )
+}
+
+fun fromTaskNewExecution(task: Task): PlayExecution {
+    return PlayExecution(ExecutionWithTask(Execution.of(task), task))
+}
+
+object PlayExecutionNavType : NavType<PlayExecution>(isNullableAllowed = false) {
+    override fun get(bundle: Bundle, key: String): PlayExecution? {
+        return bundle.getString(key)?.let { parseValue(it) }
     }
 
-    @Serializable
-    data class FromTaskNewExecution(val task: Task) : PlayExecution() {
-        override fun getExecution(): ExecutionWithTask = ExecutionWithTask(Execution.of(task), task)
+    override fun parseValue(value: String): PlayExecution {
+        return Json.decodeFromString(PlayExecution.serializer(), value)
     }
 
-    @Serializable
-    data class FromExecutionWithTask(val executionWithTask: ExecutionWithTask) : PlayExecution() {
-        override fun getExecution(): ExecutionWithTask = executionWithTask
+    override fun put(bundle: Bundle, key: String, value: PlayExecution) {
+        bundle.putString(key, Json.encodeToString(PlayExecution.serializer(), value))
     }
 }

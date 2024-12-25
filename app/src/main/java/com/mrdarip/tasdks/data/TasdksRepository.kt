@@ -1,6 +1,7 @@
 package com.mrdarip.tasdks.data
 
 import com.mrdarip.tasdks.data.entity.Activator
+import com.mrdarip.tasdks.data.entity.ActivatorWithTask
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
@@ -146,7 +147,7 @@ class TasdksRepository(
         return executionDAO.getById(executionId)
     }
 
-    fun getExecutionWithTaskByExeId(executionId: Long): ExecutionWithTask? {
+    fun getExecutionWithTaskByExeId(executionId: Long): ExecutionWithTask {
         return executionDAO.getExecutionWithTaskByExeId(executionId)
     }
 
@@ -160,6 +161,10 @@ class TasdksRepository(
 
     fun getTaskByActivatorId(activatorId: Long): Task {
         return taskDAO.getTaskByActivatorId(activatorId)
+    }
+
+    fun getActivatorWithTaskByActivatorId(activatorId: Long): ActivatorWithTask {
+        return activatorDAO.getActivatorWithTaskByActivatorId(activatorId)
     }
 
 }

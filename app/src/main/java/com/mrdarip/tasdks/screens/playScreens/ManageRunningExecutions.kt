@@ -28,7 +28,7 @@ private fun ManageRunningExecutionsBodyContent(
             TwoButtonsListItem(
                 title = execution.executionId.toString(),
                 onLiItemClick = {
-                    navController.navigate("${AppScreen.PlayActivator.route}/execution/${execution.executionId}")
+                    navController.navigate("${AppScreen.PlayExecution.route}/execution/${execution.executionId}")
                 }
             )
         }

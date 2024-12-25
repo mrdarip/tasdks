@@ -74,7 +74,7 @@ private fun ManageTasksBodyContent(
                         )
 
                         withContext(Dispatchers.Main) {
-                            navController.navigate("${AppScreen.PlayActivator.route}/activator/$activatorId")
+                            navController.navigate("${AppScreen.PlayExecution.route}/task/${task.taskId}")
                         }
                     }
                 },

@@ -1,6 +1,5 @@
 package com.mrdarip.tasdks.navigation
 
-import PlayExecution
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,9 +50,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.navigation.toRoute
 import com.mrdarip.tasdks.composables.EntitiesBackHandler
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
+import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.screens.NotFoundScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
@@ -313,11 +312,39 @@ fun MainNavHost(navController: NavHostController) {
             NotFoundScreen()
         }
 
-        composable<PlayExecution> { backStackEntry ->
-            val playExecution: PlayExecution = backStackEntry.toRoute()
+        composable(
+            "${AppScreen.PlayExecution.route}/execution/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id")
+
             PlayExecutionScreen(
-                navigationArgs = playExecution,
-                navController
+                navController = navController,
+                navigationArgs = Execution(executionId = id ?: 0, taskId = 0)
+            )
+        }
+
+        composable(
+            "${AppScreen.PlayExecution.route}/task/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id")
+
+            PlayExecutionScreen(
+                navController = navController,
+                navigationArgs = Execution(executionId = 0, taskId = id ?: 0)
+            )
+        }
+
+        composable(
+            "${AppScreen.PlayExecution.route}/activator/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id")
+
+            PlayExecutionScreen(
+                navController = navController,
+                navigationArgs = Execution(executionId = 0, taskId = 0, activatorId = id ?: 0)
             )
         }
 

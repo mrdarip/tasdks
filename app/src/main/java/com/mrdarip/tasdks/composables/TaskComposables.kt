@@ -143,7 +143,7 @@ fun TasksCardRow(
                             )
 
                             withContext(Dispatchers.Main) {
-                                navController.navigate("${AppScreen.PlayActivator.route}/activator/$activatorId")
+                                navController.navigate("${AppScreen.PlayExecution.route}/activator/$activatorId")
                             }
                         }
                     }

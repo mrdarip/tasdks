@@ -282,6 +282,9 @@ class DAOs {
             """
         ) //TODO: implement querying exactDateRange overdue tasks
         fun getOverdue(): Flow<List<Activator>>
+
+        @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
+        fun getActivatorWithTaskByActivatorId(activatorId: Long): ActivatorWithTask
     }
 
     @Dao
@@ -313,7 +316,7 @@ class DAOs {
         fun getRunningExecutions(): Flow<List<Execution>>
 
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
-        fun getExecutionWithTaskByExeId(executionId: Long): ExecutionWithTask?
+        fun getExecutionWithTaskByExeId(executionId: Long): ExecutionWithTask
 
         @Query(
             """

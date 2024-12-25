@@ -1,6 +1,5 @@
 package com.mrdarip.tasdks.screens.playScreens
 
-import PlayExecution
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
+import com.mrdarip.tasdks.data.entity.ActivatorWithTask
 import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.ExecutionWithTask
@@ -38,20 +38,32 @@ class PlayExecutionViewModel(
         }
     }
 
-    fun setTopExecution(execution: PlayExecution) {
+    fun setTopExecution(execution: Execution) {
         viewModelScope.launch(context = Dispatchers.IO) {
-            Log.w("PlayExecutionViewModel", "setTopExecution($execution)")
+            val topExecution: ExecutionWithTask
+            val actualExecution: ExecutionWithTask
 
+            if (execution.executionId != 0L) {
 
-            val topExecution: ExecutionWithTask = execution.getExecution()
-            val actualExecution: ExecutionWithTask =
-                if (topExecution.execution.executionId <= 0L) topExecution
-                else repository.getRunningExecutionChildOf(topExecution.execution.executionId)
-
-            Log.w(
-                "PlayExecutionViewModel",
-                "setTopExecution($execution) topExecution=$topExecution"
-            )
+                Log.i("PlayExecutionViewModel", "ExecutionId: ${execution.executionId}")
+                topExecution = repository.getExecutionWithTaskByExeId(execution.executionId)
+                actualExecution = repository.getRunningExecutionChildOf(execution.executionId)
+            } else {
+                if (execution.activatorId == null) {
+                    Log.i("PlayExecutionViewModel", "TaskId: ${execution.taskId}")
+                    val task = repository.getTaskById(execution.taskId)
+                    topExecution = ExecutionWithTask(Execution.of(task), task)
+                } else {
+                    Log.i("PlayExecutionViewModel", "ActivatorId: ${execution.activatorId}")
+                    val activatorWithTask: ActivatorWithTask =
+                        repository.getActivatorWithTaskByActivatorId(execution.activatorId)
+                    topExecution = ExecutionWithTask(
+                        Execution.of(activatorWithTask.activator),
+                        activatorWithTask.task
+                    )
+                }
+                actualExecution = topExecution
+            }
 
             state = state.copy(topExecution = topExecution, actualExecution = actualExecution)
         }
