@@ -33,12 +33,14 @@ class PlayExecutionViewModel(
     fun completeExecution() {
         viewModelScope.launch(context = Dispatchers.IO) {
             val actualExecution = state.actualExecution.execution
-            val newExecution = actualExecution.copy(
+            val completedExecution = actualExecution.copy(
                 end = unixEpochTime(),
                 endReason = EndReason.SUCCESS
             )
 
-            repository.upsertExecution(newExecution)
+            repository.upsertExecution(completedExecution)
+
+            //val nextExecution = repository.createNextExecutionOf(actualExecution)
         }
     }
 
@@ -73,7 +75,7 @@ class PlayExecutionViewModel(
         }
     }
 
-    fun startExecution() {
+    fun startActualExecution() {
         viewModelScope.launch(context = Dispatchers.IO) {
             state.actualExecution = state.actualExecution.copy(
                 execution = state.actualExecution.execution.copy(

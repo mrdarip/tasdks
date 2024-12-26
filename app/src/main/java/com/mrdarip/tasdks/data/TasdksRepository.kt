@@ -167,4 +167,10 @@ class TasdksRepository(
         return activatorDAO.getActivatorWithTaskByActivatorId(activatorId)
     }
 
+    fun createNextExecutionOf(actualExecution: ExecutionWithTask): ExecutionWithTask {
+        TODO()
+
+        //return executionDAO.createNextExecutionOf(actualExecution)
+    }
+
 }

@@ -91,7 +91,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 val onClickAction: () -> Unit = if (viewModel.isStarted) {
                     { viewModel.completeExecution() }
                 } else {
-                    { viewModel.startExecution() }
+                    { viewModel.startActualExecution() }
                 }
                 val icon = if (viewModel.isStarted) Icons.Default.Done else Icons.Default.PlayArrow
                 val contentDescription = if (viewModel.isStarted) "complete" else "start"
