@@ -42,7 +42,7 @@ class TasdksRepository(
         return taskDAO.maxActivatorETA(taskId, 9, 10)
     }
 
-    fun getNotSubtasksOfTask(taskId:Long): Flow<List<Task>> {
+    fun getNotSubtasksOfTask(taskId: Long): Flow<List<Task>> {
         return taskWithTasksDAO.getTasksNotSubTasks(taskId)
     }
 
@@ -100,9 +100,10 @@ class TasdksRepository(
         taskDAO.decreaseTaskPosition(position, parentId)
     }
 
-    fun removeSubTask(parentTaskId: Long,position: Long){
-        taskDAO.removeSubTask(parentTaskId,position)
+    fun removeSubTask(parentTaskId: Long, position: Long) {
+        taskDAO.removeSubTask(parentTaskId, position)
     }
+
     fun getActivatorById(activatorId: Long): Activator {
         return activatorDAO.getActivatorById(activatorId)
     }
@@ -167,10 +168,27 @@ class TasdksRepository(
         return activatorDAO.getActivatorWithTaskByActivatorId(activatorId)
     }
 
-    fun createNextExecutionOf(actualExecution: ExecutionWithTask): ExecutionWithTask {
-        TODO()
+    fun GetNext(actualExecution: ExecutionWithTask): ExecutionWithTask {
+
 
         //return executionDAO.createNextExecutionOf(actualExecution)
+    }
+
+    fun startExecution(actualExecution: ExecutionWithTask) {
+        /*
+          We are executing A task
+              A
+          0/ 1| 2\     branch number, for n1:
+          O   B   O
+          |  /\   |
+          X  C X  X
+
+         */
+        val tasksIds = taskDAO.getBranchOf(
+            taskId = actualExecution.execution.taskId,
+            branchNumber = actualExecution.execution.childNumber
+        )
+
     }
 
 }
