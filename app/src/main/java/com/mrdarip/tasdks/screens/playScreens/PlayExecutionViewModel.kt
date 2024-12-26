@@ -104,7 +104,8 @@ data class PlayExecutionState(
     var actualExecution: ExecutionWithTask = ExecutionWithTask(
         Execution(
             taskId = -1,
-            routeIds = idRoute(emptyList())
+            routeIds = idRoute(emptyList()),
+            childNumber = 0
         ), Task()
     ),
     val nextTask: Task? = null

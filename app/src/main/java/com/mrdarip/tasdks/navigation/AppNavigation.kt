@@ -324,7 +324,8 @@ fun MainNavHost(navController: NavHostController) {
                 navigationArgs = Execution(
                     executionId = id ?: 0,
                     taskId = 0,
-                    routeIds = idRoute(emptyList())
+                    routeIds = idRoute(emptyList()),
+                    childNumber = 0
                 )
             )
         }
@@ -340,7 +341,8 @@ fun MainNavHost(navController: NavHostController) {
                 navigationArgs = Execution(
                     executionId = 0,
                     taskId = id ?: 0,
-                    routeIds = idRoute(emptyList())
+                    routeIds = idRoute(emptyList()),
+                    childNumber = 0
                 )
             )
         }
@@ -357,7 +359,8 @@ fun MainNavHost(navController: NavHostController) {
                     executionId = 0,
                     taskId = 0,
                     activatorId = id ?: 0,
-                    routeIds = idRoute(emptyList())
+                    routeIds = idRoute(emptyList()),
+                    childNumber = 0
                 )
             )
         }
