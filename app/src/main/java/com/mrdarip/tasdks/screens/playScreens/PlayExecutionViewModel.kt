@@ -13,6 +13,7 @@ import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
+import com.mrdarip.tasdks.data.entity.idRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -100,7 +101,12 @@ class PlayExecutionViewModel(
 
 data class PlayExecutionState(
     var topExecution: ExecutionWithTask? = null,
-    var actualExecution: ExecutionWithTask = ExecutionWithTask(Execution(taskId = -1), Task()),
+    var actualExecution: ExecutionWithTask = ExecutionWithTask(
+        Execution(
+            taskId = -1,
+            routeIds = idRoute(emptyList())
+        ), Task()
+    ),
     val nextTask: Task? = null
 )
 

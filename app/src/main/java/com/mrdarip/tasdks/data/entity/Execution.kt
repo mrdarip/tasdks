@@ -2,7 +2,6 @@ package com.mrdarip.tasdks.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
 
 
 /**
@@ -14,7 +13,6 @@ import kotlinx.serialization.Serializable
  */
 
 @Entity(tableName = "executions")
-@Serializable
 data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long = 0,
     val start: Int? = null,  //TODO: use @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
@@ -22,7 +20,8 @@ data class Execution(
     val endReason: EndReason = EndReason.RUNNING, //TODO: rename to something that doesn't imply that the execution was completed, like "runningStatus"
     val activatorId: Long? = null,
     val parentExecution: Long? = null,
-    val taskId: Long //Could be removed as it is redundant as it is obtainable from the activator
+    val taskId: Long, //Could be removed as it is redundant as it is obtainable from the activator
+    val routeIds: idRoute
 ) {
     fun isStarted(): Boolean {
         return start != null
@@ -36,7 +35,8 @@ data class Execution(
                 endReason = EndReason.UNSTARTED,
                 activatorId = activator.activatorId,
                 parentExecution = null,
-                taskId = activator.taskToActivateId
+                taskId = activator.taskToActivateId,
+                routeIds = idRoute(emptyList())
             )
         }
 
@@ -47,11 +47,16 @@ data class Execution(
                 endReason = EndReason.UNSTARTED,
                 activatorId = null,
                 parentExecution = null,
-                taskId = task.taskId
+                taskId = task.taskId,
+                routeIds = idRoute(emptyList())
             )
         }
     }
 }
+
+data class idRoute(
+    val route: List<Long>
+)
 
 /**
  * @param successfullyEnded if the execution was completed

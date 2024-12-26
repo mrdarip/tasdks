@@ -20,19 +20,7 @@ data class Activator(
     val taskToActivateId: Long,
     val createdTime: Double = System.currentTimeMillis() / 1000.0
     //Todo: add created fore one-time execution boolean
-) {
-    fun getUnstartedExecution(): Execution {
-        return Execution(
-            activatorId = this.activatorId,
-            taskId = this.taskToActivateId,
-            endReason = EndReason.UNSTARTED,
-            parentExecution = null,
-            end = null,
-            start = null
-        )
-    }
-}
-
+)
 
 enum class RepetitionUnit(val isExactDate: Boolean) {
     MINUTES(false),

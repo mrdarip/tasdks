@@ -53,6 +53,7 @@ import androidx.navigation.navArgument
 import com.mrdarip.tasdks.composables.EntitiesBackHandler
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
 import com.mrdarip.tasdks.data.entity.Execution
+import com.mrdarip.tasdks.data.entity.idRoute
 import com.mrdarip.tasdks.screens.NotFoundScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
@@ -320,7 +321,11 @@ fun MainNavHost(navController: NavHostController) {
 
             PlayExecutionScreen(
                 navController = navController,
-                navigationArgs = Execution(executionId = id ?: 0, taskId = 0)
+                navigationArgs = Execution(
+                    executionId = id ?: 0,
+                    taskId = 0,
+                    routeIds = idRoute(emptyList())
+                )
             )
         }
 
@@ -332,7 +337,11 @@ fun MainNavHost(navController: NavHostController) {
 
             PlayExecutionScreen(
                 navController = navController,
-                navigationArgs = Execution(executionId = 0, taskId = id ?: 0)
+                navigationArgs = Execution(
+                    executionId = 0,
+                    taskId = id ?: 0,
+                    routeIds = idRoute(emptyList())
+                )
             )
         }
 
@@ -344,7 +353,12 @@ fun MainNavHost(navController: NavHostController) {
 
             PlayExecutionScreen(
                 navController = navController,
-                navigationArgs = Execution(executionId = 0, taskId = 0, activatorId = id ?: 0)
+                navigationArgs = Execution(
+                    executionId = 0,
+                    taskId = 0,
+                    activatorId = id ?: 0,
+                    routeIds = idRoute(emptyList())
+                )
             )
         }
 

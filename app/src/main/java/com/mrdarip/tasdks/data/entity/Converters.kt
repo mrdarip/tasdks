@@ -23,4 +23,14 @@ class Converters {
     fun toEndReason(value: String): EndReason {
         return EndReason.valueOf(value)
     }
+
+    @TypeConverter
+    fun fromIdRoute(idRoute: idRoute): String {
+        return idRoute.route.joinToString(separator = "/")
+    }
+
+    @TypeConverter
+    fun toIdRoute(value: String): idRoute {
+        return idRoute(value.split("/").filter { it.isNotEmpty() }.map { it.toLong() })
+    }
 }
