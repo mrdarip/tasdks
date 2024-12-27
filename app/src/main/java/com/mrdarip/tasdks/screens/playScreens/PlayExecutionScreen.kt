@@ -16,6 +16,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -43,7 +46,8 @@ private fun PlayActivatorBodyContent(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (viewModel.state.actualExecution != viewModel.state.topExecution) {
+            val isSingleTask by remember { derivedStateOf { viewModel.state.actualExecution != viewModel.state.topExecution } }
+            if (isSingleTask) {
                 // Row for title
                 Row {
                     Text(viewModel.state.topExecution!!.task.name)

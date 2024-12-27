@@ -66,11 +66,10 @@ class PlayExecutionViewModel(
     }
 
     fun startActualExecution() {
-
         viewModelScope.launch(context = Dispatchers.IO) {
             val nextActualExecution = repository.startExecution(state.actualExecution)
 
-            state.actualExecution = nextActualExecution
+            state = state.copy(actualExecution = nextActualExecution)
             isStarted = true
         }
     }
@@ -81,8 +80,8 @@ class PlayExecutionViewModel(
 }
 
 data class PlayExecutionState(
-    var topExecution: ExecutionWithTask? = null,
-    var actualExecution: ExecutionWithTask = ExecutionWithTask(
+    val topExecution: ExecutionWithTask? = null,
+    val actualExecution: ExecutionWithTask = ExecutionWithTask(
         Execution(
             taskId = -1,
             routeIds = idRoute(emptyList()),
