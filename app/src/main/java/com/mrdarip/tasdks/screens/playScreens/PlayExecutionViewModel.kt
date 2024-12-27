@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
 import com.mrdarip.tasdks.data.entity.ActivatorWithTask
-import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
@@ -32,9 +31,7 @@ class PlayExecutionViewModel(
     }
 
     fun completeExecution() {
-        viewModelScope.launch(context = Dispatchers.IO) {
-            val nextExecution = repository.completeAndGetNext(state.actualExecution)
-        }
+        TODO()
     }
 
     fun setTopExecution(execution: Execution) {
@@ -69,22 +66,12 @@ class PlayExecutionViewModel(
     }
 
     fun startActualExecution() {
+
         viewModelScope.launch(context = Dispatchers.IO) {
-            state.actualExecution = state.actualExecution.copy(
-                execution = state.actualExecution.execution.copy(
-                    start = unixEpochTime(),
-                    endReason = EndReason.RUNNING
-                )
-            )
+            val nextActualExecution = repository.startExecution(state.actualExecution)
 
-            state.actualExecution = state.actualExecution.copy(
-                execution = state.actualExecution.execution.copy(
-                    executionId = repository.upsertExecution(state.actualExecution.execution)
-                )
-            )
+            state.actualExecution = nextActualExecution
             isStarted = true
-
-            repository.startExecution(state.actualExecution)
         }
     }
 

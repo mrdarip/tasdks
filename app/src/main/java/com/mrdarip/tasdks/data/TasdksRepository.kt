@@ -7,6 +7,8 @@ import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
+import com.mrdarip.tasdks.data.entity.idRoute
+import com.mrdarip.tasdks.screens.playScreens.unixEpochTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -168,27 +170,43 @@ class TasdksRepository(
         return activatorDAO.getActivatorWithTaskByActivatorId(activatorId)
     }
 
-    fun GetNext(actualExecution: ExecutionWithTask): ExecutionWithTask {
-
-
-        //return executionDAO.createNextExecutionOf(actualExecution)
-    }
-
-    fun startExecution(actualExecution: ExecutionWithTask) {
+    /**
+     * Starts the execution of the task
+     * @return the leaf ExecutionWithTask
+     */
+    fun startExecution(actualExecution: ExecutionWithTask): ExecutionWithTask {
         /*
           We are executing A task
               A
-          0/ 1| 2\     branch number, for n1:
-          O   B   O
-          |  /\   |
-          X  C X  X
+          0/ 1| 2\
+          B   O   O
+          |\  /\  |
+          C X X X X
 
          */
-        val tasksIds = taskDAO.getBranchOf(
-            taskId = actualExecution.execution.taskId,
-            branchNumber = actualExecution.execution.childNumber
+        val tasksIds = taskDAO.getBranchOfExclusive(
+            taskId = actualExecution.execution.taskId
         )
 
+        var executionLastExecution: Execution = actualExecution.execution
+        tasksIds.forEachIndexed { index, task ->
+            val executionToInsert = Execution(
+                start = unixEpochTime(),
+                end = null,
+                endReason = EndReason.RUNNING,
+                activatorId = actualExecution.execution.activatorId,
+                parentExecution = actualExecution.execution.executionId,
+                taskId = task.taskId,
+                routeIds = idRoute(
+                    route = tasksIds.subList(0, index).map { it.taskId }
+                ),
+                childNumber = 0
+            )
+            executionLastExecution = executionToInsert
+            executionDAO.upsert(executionToInsert)
+        }
+
+        return ExecutionWithTask(executionLastExecution, tasksIds.last())
     }
 
 }
