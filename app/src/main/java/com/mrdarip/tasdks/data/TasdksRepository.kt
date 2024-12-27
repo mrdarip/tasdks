@@ -176,15 +176,17 @@ class TasdksRepository(
      */
     fun startExecution(actualExecution: ExecutionWithTask): ExecutionWithTask {
         /*
-          We are executing A task
+          We are starting task A
               A
           0/ 1| 2\
           B   O   O
           |\  /\  |
           C X X X X
 
+            task A, B and C are started
+            We return C
          */
-        val tasksIds = taskDAO.getBranchOfExclusive(
+        val tasksIds = taskDAO.getBranchOfInclusive(
             taskId = actualExecution.execution.taskId
         )
 
