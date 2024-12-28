@@ -185,87 +185,31 @@ class DAOs {
 
         @Query(
             """
-    WITH RECURSIVE SubTasksChain AS (
-        -- Base case: Start with the given taskId
-        SELECT 
-            t.taskId,
-            t.name,
-            t.comment,
-            t.iconEmoji,
-            t.archived,
-            t.isFavourite,
-            t.createdTime,
-            t.waitTime,
-            t.allowParallelTasks
-        FROM tasks t
-        INNER JOIN TASKTASKCR r ON t.taskId = r.childId
-        WHERE r.parentId = :taskId AND r.position = 0
-        
-        UNION ALL
-        
-        -- Recursive case: Find the next subTask with position 0
-        SELECT 
-            t.taskId,
-            t.name,
-            t.comment,
-            t.iconEmoji,
-            t.archived,
-            t.isFavourite,
-            t.createdTime,
-            t.waitTime,
-            t.allowParallelTasks
-        FROM tasks t
-        INNER JOIN TASKTASKCR r ON t.taskId = r.childId
-        INNER JOIN SubTasksChain s ON r.parentId = s.taskId
-        WHERE r.position = 0
-    )
-    SELECT * FROM SubTasksChain
-    UNION
-    SELECT * FROM tasks WHERE taskId = :taskId
-"""
+        WITH RECURSIVE SubTasksChain AS (
+            -- Base case: Start with the given taskId
+            SELECT 
+                t.*,
+                1 AS level -- Level starts at 1 for the base case
+            FROM tasks t
+            WHERE t.taskId = :taskId -- Start directly from the given taskId
+            
+            UNION ALL
+            
+            -- Recursive case: Increment level for each subsequent subTask
+            SELECT 
+                t.*,
+                s.level + 1 AS level -- Increment the level from the previous task
+            FROM tasks t
+            INNER JOIN TaskTaskCR cr ON t.taskId = cr.childId
+            INNER JOIN SubTasksChain s ON cr.parentId = s.taskId
+            WHERE cr.position = 0
+        )
+        -- Select all results from the recursive CTE
+        SELECT * FROM SubTasksChain
+        ORDER BY level
+        """
         )
         fun getBranchOfInclusive(taskId: Long): List<Task>
-
-        @Query(
-            """
-    WITH RECURSIVE SubTasksChain AS (
-        -- Base case: Start with the given taskId
-        SELECT 
-            t.taskId,
-            t.name,
-            t.comment,
-            t.iconEmoji,
-            t.archived,
-            t.isFavourite,
-            t.createdTime,
-            t.waitTime,
-            t.allowParallelTasks
-        FROM tasks t
-        INNER JOIN TASKTASKCR r ON t.taskId = r.childId
-        WHERE r.parentId = :taskId AND r.position = 0
-        
-        UNION ALL
-        
-        -- Recursive case: Find the next subTask with position 0
-        SELECT 
-            t.taskId,
-            t.name,
-            t.comment,
-            t.iconEmoji,
-            t.archived,
-            t.isFavourite,
-            t.createdTime,
-            t.waitTime,
-            t.allowParallelTasks
-        FROM tasks t
-        INNER JOIN TASKTASKCR r ON t.taskId = r.childId
-        INNER JOIN SubTasksChain s ON r.parentId = s.taskId
-        WHERE r.position = 0
-    )
-    SELECT * FROM SubTasksChain
-"""
-        )
-        fun getBranchOfExclusive(taskId: Long): List<Task>
     }
 
     @Dao
