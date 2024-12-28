@@ -42,12 +42,14 @@ data class Execution(
             )
         }
 
-        fun of(task: Task): Execution {
+        fun of(taskWithActivator: TaskWithActivator): Execution {
+            val task = taskWithActivator.task
+            val activator = taskWithActivator.activator
             return Execution(
                 start = null,
                 end = null,
                 endReason = EndReason.UNSTARTED,
-                activatorId = null,
+                activatorId = activator?.activatorId,
                 parentExecution = null,
                 taskId = task.taskId,
                 routeIds = idRoute(emptyList()),

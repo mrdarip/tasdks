@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.data
 
+import android.util.Log
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.ActivatorWithTask
 import com.mrdarip.tasdks.data.entity.DAOs
@@ -7,7 +8,9 @@ import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
+import com.mrdarip.tasdks.data.entity.TaskWithActivator
 import com.mrdarip.tasdks.data.entity.idRoute
+import com.mrdarip.tasdks.screens.playScreens.ExecutionWithTaskAndActivator
 import com.mrdarip.tasdks.screens.playScreens.unixEpochTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -106,7 +109,7 @@ class TasdksRepository(
         taskDAO.removeSubTask(parentTaskId, position)
     }
 
-    fun getActivatorById(activatorId: Long): Activator {
+    fun getActivatorById(activatorId: Long): Activator? {
         return activatorDAO.getActivatorById(activatorId)
     }
 
@@ -142,8 +145,8 @@ class TasdksRepository(
         return executionDAO.getRunningExecutions()
     }
 
-    fun getParentExecution(currentExecution: Execution): Execution? {
-        return this.getExecutionById(currentExecution.parentExecution ?: return null)
+    private fun getParentExecution(execution: Execution): Execution? {
+        return this.getExecutionById(execution.parentExecution ?: return null)
     }
 
     fun getExecution(executionId: Long): Execution {
@@ -174,7 +177,7 @@ class TasdksRepository(
      * Starts the execution of the task
      * @return the leaf ExecutionWithTask
      */
-    fun startExecution(actualExecution: ExecutionWithTask): ExecutionWithTask {
+    fun startExecution(actualExecution: ExecutionWithTaskAndActivator): ExecutionWithTaskAndActivator {
         /*
           We are starting task A
               A
@@ -208,7 +211,58 @@ class TasdksRepository(
             executionDAO.upsert(executionToInsert)
         }
 
-        return ExecutionWithTask(executionLastExecution, tasksIds.last())
+        return ExecutionWithTaskAndActivator(
+            executionLastExecution,
+            tasksIds.last(),
+            actualExecution.activator
+        )
+    }
+
+    /**
+     * Completes the execution of the task
+     * @return the next leaf ExecutionWithTask or null if there is no next task
+     */
+    fun completeExecution(executionToComplete: ExecutionWithTaskAndActivator): ExecutionWithTaskAndActivator? {
+        val completingExecution = executionToComplete.copy(
+            execution = executionToComplete.execution.copy(
+                end = unixEpochTime(),
+                endReason = EndReason.SUCCESS
+            )
+        )
+        executionDAO.upsert(completingExecution.execution)
+
+        val execution = completingExecution.execution
+        val task = completingExecution.task
+        val activator = completingExecution.activator
+
+
+        //TODO: Use a query that gets completed parents from actual, like in startExecution but with parents instead of children
+        val parentExecution = getParentExecution(execution)
+        if (parentExecution != null) {
+            val brothers = getSubTasksOfTaskAsList(parentExecution.taskId)
+            Log.i(
+                "TasdksRepository",
+                "$execution childNumber: ${execution.childNumber} and has ${brothers.size} brothers"
+            )
+
+            //if it has next brother
+            if (execution.childNumber + 1 < brothers.size) {
+                val nextBrotherTask = brothers[execution.childNumber + 1]
+                return startExecution(
+                    ExecutionWithTaskAndActivator(
+                        Execution.of(TaskWithActivator(nextBrotherTask, activator)),
+                        nextBrotherTask,
+                        activator
+                    )
+                )
+            }
+        }
+
+        TODO()
+    }
+
+    fun getExecutionWithTaskAndActivatorByExeId(executionId: Long): ExecutionWithTaskAndActivator {
+        return executionDAO.getExecutionWithTaskAndActivatorByExeId(executionId)
     }
 
 }

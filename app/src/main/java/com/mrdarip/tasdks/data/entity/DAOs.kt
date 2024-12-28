@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import androidx.room.Upsert
+import com.mrdarip.tasdks.screens.playScreens.ExecutionWithTaskAndActivator
 import kotlinx.coroutines.flow.Flow
 
 class DAOs {
@@ -445,6 +446,9 @@ class DAOs {
 
         @Upsert
         fun upsert(execution: Execution): Long
+
+        @Query("SELECT * FROM executions WHERE executionId = :executionId")
+        fun getExecutionWithTaskAndActivatorByExeId(executionId: Long): ExecutionWithTaskAndActivator
     }
 
 
