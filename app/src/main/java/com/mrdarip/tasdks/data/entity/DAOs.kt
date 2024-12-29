@@ -400,6 +400,20 @@ class DAOs {
 
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
         fun getExecutionWithTaskAndActivatorByExeId(executionId: Long): ExecutionWithTaskAndActivator
+
+        @Query(
+            """
+        SELECT * 
+        FROM tasks
+        WHERE taskId IN (
+            SELECT childId 
+            FROM TaskTaskCR
+            WHERE parentId IN (:executions)
+        )
+        """
+        )
+        fun getTasksFromExecutionsIDs(executions: List<Long>): Flow<List<Task>>
+
     }
 
 

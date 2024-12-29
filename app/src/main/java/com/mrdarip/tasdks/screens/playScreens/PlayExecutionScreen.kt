@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
@@ -20,7 +21,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -65,9 +68,21 @@ private fun PlayActivatorBodyContent(
                 }
 
                 Icon(Icons.Default.MoreVert, contentDescription = "...")
-                IconButton(onClick = { }) {
-                    Icon(Icons.Default.ArrowDropDown, contentDescription = "view parents")
+
+
+                var viewParents by remember { mutableStateOf(false) }
+                IconButton(onClick = { viewParents = !viewParents }) {
+                    if (viewParents)
+                        Icon(Icons.Default.KeyboardArrowUp, contentDescription = "hide parents")
+                    else
+                        Icon(Icons.Default.ArrowDropDown, contentDescription = "view parents")
                 }
+                if (viewParents) {
+                    viewModel.state.actualParents.forEach {
+                        Text(it.name)
+                    }
+                }
+
                 Icon(Icons.Default.MoreVert, contentDescription = "...")
             }
 

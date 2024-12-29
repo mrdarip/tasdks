@@ -15,6 +15,7 @@ import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.data.entity.TaskWithActivator
 import com.mrdarip.tasdks.data.entity.idRoute
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class PlayExecutionViewModel(
@@ -28,6 +29,18 @@ class PlayExecutionViewModel(
 
     private val _completedExecutions = MutableLiveData<Boolean>()
     val completedExecutions: LiveData<Boolean> get() = _completedExecutions
+
+    init {
+        getActualExecutionParentTasks()
+    }
+
+    private fun getActualExecutionParentTasks() {
+        viewModelScope.launch {
+            repository.getParentTasksOfExecutionsFlow(state.actualExecution).collectLatest {
+                state = state.copy(actualParents = it)
+            }
+        }
+    }
 
 
     fun undoExecution() {
@@ -107,6 +120,8 @@ class PlayExecutionViewModel(
 
             state = state.copy(actualExecution = nextActualExecution)
             isStarted = true
+
+            getActualExecutionParentTasks()
         }
     }
 
@@ -122,6 +137,8 @@ class PlayExecutionViewModel(
             } else {
                 _completedExecutions.postValue(true)
             }
+
+            getActualExecutionParentTasks()
         }
     }
 
@@ -140,7 +157,8 @@ data class PlayExecutionState(
             childNumber = 0
         ), Task(), null
     ),
-    val nextTask: Task? = null
+    val nextTask: Task? = null,
+    val actualParents: List<Task> = emptyList()
 )
 
 fun unixEpochTime(): Int {

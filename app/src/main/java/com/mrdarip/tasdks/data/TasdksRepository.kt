@@ -316,4 +316,8 @@ class TasdksRepository(
         return executionDAO.getExecutionWithTaskAndActivatorByExeId(executionId)
     }
 
+    fun getParentTasksOfExecutionsFlow(actualExecution: ExecutionWithTaskAndActivator): Flow<List<Task>> {
+        return executionDAO.getTasksFromExecutionsIDs(actualExecution.execution.executionRoute.route)
+    }
+
 }
