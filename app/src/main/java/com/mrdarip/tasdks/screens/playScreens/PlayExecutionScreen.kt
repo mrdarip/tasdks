@@ -16,8 +16,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,10 +27,19 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Execution
+import com.mrdarip.tasdks.navigation.AppScreen
 
 @Composable
 fun PlayExecutionScreen(navigationArgs: Execution, navController: NavController) {
     val playExecutionViewModel = viewModel(modelClass = PlayExecutionViewModel::class.java)
+
+    val completedExecutions by playExecutionViewModel.completedExecutions.observeAsState(initial = false)
+    LaunchedEffect(completedExecutions) {
+        if (completedExecutions) {
+            navController.navigate(AppScreen.NotFound.route)
+        }
+    }
+
     playExecutionViewModel.setTopExecution(navigationArgs)
     PlayActivatorBodyContent(
         viewModel = playExecutionViewModel

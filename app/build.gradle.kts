@@ -67,6 +67,7 @@ dependencies {
 
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

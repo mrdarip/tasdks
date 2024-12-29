@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
@@ -23,6 +25,9 @@ class PlayExecutionViewModel(
 
     var isStarted by mutableStateOf(false)
         private set
+
+    private val _completedExecutions = MutableLiveData<Boolean>()
+    val completedExecutions: LiveData<Boolean> get() = _completedExecutions
 
 
     fun undoExecution() {
@@ -115,7 +120,7 @@ class PlayExecutionViewModel(
             if (nextActualExecution != null) {
                 state = state.copy(actualExecution = nextActualExecution)
             } else {
-                TODO("No more tasks to execute")
+                _completedExecutions.postValue(true)
             }
         }
     }
