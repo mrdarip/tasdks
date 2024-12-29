@@ -280,6 +280,8 @@ class TasdksRepository(
                 val nextBrotherTask = brothers[parentExecution.childNumber + 1]
                 Log.i("SetExecutionAsCompleted", "Next brother task: ${nextBrotherTask.name}")
 
+                executionDAO.upsert(parentExecution.copy(childNumber = parentExecution.childNumber + 1))
+
                 val returningExecution =
                     Execution.of(TaskWithActivator(nextBrotherTask, activator)).copy(
                         parentExecution = parentExecution.executionId,
@@ -295,10 +297,19 @@ class TasdksRepository(
                         activator
                     )
                 )
+            } else {
+                //complete parent
+
+                val parentExecutionToComplete = ExecutionWithTaskAndActivator(
+                    parentExecution,
+                    taskDAO.getById(parentExecution.taskId),
+                    activator
+                )
+                return completeExecution(parentExecutionToComplete)
             }
         }
 
-        TODO()
+        return null
     }
 
     fun getExecutionWithTaskAndActivatorByExeId(executionId: Long): ExecutionWithTaskAndActivator {
