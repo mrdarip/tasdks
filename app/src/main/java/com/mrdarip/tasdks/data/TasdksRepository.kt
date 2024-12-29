@@ -279,9 +279,18 @@ class TasdksRepository(
             if (parentExecution.childNumber + 1 < brothers.size) {
                 val nextBrotherTask = brothers[parentExecution.childNumber + 1]
                 Log.i("SetExecutionAsCompleted", "Next brother task: ${nextBrotherTask.name}")
+
+                val returningExecution =
+                    Execution.of(TaskWithActivator(nextBrotherTask, activator)).copy(
+                        parentExecution = parentExecution.executionId,
+                        tasksRoute = parentExecution.tasksRoute.plus(parentExecution.taskId),
+                        executionRoute = parentExecution.executionRoute.plus(parentExecution.executionId),
+                        childNumber = 0
+                    )
+
                 return startExecution(
                     ExecutionWithTaskAndActivator(
-                        Execution.of(TaskWithActivator(nextBrotherTask, activator)),
+                        returningExecution,
                         nextBrotherTask,
                         activator
                     )
