@@ -9,7 +9,6 @@ import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.data.entity.TaskWithActivator
-import com.mrdarip.tasdks.data.entity.idRoute
 import com.mrdarip.tasdks.screens.playScreens.ExecutionWithTaskAndActivator
 import com.mrdarip.tasdks.screens.playScreens.unixEpochTime
 import kotlinx.coroutines.Dispatchers
@@ -177,7 +176,7 @@ class TasdksRepository(
      * Starts the execution of the task
      * @return the leaf ExecutionWithTask
      */
-    fun startExecution(actualExecution: ExecutionWithTaskAndActivator): ExecutionWithTaskAndActivator {
+    fun startExecution(executionWithTaskAndActivator: ExecutionWithTaskAndActivator): ExecutionWithTaskAndActivator {
         /*
           We are starting task A
               A
@@ -189,32 +188,43 @@ class TasdksRepository(
             task A, B and C are started
             We return C
          */
-        val tasksIds = taskDAO.getBranchOfInclusive(
-            taskId = actualExecution.execution.taskId
+
+        val executionToStart = executionWithTaskAndActivator.copy(
+            execution = executionWithTaskAndActivator.execution.copy(
+                //we insert it in case it is a new execution
+                executionId = executionDAO.upsert(executionWithTaskAndActivator.execution)
+            )
         )
 
-        var executionLastExecution: Execution = actualExecution.execution
-        tasksIds.forEachIndexed { index, task ->
+        Log.i("StartExecution", "Starting execution: $executionToStart")
+        val taskBranch = taskDAO.getBranchOfExclusive(
+            taskId = executionToStart.execution.taskId
+        )
+        Log.i("StartExecution", "Tasks to start: $taskBranch")
+
+        var executionLastExecution: Execution = executionToStart.execution
+        taskBranch.forEachIndexed { index, task ->
             val executionToInsert = Execution(
                 start = unixEpochTime(),
                 end = null,
                 endReason = EndReason.RUNNING,
-                activatorId = actualExecution.execution.activatorId,
-                parentExecution = actualExecution.execution.executionId,
+                activatorId = executionToStart.execution.activatorId,
+                parentExecution = executionToStart.execution.parentExecution
+                    ?: executionToStart.execution.executionId,
                 taskId = task.taskId,
-                routeIds = idRoute(
-                    route = tasksIds.subList(0, index).map { it.taskId }
-                ),
+                routeIds = executionLastExecution.routeIds.plus(executionLastExecution.taskId),
                 childNumber = 0
             )
-            executionLastExecution = executionToInsert
-            executionDAO.upsert(executionToInsert)
+
+            executionLastExecution = executionToInsert.copy(
+                executionId = executionDAO.upsert(executionToInsert)
+            )
         }
 
         return ExecutionWithTaskAndActivator(
             executionLastExecution,
-            tasksIds.last(),
-            actualExecution.activator
+            taskBranch.last(),
+            executionToStart.activator
         )
     }
 
@@ -223,13 +233,19 @@ class TasdksRepository(
      * @return the next leaf ExecutionWithTask or null if there is no next task
      */
     fun completeExecution(executionToComplete: ExecutionWithTaskAndActivator): ExecutionWithTaskAndActivator? {
-        val completingExecution = executionToComplete.copy(
+        Log.i("SetExecutionAsCompleted", "Completing execution: $executionToComplete")
+        var completingExecution = executionToComplete.copy(
             execution = executionToComplete.execution.copy(
                 end = unixEpochTime(),
                 endReason = EndReason.SUCCESS
             )
         )
-        executionDAO.upsert(completingExecution.execution)
+        completingExecution = completingExecution.copy(
+            execution = completingExecution.execution.copy(
+                executionId = executionDAO.upsert(completingExecution.execution)
+            )
+        )
+        Log.i("SetExecutionAsCompleted", "Execution completed: $completingExecution")
 
         val execution = completingExecution.execution
         val task = completingExecution.task
@@ -238,6 +254,7 @@ class TasdksRepository(
 
         //TODO: Use a query that gets completed parents from actual, like in startExecution but with parents instead of children
         val parentExecution = getParentExecution(execution)
+        Log.i("SetExecutionAsCompleted", "Parent execution: $parentExecution")
         if (parentExecution != null) {
             val brothers = getSubTasksOfTaskAsList(parentExecution.taskId)
             Log.i(

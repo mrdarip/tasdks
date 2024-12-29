@@ -158,29 +158,7 @@ class DAOs {
 
         /**
          *
-         * @return a list with task(taskId) subTask at position 0, that task's subtask at position 0, and so on recursively like in WITH RECURSIVE SubTasksChain AS (
-         *     -- Base case: Start with the given taskId
-         *     SELECT
-         *         parentId AS taskId,
-         *         childId AS subTaskId,
-         *         position
-         *     FROM TASKTASKCR
-         *     WHERE parentId = 7 AND position = 0
-         *
-         *     UNION ALL
-         *
-         *     -- Recursive case: Find the next subTask with position 0
-         *     SELECT
-         *         y.parentId AS taskId,
-         *         y.childId AS subTaskId,
-         *         y.position
-         *     FROM TASKTASKCR y
-         *     INNER JOIN SubTasksChain s ON y.parentId = s.subTaskId
-         *     WHERE y.position = 0
-         * )
-         * SELECT subTaskId AS chainList FROM SubTasksChain
-         *
-         * but returning Tasks instead of taskIds
+         * @return a list with task(taskId) subTask at position 0, that task's subtask at position 0, and so on recursively
          */
 
         @Query(
@@ -210,6 +188,35 @@ class DAOs {
         """
         )
         fun getBranchOfInclusive(taskId: Long): List<Task>
+
+        @Query(
+            """
+        WITH RECURSIVE SubTasksChain AS (
+            -- Base case: Start with the children of the given taskId
+            SELECT 
+                t.*,
+                1 AS level -- Level starts at 1 for the children of the initial task
+            FROM tasks t
+            INNER JOIN TaskTaskCR cr ON t.taskId = cr.childId
+            WHERE cr.parentId = :taskId AND cr.position = 0
+            
+            UNION ALL
+            
+            -- Recursive case: Increment level for each subsequent subTask
+            SELECT 
+                t.*,
+                s.level + 1 AS level -- Increment the level from the previous task
+            FROM tasks t
+            INNER JOIN TaskTaskCR cr ON t.taskId = cr.childId
+            INNER JOIN SubTasksChain s ON cr.parentId = s.taskId
+            WHERE cr.position = 0
+        )
+        -- Select all results from the recursive CTE
+        SELECT * FROM SubTasksChain
+        ORDER BY level
+        """
+        )
+        fun getBranchOfExclusive(taskId: Long): List<Task>
     }
 
     @Dao

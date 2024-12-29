@@ -61,7 +61,11 @@ data class Execution(
 
 data class idRoute(
     val route: List<Long>
-)
+) {
+    fun plus(id: Long): idRoute {
+        return idRoute(route.plus(id))
+    }
+}
 
 /**
  * @param successfullyEnded if the execution was completed
