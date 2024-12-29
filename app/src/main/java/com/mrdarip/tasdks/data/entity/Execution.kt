@@ -21,7 +21,8 @@ data class Execution(
     val activatorId: Long? = null,
     val parentExecution: Long? = null,
     val taskId: Long, //Could be removed as it is redundant as it is obtainable from the activator
-    val routeIds: idRoute,
+    val tasksRoute: idRoute,
+    val executionRoute: idRoute,
     val childNumber: Int
 ) {
     fun isStarted(): Boolean {
@@ -37,7 +38,8 @@ data class Execution(
                 activatorId = activator.activatorId,
                 parentExecution = null,
                 taskId = activator.taskToActivateId,
-                routeIds = idRoute(emptyList()),
+                tasksRoute = idRoute(emptyList()),
+                executionRoute = idRoute(emptyList()),
                 childNumber = 0
             )
         }
@@ -52,7 +54,8 @@ data class Execution(
                 activatorId = activator?.activatorId,
                 parentExecution = null,
                 taskId = task.taskId,
-                routeIds = idRoute(emptyList()),
+                tasksRoute = idRoute(emptyList()),
+                executionRoute = idRoute(emptyList()),
                 childNumber = 0
             )
         }

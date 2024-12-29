@@ -130,7 +130,8 @@ data class PlayExecutionState(
     val actualExecution: ExecutionWithTaskAndActivator = ExecutionWithTaskAndActivator(
         Execution(
             taskId = -1,
-            routeIds = idRoute(emptyList()),
+            tasksRoute = idRoute(emptyList()),
+            executionRoute = idRoute(emptyList()),
             childNumber = 0
         ), Task(), null
     ),

@@ -145,7 +145,10 @@ class TasdksRepository(
     }
 
     private fun getParentExecution(execution: Execution): Execution? {
-        return this.getExecutionById(execution.parentExecution ?: return null)
+        Log.i("GetParentExecution", "Getting parent of: $execution")
+        if (execution.executionRoute.route.isEmpty()) return null
+        Log.i("GetParentExecution", "Getting parent for route: ${execution.executionRoute.route}")
+        return this.getExecutionById(execution.executionRoute.route.last())
     }
 
     fun getExecution(executionId: Long): Execution {
@@ -192,7 +195,12 @@ class TasdksRepository(
         val executionToStart = executionWithTaskAndActivator.copy(
             execution = executionWithTaskAndActivator.execution.copy(
                 //we insert it in case it is a new execution
-                executionId = executionDAO.upsert(executionWithTaskAndActivator.execution)
+                executionId = executionDAO.upsert(executionWithTaskAndActivator.execution),
+
+                //start the execution
+                start = unixEpochTime(),
+                end = null,
+                endReason = EndReason.RUNNING
             )
         )
 
@@ -212,7 +220,8 @@ class TasdksRepository(
                 parentExecution = executionToStart.execution.parentExecution
                     ?: executionToStart.execution.executionId,
                 taskId = task.taskId,
-                routeIds = executionLastExecution.routeIds.plus(executionLastExecution.taskId),
+                tasksRoute = executionLastExecution.tasksRoute.plus(executionLastExecution.taskId),
+                executionRoute = executionLastExecution.executionRoute.plus(executionLastExecution.executionId),
                 childNumber = 0
             )
 
@@ -221,9 +230,12 @@ class TasdksRepository(
             )
         }
 
+        val allTasks = listOf(executionWithTaskAndActivator.task).union(taskBranch)
+        Log.i("StartExecution", "returning: ${allTasks.last().name}")
+
         return ExecutionWithTaskAndActivator(
             executionLastExecution,
-            taskBranch.last(),
+            allTasks.last(),
             executionToStart.activator
         )
     }
@@ -254,17 +266,19 @@ class TasdksRepository(
 
         //TODO: Use a query that gets completed parents from actual, like in startExecution but with parents instead of children
         val parentExecution = getParentExecution(execution)
-        Log.i("SetExecutionAsCompleted", "Parent execution: $parentExecution")
+        Log.i("SetExecutionAsCompleted", "A: it has parent execution: $parentExecution")
         if (parentExecution != null) {
+
             val brothers = getSubTasksOfTaskAsList(parentExecution.taskId)
             Log.i(
                 "TasdksRepository",
-                "$execution childNumber: ${execution.childNumber} and has ${brothers.size} brothers"
+                "execution of ${task.name} has childNumber: ${execution.childNumber} and has ${brothers.size} brothers: ${brothers.map { it.name }}"
             )
 
             //if it has next brother
-            if (execution.childNumber + 1 < brothers.size) {
-                val nextBrotherTask = brothers[execution.childNumber + 1]
+            if (parentExecution.childNumber + 1 < brothers.size) {
+                val nextBrotherTask = brothers[parentExecution.childNumber + 1]
+                Log.i("SetExecutionAsCompleted", "Next brother task: ${nextBrotherTask.name}")
                 return startExecution(
                     ExecutionWithTaskAndActivator(
                         Execution.of(TaskWithActivator(nextBrotherTask, activator)),
