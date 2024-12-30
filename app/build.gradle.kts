@@ -86,8 +86,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     //icons
-    val compose_version = "1.7.6"
-    implementation("androidx.compose.material:material-icons-extended:${compose_version}")
+    implementation(libs.androidx.material.icons.extended.v176)
 
     //for dialogs
     implementation(libs.ui)
