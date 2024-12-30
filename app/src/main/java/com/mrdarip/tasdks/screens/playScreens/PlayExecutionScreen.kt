@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -68,11 +67,11 @@ private fun PlayActivatorBodyContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (viewModel.state.topExecution != null) {
-            val isSingleTask by remember { derivedStateOf { viewModel.state.actualExecution != viewModel.state.topExecution } }
-            if (isSingleTask) {
+            val actualParents by viewModel.actualParents.observeAsState(emptyList())
+            if (actualParents.size > 1) {
                 // Row for title
                 Row {
-                    Text(viewModel.state.topExecution!!.task.name)
+                    Text(actualParents.first().name)
                 }
 
                 Icon(Icons.Default.MoreVert, contentDescription = "...")
@@ -86,8 +85,7 @@ private fun PlayActivatorBodyContent(
                         Icon(Icons.Default.ArrowDropDown, contentDescription = "view parents")
                 }
                 if (viewParents) {
-                    val actualParents by viewModel.actualParents.observeAsState(emptyList())
-                    actualParents.forEach {
+                    actualParents.subList(1, actualParents.size).forEach {
                         Text(it.name)
                     }
                 }
