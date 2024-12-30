@@ -84,4 +84,8 @@ dependencies {
     implementation(libs.androidx.core.ktx.v1120)
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation(libs.androidx.room.ktx)
+
+    //icons
+    val compose_version = "1.7.6"
+    implementation("androidx.compose.material:material-icons-extended:${compose_version}")
 }

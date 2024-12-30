@@ -7,11 +7,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -74,7 +75,7 @@ private fun PlayActivatorBodyContent(
                 var viewParents by remember { mutableStateOf(false) }
                 IconButton(onClick = { viewParents = !viewParents }) {
                     if (viewParents)
-                        Icon(Icons.Default.KeyboardArrowUp, contentDescription = "hide parents")
+                        Icon(Icons.Default.ArrowDropUp, contentDescription = "hide parents")
                     else
                         Icon(Icons.Default.ArrowDropDown, contentDescription = "view parents")
                 }
@@ -117,7 +118,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
             ) {
 
                 IconButton(onClick = { viewModel.undoExecution() }) {
-                    Icon(Icons.Default.Share, contentDescription = "go back")
+                    Icon(Icons.Default.SkipPrevious, contentDescription = "undo completion")
                 }
 
 
@@ -134,7 +135,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 }
 
                 IconButton(onClick = { TODO("implement skip modal") }) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = "skip")
+                    Icon(Icons.Default.SkipNext, contentDescription = "skip")
                 }
             }
         }

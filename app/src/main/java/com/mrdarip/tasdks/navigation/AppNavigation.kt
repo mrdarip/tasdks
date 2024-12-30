@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Home
@@ -205,7 +205,7 @@ fun BottomBar(navController: NavController) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
     val items = listOf("Menu", "Search", "Stats")
-    val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.AccountCircle)
+    val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.BarChart)
     val bottomBarScreenRoutes = listOf(
         AppScreen.FirstScreen.route,
         AppScreen.SecondScreen.route,
