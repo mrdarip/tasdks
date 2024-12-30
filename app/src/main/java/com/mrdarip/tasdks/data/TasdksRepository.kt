@@ -317,6 +317,10 @@ class TasdksRepository(
     }
 
     fun getParentTasksOfExecutionsFlow(actualExecution: ExecutionWithTaskAndActivator): Flow<List<Task>> {
+        Log.i(
+            "TasdksRepository",
+            "Getting tasks for ${actualExecution.execution.executionRoute.route}"
+        )
         return executionDAO.getTasksFromExecutionsIDs(actualExecution.execution.executionRoute.route)
     }
 

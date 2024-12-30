@@ -30,6 +30,9 @@ class PlayExecutionViewModel(
     private val _completedExecutions = MutableLiveData<Boolean>()
     val completedExecutions: LiveData<Boolean> get() = _completedExecutions
 
+    private val _actualParents = MutableLiveData<List<Task>>()
+    val actualParents: LiveData<List<Task>> get() = _actualParents
+
     init {
         getActualExecutionParentTasks()
     }
@@ -37,7 +40,7 @@ class PlayExecutionViewModel(
     private fun getActualExecutionParentTasks() {
         viewModelScope.launch {
             repository.getParentTasksOfExecutionsFlow(state.actualExecution).collectLatest {
-                state = state.copy(actualParents = it)
+                _actualParents.postValue(it)
             }
         }
     }
@@ -157,8 +160,7 @@ data class PlayExecutionState(
             childNumber = 0
         ), Task(), null
     ),
-    val nextTask: Task? = null,
-    val actualParents: List<Task> = emptyList()
+    val nextTask: Task? = null
 )
 
 fun unixEpochTime(): Int {

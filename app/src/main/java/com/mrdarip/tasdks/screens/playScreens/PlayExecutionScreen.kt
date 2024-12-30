@@ -78,7 +78,8 @@ private fun PlayActivatorBodyContent(
                         Icon(Icons.Default.ArrowDropDown, contentDescription = "view parents")
                 }
                 if (viewParents) {
-                    viewModel.state.actualParents.forEach {
+                    val actualParents by viewModel.actualParents.observeAsState(emptyList())
+                    actualParents.forEach {
                         Text(it.name)
                     }
                 }

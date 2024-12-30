@@ -403,13 +403,10 @@ class DAOs {
 
         @Query(
             """
-        SELECT * 
+        SELECT tasks.* 
         FROM tasks
-        WHERE taskId IN (
-            SELECT childId 
-            FROM TaskTaskCR
-            WHERE parentId IN (:executions)
-        )
+        JOIN executions e ON tasks.taskId = e.taskId
+        WHERE e.executionId IN (:executions)
         """
         )
         fun getTasksFromExecutionsIDs(executions: List<Long>): Flow<List<Task>>
