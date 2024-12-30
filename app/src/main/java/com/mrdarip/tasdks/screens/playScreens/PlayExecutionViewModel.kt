@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
+import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.data.entity.TaskWithActivator
@@ -147,6 +148,10 @@ class PlayExecutionViewModel(
 
     private fun evaluateIsStarted() {
         isStarted = state.actualExecution.execution.isStarted()
+    }
+
+    fun skipCurrentExecution(reason: EndReason) {
+
     }
 }
 

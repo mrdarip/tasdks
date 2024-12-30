@@ -146,7 +146,10 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 }
                 if (showDialog) {
                     SkipDialog(
-                        onSkip = { },
+                        onSkip = {
+                            viewModel.skipCurrentExecution(it)
+                            showDialog = false
+                        },
                         onDismissRequest = { showDialog = false }
                     )
                 }
