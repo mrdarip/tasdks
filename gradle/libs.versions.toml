@@ -15,8 +15,11 @@ roomCommon = "2.6.1"
 navigationCompose = "2.8.5"
 roomKtx = "2.6.1"
 roomRuntime = "2.6.1"
+ui = "1.7.6"
 uiTextGoogleFonts = "1.7.2"
 runtimeLivedata = "1.7.6"
+uiToolingPreview = "1.7.6"
+uiWindow = "1.5.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +28,7 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+androidx-ui-window = { module = "androidx.compose.ui:ui-window" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -42,6 +46,9 @@ androidx-room-common = { group = "androidx.room", name = "room-common", version.
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
+ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
+ui-window = { module = "androidx.compose.ui:ui-window", version.ref = "uiWindow" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

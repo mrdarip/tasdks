@@ -88,4 +88,9 @@ dependencies {
     //icons
     val compose_version = "1.7.6"
     implementation("androidx.compose.material:material-icons-extended:${compose_version}")
+
+    //for dialogs
+    implementation(libs.ui)
+    implementation(libs.ui.tooling.preview)
+
 }

@@ -2,7 +2,10 @@ package com.mrdarip.tasdks.screens.playScreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -28,8 +31,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.navigation.AppScreen
 
@@ -134,13 +139,47 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                     Icon(icon, contentDescription = contentDescription)
                 }
 
-                IconButton(onClick = { TODO("implement skip modal") }) {
+                var showDialog by remember { mutableStateOf(false) }
+                IconButton(onClick = { showDialog = true }) {
                     Icon(Icons.Default.SkipNext, contentDescription = "skip")
+                }
+                if (showDialog) {
+                    SkipDialog(
+                        onSkip = { },
+                        onDismissRequest = { showDialog = false }
+                    )
                 }
             }
         }
         if (viewModel.state.nextTask != null) {
             Text("Next: ${viewModel.state.nextTask!!.name}")
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun SkipDialog(
+    onSkip: (EndReason) -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        Card {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                FlowRow {
+                    Text("Skip reason")
+                    EndReason.entries.forEach { reason ->
+                        IconButton(onClick = { onSkip(reason) }) {
+                            Text(reason.name)
+                        }
+                    }
+                }
+            }
         }
     }
 }
