@@ -53,13 +53,14 @@ fun PlayExecutionScreen(navigationArgs: Execution, navController: NavController)
 private fun PlayActivatorBodyContent(
     viewModel: PlayExecutionViewModel
 ) {
-    if (viewModel.state.topExecution != null) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (viewModel.state.topExecution != null) {
             val isSingleTask by remember { derivedStateOf { viewModel.state.actualExecution != viewModel.state.topExecution } }
             if (isSingleTask) {
                 // Row for title
@@ -88,10 +89,11 @@ private fun PlayActivatorBodyContent(
             }
 
             TaskPlayer(viewModel)
+        } else {
+            Text("Loading...")
         }
-    } else {
-        Text("Loading..., topExecution is null")
     }
+
 }
 
 @Composable
