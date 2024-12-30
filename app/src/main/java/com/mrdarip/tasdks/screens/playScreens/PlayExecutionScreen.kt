@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
@@ -74,7 +73,7 @@ private fun PlayActivatorBodyContent(
                     Text(actualParents.first().name)
                 }
 
-                Icon(Icons.Default.MoreVert, contentDescription = "...")
+                // TODO: Add icon for suggesting this are parent tasks
 
 
                 var viewParents by remember { mutableStateOf(false) }
@@ -90,7 +89,7 @@ private fun PlayActivatorBodyContent(
                     }
                 }
 
-                Icon(Icons.Default.MoreVert, contentDescription = "...")
+                // TODO: Add icon for suggesting this are parent tasks
             }
 
             TaskPlayer(viewModel)
