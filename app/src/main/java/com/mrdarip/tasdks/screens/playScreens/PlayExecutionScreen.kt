@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -160,7 +161,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
     }
 }
 
-@Preview()
+@Preview
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SkipDialog(
@@ -181,13 +182,28 @@ fun SkipDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    EndReason.entries.forEach { reason ->
+                    val colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    )
+
+                    val endColors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError,
+                        disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    )
+
+                    EndReason.entries.filter { !it.successfullyEnded }.forEach { reason ->
                         Button(
                             onClick = { onSkip(reason) },
                             modifier = Modifier
                                 .size(100.dp)
                                 .weight(1f),
-                            shape = MaterialTheme.shapes.medium
+                            shape = MaterialTheme.shapes.medium,
+                            colors = if (reason.killsExecution) endColors else colors
                         ) {
                             Text(reason.name.replace("_", " "))
                         }
