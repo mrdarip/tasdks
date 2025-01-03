@@ -384,16 +384,11 @@ class DAOs {
         @Query(
             """
             SELECT * FROM executions 
-            WHERE parentExecution = :executionId AND `end` IS NULL
-            UNION
-            SELECT * FROM executions 
-            WHERE executionId = :executionId AND NOT EXISTS (
-                SELECT 1 FROM executions 
-                WHERE parentExecution = :executionId AND `end` IS NULL
-            )
+            WHERE executionRoute LIKE :executionId || '%'
+            Order BY executionId desc limit 1
             """
         )
-        fun getRunningExecutionChildOf(executionId: Long): ExecutionWithTask
+        fun getRunningExecutionChildOf(executionId: Long): ExecutionWithTask //TODO: improve query's logic
 
         @Upsert
         fun upsert(execution: Execution): Long
