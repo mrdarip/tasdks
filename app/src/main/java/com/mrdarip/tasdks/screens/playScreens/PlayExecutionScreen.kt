@@ -30,8 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
+import com.mrdarip.tasdks.data.entity.ExecutionStatus
 import com.mrdarip.tasdks.navigation.AppScreen
 
 @Composable
@@ -129,7 +129,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
 
 
                 val onClickAction: () -> Unit = if (viewModel.isStarted) {
-                    { viewModel.completeExecution(EndReason.SUCCESS) }
+                    { viewModel.completeExecution(ExecutionStatus.SUCCESS) }
                 } else {
                     { viewModel.startActualExecution() }
                 }
@@ -141,7 +141,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 }
 
 
-                IconButton(onClick = { viewModel.completeExecution(EndReason.SKIPPED) }) {
+                IconButton(onClick = { viewModel.completeExecution(ExecutionStatus.SKIPPED) }) {
                     Icon(Icons.Default.SkipNext, contentDescription = "skip")
                 }
             }

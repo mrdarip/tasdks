@@ -53,7 +53,7 @@ import androidx.navigation.navArgument
 import com.mrdarip.tasdks.composables.EntitiesBackHandler
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
 import com.mrdarip.tasdks.data.entity.Execution
-import com.mrdarip.tasdks.data.entity.idRoute
+import com.mrdarip.tasdks.data.entity.IDRoute
 import com.mrdarip.tasdks.screens.NotFoundScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
@@ -324,8 +324,8 @@ fun MainNavHost(navController: NavHostController) {
                 navigationArgs = Execution(
                     executionId = id ?: 0,
                     taskId = 0,
-                    tasksRoute = idRoute(emptyList()),
-                    executionRoute = idRoute(emptyList()),
+                    tasksRoute = IDRoute(emptyList()),
+                    executionRoute = IDRoute(emptyList()),
                     childNumber = 0
                 )
             )
@@ -342,8 +342,8 @@ fun MainNavHost(navController: NavHostController) {
                 navigationArgs = Execution(
                     executionId = 0,
                     taskId = id ?: 0,
-                    tasksRoute = idRoute(emptyList()),
-                    executionRoute = idRoute(emptyList()),
+                    tasksRoute = IDRoute(emptyList()),
+                    executionRoute = IDRoute(emptyList()),
                     childNumber = 0
                 )
             )
@@ -361,8 +361,8 @@ fun MainNavHost(navController: NavHostController) {
                     executionId = 0,
                     taskId = 0,
                     activatorId = id ?: 0,
-                    tasksRoute = idRoute(emptyList()),
-                    executionRoute = idRoute(emptyList()),
+                    tasksRoute = IDRoute(emptyList()),
+                    executionRoute = IDRoute(emptyList()),
                     childNumber = 0
                 )
             )

@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 /**
  * @param start the time the execution started in seconds since epoch
  * @param end the time the execution ended in seconds since epoch
- * @param endReason the reason the execution ended
+ * @param executionStatus the reason the execution ended
  * @param activatorId activator that triggered the the root of the execution tree or null if it was a one-time execution* @param parentExecution the parent execution of the execution, null if it was the root
- * @param taskId the task that was executed
+ * @param taskId the task that was executed, or the task that started the execution, if it doesn't come from an activator
  */
 
 @Entity(tableName = "executions")
@@ -17,11 +17,11 @@ data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long = 0,
     val start: Int? = null,  //TODO: use @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
     val end: Int? = null,
-    val endReason: EndReason = EndReason.RUNNING, //TODO: rename to something that doesn't imply that the execution was completed, like "runningStatus"
+    val executionStatus: ExecutionStatus = ExecutionStatus.RUNNING,
     val activatorId: Long? = null,
-    val taskId: Long, //Could be removed as it is redundant as it is obtainable from the activator
-    val tasksRoute: idRoute,
-    val executionRoute: idRoute,
+    val taskId: Long,
+    val tasksRoute: IDRoute,
+    val executionRoute: IDRoute,
     val childNumber: Int
 ) {
     fun isStarted(): Boolean {
@@ -33,11 +33,11 @@ data class Execution(
             return Execution(
                 start = null,
                 end = null,
-                endReason = EndReason.UNSTARTED,
+                executionStatus = ExecutionStatus.UNSTARTED,
                 activatorId = activator.activatorId,
                 taskId = activator.taskToActivateId,
-                tasksRoute = idRoute(emptyList()),
-                executionRoute = idRoute(emptyList()),
+                tasksRoute = IDRoute(emptyList()),
+                executionRoute = IDRoute(emptyList()),
                 childNumber = 0
             )
         }
@@ -48,22 +48,22 @@ data class Execution(
             return Execution(
                 start = null,
                 end = null,
-                endReason = EndReason.UNSTARTED,
+                executionStatus = ExecutionStatus.UNSTARTED,
                 activatorId = activator?.activatorId,
                 taskId = task.taskId,
-                tasksRoute = idRoute(emptyList()),
-                executionRoute = idRoute(emptyList()),
+                tasksRoute = IDRoute(emptyList()),
+                executionRoute = IDRoute(emptyList()),
                 childNumber = 0
             )
         }
     }
 }
 
-data class idRoute(
+data class IDRoute(
     val route: List<Long>
 ) {
-    fun plus(id: Long): idRoute {
-        return idRoute(route.plus(id))
+    fun plus(id: Long): IDRoute {
+        return IDRoute(route.plus(id))
     }
 }
 
@@ -73,7 +73,7 @@ data class idRoute(
  * @param timeIsAccurate if the time tracking is accurate
  */
 
-enum class EndReason(
+enum class ExecutionStatus(
     val successfullyEnded: Boolean,
     val killsExecution: Boolean, // Determines if the current execution halts further executions
     val timeIsAccurate: Boolean, // Indicates if the tracked time is valid
@@ -119,7 +119,7 @@ enum class EndReason(
     UNSTARTED(false, false, false, true);
 
     companion object {
-        fun mix(old: EndReason, new: EndReason): EndReason {
+        fun mix(old: ExecutionStatus, new: ExecutionStatus): ExecutionStatus {
             if (old == new) return old
             if (old.overwritable) {
                 return new

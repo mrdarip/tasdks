@@ -245,7 +245,7 @@ class DAOs {
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
         fun getActivatorByIdAsFlow(activatorId: Long): Flow<Activator>
 
-        @Query("SELECT * FROM executions WHERE tasksRoute IS '' AND endReason = 'RUNNING'")
+        @Query("SELECT * FROM executions WHERE tasksRoute IS '' AND executionStatus = 'RUNNING'")
         fun getParentRunningExecutions(): Flow<List<Execution>>
 
         @Query(
@@ -361,9 +361,9 @@ class DAOs {
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
         fun getById(executionId: Long): Execution
 
-        @Query("UPDATE executions SET 'end' = :end, endReason = :endReason WHERE executionId = :executionId")
+        @Query("UPDATE executions SET 'end' = :end, executionStatus = :executionStatus WHERE executionId = :executionId")
         fun update(
-            executionId: Long, end: Int, endReason: EndReason
+            executionId: Long, end: Int, executionStatus: ExecutionStatus
         )
 
         @Delete

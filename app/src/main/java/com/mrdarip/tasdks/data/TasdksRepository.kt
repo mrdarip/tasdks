@@ -4,8 +4,8 @@ import android.util.Log
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.ActivatorWithTask
 import com.mrdarip.tasdks.data.entity.DAOs
-import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
+import com.mrdarip.tasdks.data.entity.ExecutionStatus
 import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.data.entity.TaskWithActivator
@@ -131,9 +131,9 @@ class TasdksRepository(
     fun updateExecution(
         executionId: Long,
         end: Int,
-        endReason: EndReason
+        executionStatus: ExecutionStatus
     ) {
-        executionDAO.update(executionId, end, endReason)
+        executionDAO.update(executionId, end, executionStatus)
     }
 
     fun insertActivator(activator: Activator): Long {
@@ -196,7 +196,7 @@ class TasdksRepository(
             execution = executionWithTaskAndActivator.execution.copy(
                 start = unixEpochTime(),
                 end = null,
-                endReason = EndReason.RUNNING
+                executionStatus = ExecutionStatus.RUNNING
             )
         )
 
@@ -208,7 +208,7 @@ class TasdksRepository(
                 //start the execution
                 start = unixEpochTime(),
                 end = null,
-                endReason = EndReason.RUNNING
+                executionStatus = ExecutionStatus.RUNNING
             )
         )
 
@@ -223,7 +223,7 @@ class TasdksRepository(
             val executionToInsert = Execution(
                 start = unixEpochTime(),
                 end = null,
-                endReason = EndReason.RUNNING,
+                executionStatus = ExecutionStatus.RUNNING,
                 activatorId = executionToStart.execution.activatorId,
                 taskId = task.taskId,
                 tasksRoute = executionLastExecution.tasksRoute.plus(executionLastExecution.taskId),
@@ -252,14 +252,14 @@ class TasdksRepository(
      */
     fun completeExecution(
         executionToComplete: ExecutionWithTaskAndActivator,
-        reason: EndReason
+        reason: ExecutionStatus
     ): ExecutionWithTaskAndActivator? {
         Log.i("SetExecutionAsCompleted", "Completing execution: $executionToComplete")
         var completingExecution = executionToComplete.copy(
             execution = executionToComplete.execution.copy(
                 end = unixEpochTime(),
-                endReason = EndReason.mix(
-                    executionToComplete.execution.endReason,
+                executionStatus = ExecutionStatus.mix(
+                    executionToComplete.execution.executionStatus,
                     reason
                 )
             )

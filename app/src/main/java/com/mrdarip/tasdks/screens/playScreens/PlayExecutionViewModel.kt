@@ -10,11 +10,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
-import com.mrdarip.tasdks.data.entity.EndReason
 import com.mrdarip.tasdks.data.entity.Execution
+import com.mrdarip.tasdks.data.entity.ExecutionStatus
+import com.mrdarip.tasdks.data.entity.IDRoute
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.data.entity.TaskWithActivator
-import com.mrdarip.tasdks.data.entity.idRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -130,7 +130,7 @@ class PlayExecutionViewModel(
     }
 
 
-    fun completeExecution(reason: EndReason) {
+    fun completeExecution(reason: ExecutionStatus) {
         viewModelScope.launch(context = Dispatchers.IO) {
             val nextActualExecution = repository.completeExecution(
                 state.actualExecution, reason
@@ -156,8 +156,8 @@ data class PlayExecutionState(
     val actualExecution: ExecutionWithTaskAndActivator = ExecutionWithTaskAndActivator(
         Execution(
             taskId = -1,
-            tasksRoute = idRoute(emptyList()),
-            executionRoute = idRoute(emptyList()),
+            tasksRoute = IDRoute(emptyList()),
+            executionRoute = IDRoute(emptyList()),
             childNumber = 0
         ), Task(), null
     ),
