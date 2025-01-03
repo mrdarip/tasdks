@@ -385,8 +385,11 @@ class DAOs {
         @Query(
             """
             SELECT * FROM executions 
-            WHERE executionRoute LIKE :executionId || '%'
-            Order BY executionId desc limit 1
+            WHERE executionRoute LIKE :executionId || '%' 
+            UNION 
+            SELECT * FROM executions WHERE executionId = :executionId 
+            ORDER BY executionId DESC 
+            LIMIT 1
             """
         )
         fun getRunningExecutionChildOf(executionId: Long): ExecutionWithTask //TODO: improve query's logic

@@ -45,7 +45,9 @@ fun PlayExecutionScreen(navigationArgs: Execution, navController: NavController)
         }
     }
 
-    playExecutionViewModel.setTopExecution(navigationArgs)
+    LaunchedEffect(key1 = navigationArgs) {
+        playExecutionViewModel.setTopExecution(navigationArgs)
+    }
     PlayActivatorBodyContent(
         viewModel = playExecutionViewModel
     )

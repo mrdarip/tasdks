@@ -38,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
@@ -134,16 +133,8 @@ fun TasksCardRow(
                     task = task,
                     onClick = {
                         mainMenuViewModel.viewModelScope.launch(Dispatchers.IO) {
-                            val activatorId = mainMenuViewModel.insertActivator(
-                                Activator(
-                                    comment = "created for one time execution",
-                                    taskToActivateId = task.taskId,
-                                    endAfterRepetitions = 1
-                                ) //TODO: check RepetitionRange for one time repetition
-                            )
-
                             withContext(Dispatchers.Main) {
-                                navController.navigate("${AppScreen.PlayExecution.route}/activator/$activatorId")
+                                navController.navigate("${AppScreen.PlayExecution.route}/task/${task.taskId}")
                             }
                         }
                     }

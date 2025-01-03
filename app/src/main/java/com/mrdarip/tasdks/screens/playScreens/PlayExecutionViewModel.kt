@@ -52,70 +52,69 @@ class PlayExecutionViewModel(
     }
 
     fun setTopExecution(execution: Execution) {
-        if (state.topExecution == null) {
-            viewModelScope.launch(context = Dispatchers.IO) {
-                val topExecution: ExecutionWithTaskAndActivator
-                val actualExecution: ExecutionWithTaskAndActivator
+        viewModelScope.launch(context = Dispatchers.IO) {
+            val topExecution: ExecutionWithTaskAndActivator
+            val actualExecution: ExecutionWithTaskAndActivator
 
-                if (execution.executionId != 0L) {
+            if (execution.executionId != 0L) {
+                Log.i(
+                    "PlayExecutionViewModel",
+                    "Executing with ExecutionId: ${execution.executionId}"
+                )
+
+                topExecution =
+                    repository.getExecutionWithTaskAndActivatorByExeId(execution.executionId)
+
+                val actualExecutionWithTask =
+                    repository.getRunningExecutionChildOf(execution.executionId)
+
+                actualExecution = ExecutionWithTaskAndActivator(
+                    actualExecutionWithTask.execution,
+                    actualExecutionWithTask.task,
+                    topExecution.activator
+                )
+            } else {
+                if (execution.activatorId != null) {
                     Log.i(
                         "PlayExecutionViewModel",
-                        "Executing with ExecutionId: ${execution.executionId}"
+                        "Executing with ActivatorId: ${execution.activatorId}"
                     )
 
-                    topExecution =
-                        repository.getExecutionWithTaskAndActivatorByExeId(execution.executionId)
+                    val activatorWithTask =
+                        repository.getActivatorWithTaskByActivatorId(execution.activatorId)
+                    val task = activatorWithTask.task
+                    val activator = activatorWithTask.activator
 
-                    val actualExecutionWithTask =
-                        repository.getRunningExecutionChildOf(execution.executionId)
-                    actualExecution = ExecutionWithTaskAndActivator(
-                        actualExecutionWithTask.execution,
-                        actualExecutionWithTask.task,
-                        topExecution.activator
+                    val newExecution = Execution.of(TaskWithActivator(task, activator))
+
+                    topExecution = ExecutionWithTaskAndActivator(
+                        newExecution,
+                        task,
+                        activator
                     )
-
                 } else {
-                    if (execution.activatorId != null) {
-                        Log.i(
-                            "PlayExecutionViewModel",
-                            "Executing with ActivatorId: ${execution.activatorId}"
-                        )
+                    Log.i(
+                        "PlayExecutionViewModel",
+                        "Executing with TaskId: ${execution.taskId}"
+                    )
 
-                        val activatorWithTask =
-                            repository.getActivatorWithTaskByActivatorId(execution.activatorId)
-                        val task = activatorWithTask.task
-                        val activator = activatorWithTask.activator
+                    val task = repository.getTaskById(execution.taskId)
+                    val activator = null
+                    val newExecution = Execution.of(TaskWithActivator(task, activator))
 
-                        val newExecution = Execution.of(TaskWithActivator(task, activator))
-
-                        topExecution = ExecutionWithTaskAndActivator(
-                            newExecution,
-                            task,
-                            activator
-                        )
-                    } else {
-                        Log.i(
-                            "PlayExecutionViewModel",
-                            "Executing with TaskId: ${execution.taskId}"
-                        )
-
-                        val task = repository.getTaskById(execution.taskId)
-                        val activator = null
-                        val newExecution = Execution.of(TaskWithActivator(task, activator))
-
-                        topExecution = ExecutionWithTaskAndActivator(
-                            newExecution,
-                            task,
-                            activator
-                        )
-                    }
-                    actualExecution = topExecution
+                    topExecution = ExecutionWithTaskAndActivator(
+                        newExecution,
+                        task,
+                        activator
+                    )
                 }
-
-                state = state.copy(topExecution = topExecution, actualExecution = actualExecution)
-                evaluateIsStarted()
+                actualExecution = topExecution
             }
+
+            state = state.copy(topExecution = topExecution, actualExecution = actualExecution)
+            evaluateIsStarted()
         }
+
     }
 
     fun startActualExecution() {
