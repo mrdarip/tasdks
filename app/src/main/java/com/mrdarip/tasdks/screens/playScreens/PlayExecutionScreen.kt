@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -158,20 +160,21 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
     }
 }
 
+@Preview()
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SkipDialog(
-    onSkip: (EndReason) -> Unit,
-    onDismissRequest: () -> Unit,
+    onSkip: (EndReason) -> Unit = {},
+    onDismissRequest: () -> Unit = {},
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card {
             Column(
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(16.dp)
             ) {
-                Text("Skip reason", style = MaterialTheme.typography.displaySmall)
+                Text("Skip reason", style = MaterialTheme.typography.titleMedium)
 
                 FlowRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -179,8 +182,14 @@ fun SkipDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     EndReason.entries.forEach { reason ->
-                        Button(onClick = { onSkip(reason) }) {
-                            Text(reason.name)
+                        Button(
+                            onClick = { onSkip(reason) },
+                            modifier = Modifier
+                                .size(100.dp)
+                                .weight(1f),
+                            shape = MaterialTheme.shapes.medium
+                        ) {
+                            Text(reason.name.replace("_", " "))
                         }
                     }
                 }
