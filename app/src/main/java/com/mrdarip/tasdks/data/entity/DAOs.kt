@@ -245,7 +245,7 @@ class DAOs {
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
         fun getActivatorByIdAsFlow(activatorId: Long): Flow<Activator>
 
-        @Query("SELECT * FROM executions WHERE parentExecution IS NULL AND endReason = 'RUNNING'")
+        @Query("SELECT * FROM executions WHERE tasksRoute IS '' AND endReason = 'RUNNING'")
         fun getParentRunningExecutions(): Flow<List<Execution>>
 
         @Query(
