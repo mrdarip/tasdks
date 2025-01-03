@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.screens.playScreens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -125,7 +127,15 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                IconButton(onClick = { viewModel.undoExecution() }) {
+                val context = LocalContext.current
+                IconButton(onClick = {
+                    Toast.makeText(
+                        context,
+                        "Undo is not implemented yet",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }) {
                     Icon(Icons.Default.SkipPrevious, contentDescription = "undo completion")
                 }
 
