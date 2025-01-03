@@ -244,12 +244,18 @@ class TasdksRepository(
      * Completes the execution of the task
      * @return the next leaf ExecutionWithTask or null if there is no next task
      */
-    fun completeExecution(executionToComplete: ExecutionWithTaskAndActivator): ExecutionWithTaskAndActivator? {
+    fun completeExecution(
+        executionToComplete: ExecutionWithTaskAndActivator,
+        reason: EndReason
+    ): ExecutionWithTaskAndActivator? {
         Log.i("SetExecutionAsCompleted", "Completing execution: $executionToComplete")
         var completingExecution = executionToComplete.copy(
             execution = executionToComplete.execution.copy(
                 end = unixEpochTime(),
-                endReason = EndReason.SUCCESS
+                endReason = EndReason.mix(
+                    executionToComplete.execution.endReason,
+                    reason
+                )
             )
         )
         completingExecution = completingExecution.copy(
@@ -305,7 +311,7 @@ class TasdksRepository(
                     taskDAO.getById(parentExecution.taskId),
                     activator
                 )
-                return completeExecution(parentExecutionToComplete)
+                return completeExecution(parentExecutionToComplete, reason)
             }
         }
 

@@ -130,10 +130,10 @@ class PlayExecutionViewModel(
     }
 
 
-    fun completeExecution() {
+    fun completeExecution(reason: EndReason) {
         viewModelScope.launch(context = Dispatchers.IO) {
             val nextActualExecution = repository.completeExecution(
-                state.actualExecution
+                state.actualExecution, reason
             )
 
             if (nextActualExecution != null) {
@@ -148,10 +148,6 @@ class PlayExecutionViewModel(
 
     private fun evaluateIsStarted() {
         isStarted = state.actualExecution.execution.isStarted()
-    }
-
-    fun skipCurrentExecution(reason: EndReason) {
-
     }
 }
 

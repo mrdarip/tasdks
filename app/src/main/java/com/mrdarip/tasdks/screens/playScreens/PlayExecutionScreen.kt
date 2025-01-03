@@ -126,7 +126,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
 
 
                 val onClickAction: () -> Unit = if (viewModel.isStarted) {
-                    { viewModel.completeExecution() }
+                    { viewModel.completeExecution(EndReason.SUCCESS) }
                 } else {
                     { viewModel.startActualExecution() }
                 }
@@ -144,7 +144,7 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 if (showDialog) {
                     SkipDialog(
                         onSkip = {
-                            viewModel.skipCurrentExecution(it)
+                            viewModel.completeExecution(it)
                             showDialog = false
                         },
                         onDismissRequest = { showDialog = false }

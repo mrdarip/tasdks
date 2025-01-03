@@ -79,45 +79,60 @@ data class idRoute(
 enum class EndReason(
     val successfullyEnded: Boolean,
     val killsExecution: Boolean, // Determines if the current execution halts further executions
-    val timeIsAccurate: Boolean  // Indicates if the tracked time is valid
+    val timeIsAccurate: Boolean, // Indicates if the tracked time is valid
+    val overwritable: Boolean // Indicates if the end reason can be overwritten with a new reason or should be converted to a mixed reasons reason
 ) {
     /** Execution completed successfully and time tracking is accurate */
-    SUCCESS(true, false, true),
+    SUCCESS(true, false, true, true),
 
     /** Execution ran out of time due to external deadlines; execution terminated */
-    TIME_EXPIRED(false, true, false),
+    TIME_EXPIRED(false, true, false, false),
 
     /** Execution was completed, but user forgot to stop it, time may be inaccurate */
-    COMPLETED_WITH_FORGOTTEN_STOP(true, false, false),
+    COMPLETED_WITH_FORGOTTEN_STOP(true, false, false, false),
 
     /** Execution not stopped by user, causing unintended continuation; execution terminated */
-    FORGOTTEN_STOP_INTERRUPTS(false, true, false),
+    FORGOTTEN_STOP_INTERRUPTS(false, true, false, false),
 
     /** Execution completed, but was not tracked */
-    UNTRACKED_COMPLETION(true, false, false),
+    UNTRACKED_COMPLETION(true, false, false, false),
 
     /** Execution not completed due to external circumstances; execution terminated */
-    INCOMPLETE_DUE_TO_EXTERNAL_CAUSES(false, true, false),
+    INCOMPLETE_DUE_TO_EXTERNAL_CAUSES(false, true, false, false),
 
     /** Execution terminated by user changing their mind */
-    USER_ABORTED(false, true, false),
+    USER_ABORTED(false, true, false, false),
 
     /** Execution skipped by user’s choice; valid as completed */
-    SKIPPED(true, false, true),
+    SKIPPED(true, false, true, false),
 
     /** Execution skipped due to lack of time; does not halt further executions */
-    SKIPPED_DUE_TO_TIME(false, false, false),
+    SKIPPED_DUE_TO_TIME(false, false, false, false),
 
     /** Execution terminated due to mixed unsuccessful reasons */
-    UNSUCCESSFUL_MIXED_REASONS(false, true, false),
+    UNSUCCESSFUL_MIXED_REASONS(false, true, false, false),
 
     /** Execution completed successfully despite mixed reasons; time may be inaccurate */
-    SUCCESSFUL_MIXED_REASONS(true, false, false),
+    SUCCESSFUL_MIXED_REASONS(true, false, false, false),
 
     /** Execution is running */
-    RUNNING(false, false, true),
+    RUNNING(false, false, true, true),
 
     /** Execution was created but never started */
-    UNSTARTED(false, false, false)
-}
+    UNSTARTED(false, false, false, true);
 
+    companion object {
+        fun mix(old: EndReason, new: EndReason): EndReason {
+            if (old == new) return old
+            if (old.overwritable) {
+                return new
+            } else {
+                if (old.successfullyEnded && new.successfullyEnded) {
+                    return SUCCESSFUL_MIXED_REASONS
+                } else {
+                    return UNSUCCESSFUL_MIXED_REASONS
+                }
+            }
+        }
+    }
+}
