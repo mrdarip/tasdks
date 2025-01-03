@@ -375,7 +375,8 @@ class DAOs {
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
         fun getExecutionById(executionId: Long): Execution
 
-        @Query("SELECT * FROM executions WHERE parentExecution IS NULL AND `end` IS NULL")
+        //TODO: getRunningExecutions is very similar to activatorDAO.getParentRunningExecutions, maybe they could be merged
+        @Query("SELECT * FROM executions WHERE tasksRoute IS '' AND `end` IS NULL")
         fun getRunningExecutions(): Flow<List<Execution>>
 
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
