@@ -2,12 +2,9 @@ package com.mrdarip.tasdks.screens.playScreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -15,12 +12,9 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,9 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.EndReason
@@ -140,76 +132,14 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                     Icon(icon, contentDescription = contentDescription)
                 }
 
-                var showDialog by remember { mutableStateOf(false) }
-                IconButton(onClick = { showDialog = true }) {
+
+                IconButton(onClick = { viewModel.completeExecution(EndReason.SKIPPED) }) {
                     Icon(Icons.Default.SkipNext, contentDescription = "skip")
-                }
-                if (showDialog) {
-                    SkipDialog(
-                        onSkip = {
-                            viewModel.completeExecution(it)
-                            showDialog = false
-                        },
-                        onDismissRequest = { showDialog = false }
-                    )
                 }
             }
         }
         if (viewModel.state.nextTask != null) {
             Text("Next: ${viewModel.state.nextTask!!.name}")
-        }
-    }
-}
-
-@Preview
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun SkipDialog(
-    onSkip: (EndReason) -> Unit = {},
-    onDismissRequest: () -> Unit = {},
-) {
-    Dialog(onDismissRequest = { onDismissRequest() }) {
-        Card {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text("Skip reason", style = MaterialTheme.typography.titleMedium)
-
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    val colors = ButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-                        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                    )
-
-                    val endColors = ButtonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError,
-                        disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-                        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                    )
-
-                    EndReason.entries.filter { !it.successfullyEnded }.forEach { reason ->
-                        Button(
-                            onClick = { onSkip(reason) },
-                            modifier = Modifier
-                                .size(100.dp)
-                                .weight(1f),
-                            shape = MaterialTheme.shapes.medium,
-                            colors = if (reason.killsExecution) endColors else colors
-                        ) {
-                            Text(reason.name.replace("_", " "))
-                        }
-                    }
-                }
-            }
         }
     }
 }
