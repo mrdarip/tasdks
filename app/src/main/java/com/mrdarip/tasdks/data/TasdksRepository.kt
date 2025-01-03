@@ -192,10 +192,18 @@ class TasdksRepository(
             We return C
          */
 
-        val executionToStart = executionWithTaskAndActivator.copy(
+        val startedExecution = executionWithTaskAndActivator.copy(
             execution = executionWithTaskAndActivator.execution.copy(
+                start = unixEpochTime(),
+                end = null,
+                endReason = EndReason.RUNNING
+            )
+        )
+
+        val executionToStart = startedExecution.copy(
+            execution = startedExecution.execution.copy(
                 //we insert it in case it is a new execution
-                executionId = executionDAO.upsert(executionWithTaskAndActivator.execution),
+                executionId = executionDAO.upsert(startedExecution.execution),
 
                 //start the execution
                 start = unixEpochTime(),
@@ -230,7 +238,7 @@ class TasdksRepository(
             )
         }
 
-        val allTasks = listOf(executionWithTaskAndActivator.task).union(taskBranch)
+        val allTasks = listOf(startedExecution.task).union(taskBranch)
         Log.i("StartExecution", "returning: ${allTasks.last().name}")
 
         return ExecutionWithTaskAndActivator(
