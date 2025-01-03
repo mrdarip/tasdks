@@ -127,18 +127,20 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                val context = LocalContext.current
-                IconButton(onClick = {
-                    Toast.makeText(
-                        context,
-                        "Undo is not implemented yet",
-                        Toast.LENGTH_SHORT
-                    ).show()
 
-                }) {
-                    Icon(Icons.Default.SkipPrevious, contentDescription = "undo completion")
+                if (viewModel.isStarted) {
+                    val context = LocalContext.current
+                    IconButton(onClick = {
+                        Toast.makeText(
+                            context,
+                            "Undo is not implemented yet",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    }) {
+                        Icon(Icons.Default.SkipPrevious, contentDescription = "undo completion")
+                    }
                 }
-
 
                 val onClickAction: () -> Unit = if (viewModel.isStarted) {
                     { viewModel.completeExecution(ExecutionStatus.SUCCESS) }
@@ -152,9 +154,10 @@ private fun TaskPlayer(viewModel: PlayExecutionViewModel) {
                     Icon(icon, contentDescription = contentDescription)
                 }
 
-
-                IconButton(onClick = { viewModel.completeExecution(ExecutionStatus.SKIPPED) }) {
-                    Icon(Icons.Default.SkipNext, contentDescription = "skip")
+                if (viewModel.isStarted) {
+                    IconButton(onClick = { viewModel.completeExecution(ExecutionStatus.SKIPPED) }) {
+                        Icon(Icons.Default.SkipNext, contentDescription = "skip")
+                    }
                 }
             }
         }
