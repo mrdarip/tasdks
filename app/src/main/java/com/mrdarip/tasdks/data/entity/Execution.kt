@@ -19,7 +19,6 @@ data class Execution(
     val end: Int? = null,
     val endReason: EndReason = EndReason.RUNNING, //TODO: rename to something that doesn't imply that the execution was completed, like "runningStatus"
     val activatorId: Long? = null,
-    val parentExecution: Long? = null,
     val taskId: Long, //Could be removed as it is redundant as it is obtainable from the activator
     val tasksRoute: idRoute,
     val executionRoute: idRoute,
@@ -36,7 +35,6 @@ data class Execution(
                 end = null,
                 endReason = EndReason.UNSTARTED,
                 activatorId = activator.activatorId,
-                parentExecution = null,
                 taskId = activator.taskToActivateId,
                 tasksRoute = idRoute(emptyList()),
                 executionRoute = idRoute(emptyList()),
@@ -52,7 +50,6 @@ data class Execution(
                 end = null,
                 endReason = EndReason.UNSTARTED,
                 activatorId = activator?.activatorId,
-                parentExecution = null,
                 taskId = task.taskId,
                 tasksRoute = idRoute(emptyList()),
                 executionRoute = idRoute(emptyList()),

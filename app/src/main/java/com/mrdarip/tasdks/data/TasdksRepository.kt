@@ -225,8 +225,6 @@ class TasdksRepository(
                 end = null,
                 endReason = EndReason.RUNNING,
                 activatorId = executionToStart.execution.activatorId,
-                parentExecution = executionToStart.execution.parentExecution
-                    ?: executionToStart.execution.executionId,
                 taskId = task.taskId,
                 tasksRoute = executionLastExecution.tasksRoute.plus(executionLastExecution.taskId),
                 executionRoute = executionLastExecution.executionRoute.plus(executionLastExecution.executionId),
@@ -298,7 +296,6 @@ class TasdksRepository(
 
                 val returningExecution =
                     Execution.of(TaskWithActivator(nextBrotherTask, activator)).copy(
-                        parentExecution = parentExecution.executionId,
                         tasksRoute = parentExecution.tasksRoute.plus(parentExecution.taskId),
                         executionRoute = parentExecution.executionRoute.plus(parentExecution.executionId),
                         childNumber = 0
