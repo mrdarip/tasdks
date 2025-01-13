@@ -36,13 +36,13 @@ data class RepetitionRange(
     //from-to activators: null
 
     val start: Long = 0, //In seconds since epoch
-    //min-max activators: min
-    //from-to activators: from
-    val end: Int = 0,
-    //min-max activators: max
-    //from-to activators: to
+    //min-max activators: min repetitionUnits to wait to be done
+    //from-to activators: from (date epoch in milliseconds)
+    val end: Long = 0,
+    //min-max activators: max repetitionUnits to wait to be overdue
+    //from-to activators: to (date epoch in milliseconds)
 
-    val repeatsEvery: Int = 1, //how often does it repeat, mustn't be <= 0
+    val repeatsEvery: Int = 1, //todo: remove
     //min-max activators: null
     //from-to activators:
     val repetitionUnit: RepetitionUnit = RepetitionUnit.DAYS
