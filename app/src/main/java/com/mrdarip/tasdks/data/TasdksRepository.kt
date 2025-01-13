@@ -10,12 +10,12 @@ import com.mrdarip.tasdks.data.entity.ExecutionWithTask
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.data.entity.TaskWithActivator
 import com.mrdarip.tasdks.screens.playScreens.ExecutionWithTaskAndActivator
-import com.mrdarip.tasdks.screens.playScreens.unixEpochTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
+import java.time.Instant
 
 class TasdksRepository(
     private val taskDAO: DAOs.TaskDAO,
@@ -194,7 +194,7 @@ class TasdksRepository(
 
         val startedExecution = executionWithTaskAndActivator.copy(
             execution = executionWithTaskAndActivator.execution.copy(
-                start = unixEpochTime(),
+                start = Instant.now(),
                 end = null,
                 executionStatus = ExecutionStatus.RUNNING
             )
@@ -206,7 +206,7 @@ class TasdksRepository(
                 executionId = executionDAO.upsert(startedExecution.execution),
 
                 //start the execution
-                start = unixEpochTime(),
+                start = Instant.now(),
                 end = null,
                 executionStatus = ExecutionStatus.RUNNING
             )
@@ -221,7 +221,7 @@ class TasdksRepository(
         var executionLastExecution: Execution = executionToStart.execution
         taskBranch.forEachIndexed { index, task ->
             val executionToInsert = Execution(
-                start = unixEpochTime(),
+                start = Instant.now(),
                 end = null,
                 executionStatus = ExecutionStatus.RUNNING,
                 activatorId = executionToStart.execution.activatorId,
@@ -257,7 +257,7 @@ class TasdksRepository(
         Log.i("SetExecutionAsCompleted", "Completing execution: $executionToComplete")
         var completingExecution = executionToComplete.copy(
             execution = executionToComplete.execution.copy(
-                end = unixEpochTime(),
+                end = Instant.now(),
                 executionStatus = ExecutionStatus.mix(
                     executionToComplete.execution.executionStatus,
                     reason

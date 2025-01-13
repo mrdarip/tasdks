@@ -49,6 +49,7 @@ import com.mrdarip.tasdks.composables.SelectableGridTask
 import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.RepetitionUnit
 import com.mrdarip.tasdks.data.entity.Task
+import java.time.Instant
 import java.util.Date
 
 @Composable
@@ -221,8 +222,17 @@ private fun EndAfterFactorInput(
     ) {
         Text(text = "Kill after date")
         DateInput(
-            date = activator.endAfterDate ?: -1,
-            onDateChanged = { onActivatorChanged(activator.copy(endAfterDate = if (it < 0) null else it)) })
+            date = activator.endAfterDate ?: Instant.MIN,
+            onDateChanged = {
+                onActivatorChanged(
+                    activator.copy(
+                        endAfterDate = if (it.isBefore(
+                                Instant.EPOCH
+                            )
+                        ) null else it
+                    )
+                )
+            })
     }
 }
 
@@ -250,8 +260,8 @@ private fun StartDateInput(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun DateInput(
-    date: Int,
-    onDateChanged: (Int) -> Unit
+    date: Instant,
+    onDateChanged: (Instant) -> Unit
 ) {
     val openDialog = remember { mutableStateOf(false) }
 
@@ -259,17 +269,17 @@ private fun DateInput(
         onClick = { openDialog.value = true }
     ) {
         Text(
-            text = if (date <= 0) "Select Date"
+            text = if (date.isBefore(Instant.EPOCH)) "Select Date"
             else DateFormat.format(
                 "dd/MM/yyyy",
-                Date(date.toLong() * 1000)
+                Date(date.epochSecond)
             ).toString()
         )
     }
 
     if (openDialog.value) {
         val datePickerState =
-            rememberDatePickerState(if (date <= 0) null else date * 1000L)
+            rememberDatePickerState(if (date.isBefore(Instant.EPOCH)) null else date.epochSecond)
         val confirmEnabled = remember {
             derivedStateOf { datePickerState.selectedDateMillis != null }
         }
@@ -282,7 +292,7 @@ private fun DateInput(
                     onClick = {
                         openDialog.value = false
                         onDateChanged(
-                            (datePickerState.selectedDateMillis!! / 1000).toInt()
+                            Instant.ofEpochSecond(datePickerState.selectedDateMillis ?: 0)
                         )
                     },
                     enabled = confirmEnabled.value
@@ -319,22 +329,22 @@ private fun RepetitionsRangeInput(
         ) {
             if (activator.repetitionRange.repetitionUnit.isExactDate) {
                 DateInput(
-                    date = activator.repetitionRange.start,
+                    date = Instant.ofEpochSecond(activator.repetitionRange.start),
                     onDateChanged = {
                         onActivatorChanged(
                             activator.copy(
-                                repetitionRange = activator.repetitionRange.copy(start = it)
+                                repetitionRange = activator.repetitionRange.copy(start = it.epochSecond)
                             )
                         )
                     })
             } else {
                 NumberInput(
-                    value = activator.repetitionRange.start,
+                    value = activator.repetitionRange.start.toInt(),
                     onValidValueChange = {
                         onActivatorChanged(
                             activator.copy(
                                 repetitionRange = activator.repetitionRange.copy(
-                                    start = it
+                                    start = it.toLong()
                                 )
                             )
                         )
@@ -347,11 +357,11 @@ private fun RepetitionsRangeInput(
 
             if (activator.repetitionRange.repetitionUnit.isExactDate) {
                 DateInput(
-                    date = activator.repetitionRange.end,
+                    date = Instant.ofEpochSecond(activator.repetitionRange.end.toLong()),
                     onDateChanged = {
                         onActivatorChanged(
                             activator.copy(
-                                repetitionRange = activator.repetitionRange.copy(end = it)
+                                repetitionRange = activator.repetitionRange.copy(end = it.epochSecond.toInt())
                             )
                         )
                     })

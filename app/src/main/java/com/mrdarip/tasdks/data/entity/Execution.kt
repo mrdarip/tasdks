@@ -2,6 +2,7 @@ package com.mrdarip.tasdks.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.Instant
 
 
 /**
@@ -15,8 +16,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "executions")
 data class Execution(
     @PrimaryKey(autoGenerate = true) val executionId: Long = 0,
-    val start: Int? = null,  //TODO: use @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
-    val end: Int? = null,
+    val start: Instant? = null,  //TODO: use @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
+    val end: Instant? = null,
     val executionStatus: ExecutionStatus = ExecutionStatus.RUNNING,
     val activatorId: Long? = null,
     val taskId: Long,

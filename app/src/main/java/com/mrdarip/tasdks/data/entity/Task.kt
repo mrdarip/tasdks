@@ -2,7 +2,7 @@ package com.mrdarip.tasdks.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
+import java.time.Instant
 
 /**
  * @param name the name of the task
@@ -14,7 +14,6 @@ import kotlinx.serialization.Serializable
  * @param allowParallelTasks if the task allows parallel tasks
  */
 @Entity(tableName = "tasks")
-@Serializable
 data class Task(
     @PrimaryKey(autoGenerate = true) val taskId: Long = 0,
     var name: String = "",
@@ -22,8 +21,8 @@ data class Task(
     val iconEmoji: String? = null,
     val archived: Boolean = false,
     val isFavourite: Boolean = false,
-    val createdTime: Double = System.currentTimeMillis() / 1000.0,
+    val createdTime: Instant = Instant.now(),
     val waitTime: Int = 0, //In seconds //for tasks that need waiting until you can do the next task
-    val allowParallelTasks: Boolean = false, //for tasks that can be done at the same time as other tasks
+    val allowParallelTasks: Boolean = false, //TODO: remove
 )
 

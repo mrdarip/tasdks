@@ -1,6 +1,7 @@
 package com.mrdarip.tasdks.data.entity
 
 import androidx.room.TypeConverter
+import java.time.Instant
 import java.util.Date
 
 class Converters {
@@ -32,5 +33,15 @@ class Converters {
     @TypeConverter
     fun toIdRoute(value: String): IDRoute {
         return IDRoute(value.split("/").filter { it.isNotEmpty() }.map { it.toLong() })
+    }
+
+    @TypeConverter
+    fun fromInstant(instant: Instant): Long {
+        return instant.toEpochMilli()
+    }
+
+    @TypeConverter
+    fun toInstant(value: Long): Instant {
+        return Instant.ofEpochMilli(value)
     }
 }
