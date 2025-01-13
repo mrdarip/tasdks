@@ -1,4 +1,4 @@
-package com.mrdarip.tasdks.screens.managementScreens.viewModels
+package com.mrdarip.tasdks.navigation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,29 +7,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
-import com.mrdarip.tasdks.data.entity.Resource
+import com.mrdarip.tasdks.data.entity.Execution
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ManageResourcesViewModel(
+class WidgetBottomBarViewModel(
     private val repository: TasdksRepository = Graph.repository
 ) : ViewModel() {
-    var state by mutableStateOf(ManageResourcesState())
+    var state by mutableStateOf(CreateActivatorState())
         private set
 
     init {
-        getAllResources()
+        getActivators()
     }
 
-    private fun getAllResources() {
+    private fun getActivators() {
         viewModelScope.launch {
-            repository.allResources.collectLatest {
-                state = state.copy(allResources = it)
+            repository.runningExecutionsFlow.collectLatest {
+                state = state.copy(executions = it)
             }
         }
     }
+
 }
 
-data class ManageResourcesState(
-    val allResources: List<Resource> = emptyList()
+data class CreateActivatorState(
+    val executions: List<Execution> = emptyList()
+    //TODO: Add other entities video 6/7
 )

@@ -1,5 +1,6 @@
 package com.mrdarip.tasdks.screens.managementScreens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -55,10 +56,10 @@ private fun CreateActivatorBodyContent(
                 Activator(
                     comment = null,
                     taskToActivateId = preSelectedTaskId,
-                    endDate = null,
+                    endAfterDate = null,
                     userCancelled = false,
                     repetitionRange = RepetitionRange(),
-                    endRep = null
+                    endAfterRepetitions = null
                 )
             )
         }
@@ -76,6 +77,7 @@ private fun CreateActivatorBodyContent(
                 //TODO: Move check to ActivatorFields
                 if (newActivator.taskToActivateId != -1L) {//if task to activate is -1 it means that no task was selected
                     createActivatorViewModel.viewModelScope.launch(Dispatchers.IO) {
+                        Log.i("CreateActivatorScreen", "Inserting activator $newActivator")
                         createActivatorViewModel.insertActivator(newActivator)
                         withContext(Dispatchers.Main) {
                             navController.popBackStack()//todo: should this be moved outside the coroutine?

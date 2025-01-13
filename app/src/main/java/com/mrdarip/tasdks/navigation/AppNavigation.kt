@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -52,20 +52,21 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mrdarip.tasdks.composables.EntitiesBackHandler
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
+import com.mrdarip.tasdks.data.entity.Execution
+import com.mrdarip.tasdks.data.entity.IDRoute
 import com.mrdarip.tasdks.screens.NotFoundScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.StatsMenu
 import com.mrdarip.tasdks.screens.managementScreens.CreateActivatorScreen
-import com.mrdarip.tasdks.screens.managementScreens.CreateResourceScreen
 import com.mrdarip.tasdks.screens.managementScreens.CreateTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditActivatorScreen
 import com.mrdarip.tasdks.screens.managementScreens.EditTaskScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageActivatorsScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageExecutionsScreen
-import com.mrdarip.tasdks.screens.managementScreens.ManageResourcesScreen
 import com.mrdarip.tasdks.screens.managementScreens.ManageTasksScreen
-import com.mrdarip.tasdks.screens.playScreens.PlayActivatorScreen
+import com.mrdarip.tasdks.screens.playScreens.ManageRunningExecutions
+import com.mrdarip.tasdks.screens.playScreens.PlayExecutionScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -143,19 +144,20 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
         val labels = listOf(
             "Manage Tasks",
             "Manage Activators",
-            "Manage Resources"
+            "Manage Running Executions"
         )
 
         val icons = listOf(
             Icons.Filled.Build,
             Icons.Filled.PlayArrow,
-            Icons.Filled.Star
+            Icons.Filled.Call
         )
 
         val screens = listOf(
             AppScreen.ManageTasks,
             AppScreen.ManageActivators,
-            AppScreen.ManageResources
+            AppScreen.ManageRunningExecutions
+
         )
 
         labels.forEachIndexed { index, item ->
@@ -203,7 +205,7 @@ fun BottomBar(navController: NavController) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
     val items = listOf("Menu", "Search", "Stats")
-    val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.AccountCircle)
+    val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.BarChart)
     val bottomBarScreenRoutes = listOf(
         AppScreen.FirstScreen.route,
         AppScreen.SecondScreen.route,
@@ -248,18 +250,6 @@ fun MainNavHost(navController: NavHostController) {
             StatsMenu(navController)
         }
 
-        composable(route = AppScreen.ManageResources.route) {
-            ManageResourcesScreen(navController = navController)
-        }
-
-        composable(
-            "${AppScreen.CreateResource.route}/{resourceId}",
-            arguments = listOf(navArgument("resourceId") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val resourceId = backStackEntry.arguments?.getLong("resourceId")
-            CreateResourceScreen(navController, resourceId ?: -1)
-        }
-
         composable(route = AppScreen.ManageExecutions.route) {
             ManageExecutionsScreen(navController = navController)
         }
@@ -288,17 +278,15 @@ fun MainNavHost(navController: NavHostController) {
         }
 
         composable(
-            "${AppScreen.PlayActivator.route}/{activatorId}",
-            arguments = listOf(navArgument("activatorId") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val activatorId = backStackEntry.arguments?.getLong("activatorId")
-            PlayActivatorScreen(activatorId ?: 0, navController)
-        }
-
-        composable(
             AppScreen.ManageActivators.route,
         ) {
             ManageActivatorsScreen(navController = navController)
+        }
+
+        composable(
+            AppScreen.ManageRunningExecutions.route,
+        ) {
+            ManageRunningExecutions(navController = navController)
         }
 
         composable(
@@ -325,12 +313,67 @@ fun MainNavHost(navController: NavHostController) {
             NotFoundScreen()
         }
 
+        composable(
+            "${AppScreen.PlayExecution.route}/execution/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id")
+
+            PlayExecutionScreen(
+                navController = navController,
+                navigationArgs = Execution(
+                    executionId = id ?: 0,
+                    taskId = 0,
+                    tasksRoute = IDRoute(emptyList()),
+                    executionRoute = IDRoute(emptyList()),
+                    childNumber = 0
+                )
+            )
+        }
+
+        composable(
+            "${AppScreen.PlayExecution.route}/task/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id")
+
+            PlayExecutionScreen(
+                navController = navController,
+                navigationArgs = Execution(
+                    executionId = 0,
+                    taskId = id ?: 0,
+                    tasksRoute = IDRoute(emptyList()),
+                    executionRoute = IDRoute(emptyList()),
+                    childNumber = 0
+                )
+            )
+        }
+
+        composable(
+            "${AppScreen.PlayExecution.route}/activator/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id")
+
+            PlayExecutionScreen(
+                navController = navController,
+                navigationArgs = Execution(
+                    executionId = 0,
+                    taskId = 0,
+                    activatorId = id ?: 0,
+                    tasksRoute = IDRoute(emptyList()),
+                    executionRoute = IDRoute(emptyList()),
+                    childNumber = 0
+                )
+            )
+        }
+
     }
 }
 
 @Composable
 fun RunningActivators() {
-    val viewModel = viewModel(modelClass = RunningActivatorsViewModel::class.java)
+    val viewModel = viewModel(modelClass = WidgetBottomBarViewModel::class.java)
     val viewModelState = viewModel.state
 
     Column(

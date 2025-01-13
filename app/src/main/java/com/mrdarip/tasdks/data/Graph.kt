@@ -11,7 +11,6 @@ object Graph {
             db.taskDao(),
             db.activatorDao(),
             db.executionDao(),
-            db.resourceDao(),
             db.taskWithTasksDao()
         )
     }

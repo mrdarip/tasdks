@@ -7,15 +7,13 @@ enum class AppScreen(val route: String, val isEntityScreen: Boolean = false) {
     EditActivator("EditActivator", true),
     ManageActivators("ManageActivators", false),
     CreateActivator("CreateActivator", true),
-    CreateResource("CreateResource", true),
-    EditResource("EditResource", true),
-    ManageResources("ManageResources", false),
     ManageExecutions("ManageExecutions", false),
     EditTask("EditTask", true),
     ManageTasks("ManageTasks", false),
     CreateTask("CreateTask", true),
-    PlayActivator("PlayActivator", true),
-    NotFound("NotFound", false);
+    NotFound("NotFound", false),
+    ManageRunningExecutions("ManageRunningExecutions"),
+    PlayExecution("PlayExecution", false); //TODO: is this false?
 
     companion object {
         fun fromRoute(route: String): AppScreen {

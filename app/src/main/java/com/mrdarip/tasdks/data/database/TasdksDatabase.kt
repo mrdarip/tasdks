@@ -9,7 +9,6 @@ import com.mrdarip.tasdks.data.entity.Activator
 import com.mrdarip.tasdks.data.entity.Converters
 import com.mrdarip.tasdks.data.entity.DAOs
 import com.mrdarip.tasdks.data.entity.Execution
-import com.mrdarip.tasdks.data.entity.Resource
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.data.entity.TaskTaskCR
 
@@ -18,7 +17,6 @@ import com.mrdarip.tasdks.data.entity.TaskTaskCR
         Task::class,
         Activator::class,
         Execution::class,
-        Resource::class,
         TaskTaskCR::class],
     version = 1,
     exportSchema = false
@@ -28,7 +26,6 @@ abstract class TasdksDatabase : RoomDatabase() {
     abstract fun taskDao(): DAOs.TaskDAO
     abstract fun activatorDao(): DAOs.ActivatorDAO
     abstract fun executionDao(): DAOs.ExecutionDAO
-    abstract fun resourceDao(): DAOs.ResourceDAO
     abstract fun taskWithTasksDao(): DAOs.TaskWithTasksDAO
     companion object {
         @Volatile

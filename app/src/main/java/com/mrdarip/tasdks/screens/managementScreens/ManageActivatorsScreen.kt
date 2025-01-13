@@ -65,7 +65,7 @@ private fun ManageActivatorsBodyContent(
                 subTitle = activator.comment ?: "No comment provided",
                 emoji = taskToActivate.iconEmoji,
                 onPrimaryClick = {
-                    navController.navigate("${AppScreen.PlayActivator.route}/${activator.activatorId}")
+                    navController.navigate("${AppScreen.PlayExecution.route}/activator/${activator.activatorId}")
                 },
                 primaryIcon = Icons.Filled.PlayArrow,
                 onSecondaryClick = {

@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import androidx.room.Upsert
+import com.mrdarip.tasdks.screens.playScreens.ExecutionWithTaskAndActivator
 import kotlinx.coroutines.flow.Flow
 
 class DAOs {
@@ -106,7 +107,8 @@ class DAOs {
         fun taskLength(taskId: Long): Long
 
         //to get top and from from a percentile you must convert it to a fraction, so the numerator is top and from is the denominator. For example the 95% (0.95) percentile is 19/20 so top = 19 and from = 20
-        @Query("""
+        @Query(
+            """
             WITH LastExecutions AS (
                 SELECT `end` - start AS duration
                 FROM executions
@@ -118,10 +120,12 @@ class DAOs {
             FROM LastExecutions
             ORDER BY duration ASC
             LIMIT 1 OFFSET :top-1
-            """)
+            """
+        )
         fun maxTaskETA(taskId: Long, top: Int, from: Int): Flow<Long>
 
-        @Query("""
+        @Query(
+            """
             WITH ActivatorExecutions AS (
                 SELECT `end` - start AS duration
                 FROM executions
@@ -145,8 +149,74 @@ class DAOs {
             )
             ORDER BY duration ASC
             LIMIT 1 OFFSET :top - 1
-        """)
+        """
+        )
         fun maxActivatorETA(activatorId: Long, top: Int, from: Int): Flow<Long>
+
+        @Query("SELECT t.* FROM tasks t JOIN activators a ON t.taskId = a.taskToActivateId WHERE a.activatorId = :activatorId")
+        fun getTaskByActivatorId(activatorId: Long): Task
+
+        /**
+         *
+         * @return a list with task(taskId) subTask at position 0, that task's subtask at position 0, and so on recursively
+         */
+
+        @Query(
+            """
+        WITH RECURSIVE SubTasksChain AS (
+            -- Base case: Start with the given taskId
+            SELECT 
+                t.*,
+                1 AS level -- Level starts at 1 for the base case
+            FROM tasks t
+            WHERE t.taskId = :taskId -- Start directly from the given taskId
+            
+            UNION ALL
+            
+            -- Recursive case: Increment level for each subsequent subTask
+            SELECT 
+                t.*,
+                s.level + 1 AS level -- Increment the level from the previous task
+            FROM tasks t
+            INNER JOIN TaskTaskCR cr ON t.taskId = cr.childId
+            INNER JOIN SubTasksChain s ON cr.parentId = s.taskId
+            WHERE cr.position = 0
+        )
+        -- Select all results from the recursive CTE
+        SELECT * FROM SubTasksChain
+        ORDER BY level
+        """
+        )
+        fun getBranchOfInclusive(taskId: Long): List<Task>
+
+        @Query(
+            """
+        WITH RECURSIVE SubTasksChain AS (
+            -- Base case: Start with the children of the given taskId
+            SELECT 
+                t.*,
+                1 AS level -- Level starts at 1 for the children of the initial task
+            FROM tasks t
+            INNER JOIN TaskTaskCR cr ON t.taskId = cr.childId
+            WHERE cr.parentId = :taskId AND cr.position = 0
+            
+            UNION ALL
+            
+            -- Recursive case: Increment level for each subsequent subTask
+            SELECT 
+                t.*,
+                s.level + 1 AS level -- Increment the level from the previous task
+            FROM tasks t
+            INNER JOIN TaskTaskCR cr ON t.taskId = cr.childId
+            INNER JOIN SubTasksChain s ON cr.parentId = s.taskId
+            WHERE cr.position = 0
+        )
+        -- Select all results from the recursive CTE
+        SELECT * FROM SubTasksChain
+        ORDER BY level
+        """
+        )
+        fun getBranchOfExclusive(taskId: Long): List<Task>
     }
 
     @Dao
@@ -166,7 +236,7 @@ class DAOs {
         @Query("SELECT * FROM activators")
         fun getAllActivators(): Flow<List<Activator>>
 
-        @Query("SELECT * FROM activators WHERE NOT userCancelled AND COALESCE(endDate > strftime('%s', 'now'),1) AND COALESCE(endRep > (SELECT COUNT(activatorId) FROM executions GROUP BY activatorId),1)")
+        @Query("SELECT * FROM activators e1 WHERE NOT userCancelled AND COALESCE(endAfterDate > strftime('%s', 'now'),1) AND COALESCE(endAfterRepetitions > (SELECT COUNT(activatorId) FROM executions e2 where e2.activatorId = e1.activatorId ),1)")
         fun getActiveActivators(): Flow<List<Activator>>
 
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
@@ -175,7 +245,7 @@ class DAOs {
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
         fun getActivatorByIdAsFlow(activatorId: Long): Flow<Activator>
 
-        @Query("SELECT * FROM executions WHERE parentExecution IS NULL AND start = `end` ")
+        @Query("SELECT * FROM executions WHERE tasksRoute IS '' AND executionStatus = 'RUNNING'")
         fun getParentRunningExecutions(): Flow<List<Execution>>
 
         @Query(
@@ -185,8 +255,8 @@ class DAOs {
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId 
                 WHERE
                     activators.userCancelled = 0 AND
-                    COALESCE(endDate > strftime('%s', 'now'),1) AND
-                    COALESCE(endRep > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
+                    COALESCE(endAfterDate > strftime('%s', 'now'),1) AND
+                    COALESCE(endAfterRepetitions > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
                 GROUP BY activators.activatorId 
                 HAVING 
                     (
@@ -237,8 +307,8 @@ class DAOs {
                 LEFT JOIN executions ON activators.activatorId = executions.activatorId
                 WHERE 
                     activators.userCancelled = 0 AND
-                    COALESCE(endDate > strftime('%s', 'now'),1) AND
-                    COALESCE(endRep > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
+                    COALESCE(endAfterDate > strftime('%s', 'now'),1) AND
+                    COALESCE(endAfterRepetitions > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
                 GROUP BY activators.activatorId
                 HAVING 
                     (
@@ -275,6 +345,9 @@ class DAOs {
             """
         ) //TODO: implement querying exactDateRange overdue tasks
         fun getOverdue(): Flow<List<Activator>>
+
+        @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
+        fun getActivatorWithTaskByActivatorId(activatorId: Long): ActivatorWithTask
     }
 
     @Dao
@@ -288,9 +361,9 @@ class DAOs {
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
         fun getById(executionId: Long): Execution
 
-        @Query("UPDATE executions SET 'end' = :end, successfullyEnded = :successfullyEnded WHERE executionId = :executionId")
+        @Query("UPDATE executions SET 'end' = :end, executionStatus = :executionStatus WHERE executionId = :executionId")
         fun update(
-            executionId: Long, end: Int, successfullyEnded: Boolean
+            executionId: Long, end: Int, executionStatus: ExecutionStatus
         )
 
         @Delete
@@ -301,28 +374,44 @@ class DAOs {
 
         @Query("SELECT * FROM executions WHERE executionId = :executionId")
         fun getExecutionById(executionId: Long): Execution
-    }
 
-    @Dao
-    interface ResourceDAO {
+        //TODO: getRunningExecutions is very similar to activatorDAO.getParentRunningExecutions, maybe they could be merged
+        @Query("SELECT * FROM executions WHERE tasksRoute IS '' AND `end` IS NULL")
+        fun getRunningExecutions(): Flow<List<Execution>>
+
+        @Query("SELECT * FROM executions WHERE executionId = :executionId")
+        fun getExecutionWithTaskByExeId(executionId: Long): ExecutionWithTask
+
+        @Query(
+            """
+            SELECT * FROM executions 
+            WHERE executionRoute LIKE :executionId || '%' 
+            UNION 
+            SELECT * FROM executions WHERE executionId = :executionId 
+            ORDER BY executionId DESC 
+            LIMIT 1
+            """
+        )
+        fun getRunningExecutionChildOf(executionId: Long): ExecutionWithTask //TODO: improve query's logic
+
         @Upsert
-        suspend fun upsert(resource: Resource): Long
+        fun upsert(execution: Execution): Long
 
-        @Update
-        fun update(resource: Resource)
+        @Query("SELECT * FROM executions WHERE executionId = :executionId")
+        fun getExecutionWithTaskAndActivatorByExeId(executionId: Long): ExecutionWithTaskAndActivator
 
-        @Delete
-        fun delete(resource: Resource)
+        @Query(
+            """
+        SELECT tasks.* 
+        FROM tasks
+        JOIN executions e ON tasks.taskId = e.taskId
+        WHERE e.executionId IN (:executions)
+        """
+        )
+        fun getTasksFromExecutionsIDs(executions: List<Long>): Flow<List<Task>>
 
-        @Query("SELECT * FROM resources")
-        fun getAllResources(): Flow<List<Resource>>
-
-        @Query("SELECT * FROM resources WHERE resourceId = :resourceId")
-        fun getResourceById(resourceId: Long): Resource
-
-        @Query("SELECT * FROM resources WHERE resourceId = :resourceId")
-        fun getByIdAsFlow(resourceId: Long): Flow<Resource>
     }
+
 
     @Dao
     interface TaskWithTasksDAO {

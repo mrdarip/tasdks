@@ -1,4 +1,4 @@
-package com.mrdarip.tasdks.navigation
+package com.mrdarip.tasdks.screens.playScreens
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,19 +11,19 @@ import com.mrdarip.tasdks.data.entity.Execution
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class RunningActivatorsViewModel(
+class ManageRunningExecutionsViewModel(
     private val repository: TasdksRepository = Graph.repository
 ) : ViewModel() {
     var state by mutableStateOf(CreateActivatorState())
         private set
 
     init {
-        getActivators()
+        getExecutions()
     }
 
-    private fun getActivators() {
+    private fun getExecutions() {
         viewModelScope.launch {
-            repository.runningExecutions.collectLatest {
+            repository.runningExecutionsFlow.collectLatest {
                 state = state.copy(executions = it)
             }
         }

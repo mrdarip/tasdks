@@ -69,12 +69,12 @@ private fun ManageTasksBodyContent(
                             Activator(
                                 comment = "Created for one time execution",
                                 taskToActivateId = task.taskId,
-                                endRep = 1
+                                endAfterRepetitions = 1
                             )
                         )
 
                         withContext(Dispatchers.Main) {
-                            navController.navigate("${AppScreen.PlayActivator.route}/$activatorId")
+                            navController.navigate("${AppScreen.PlayExecution.route}/task/${task.taskId}")
                         }
                     }
                 },
