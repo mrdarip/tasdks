@@ -1,6 +1,6 @@
 ---
-title: 'Hugo Whisper Docs'
-date: 2018-11-28T15:14:39+10:00
+title: 'Tasdks'
+date: 2025-01-19T18:51:18+01:00
 ---
 
-Whisper is a documentation theme built with Hugo. The design and functionality is intentionally minimal. 
+Tasdks is an intuitive task management app that helps you organize, prioritize, and predict the duration of your tasks. It learns from your habits and distributes tasks efficiently across your days, ensuring you never miss a step or underestimate the time needed.

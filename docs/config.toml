@@ -1,7 +1,7 @@
 baseURL = "/"
 theme = "hugo-whisper-theme"
 languageCode = "en-us"
-title = "Hugo Whisper Theme"
+title = "Tasdks"
 
 pygmentsCodeFences = true
 pygmentsCodefencesGuessSyntax = true
@@ -52,4 +52,4 @@ summaryLength = 30
       standard  = "/images/logo.svg"
 
   [params.footer]
-    copyright_text = 'Free Hugo theme by <a class="zerostatic" href="https://www.zerostatic.io">Zerostatic Themes</a>'
+    copyright_text = 'Productivity app by <a class="mrdarip" href="https://mrdarip.github.io/">mrdarip</a>'
