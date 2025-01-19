@@ -38,3 +38,5 @@ obj/
 
 # Kotlin 2.0
 .kotlin/
+
+.idea/
