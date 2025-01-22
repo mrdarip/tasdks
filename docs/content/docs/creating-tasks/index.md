@@ -4,7 +4,7 @@ date: 2025-01-21T2:24:01+01:00
 weight: 3
 ---
 
-## When to divide a task into subtasks
+## When to divide a task into subtasks {#when-to-divide-a-task-into-subtasks}
 
 When a task is too complex or too long, it is a good idea to divide it into subtasks. This makes the task easier to understand and manage.
 

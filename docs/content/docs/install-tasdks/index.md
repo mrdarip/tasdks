@@ -1,7 +1,7 @@
 ---
 title: 'Install Tasdks'
 date: 2025-01-19T19:24:01+01:00
-weight: 2
+weight: 1
 summary: 'Taskds is currently only available from Github releases for Android'
 ---
 
