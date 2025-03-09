@@ -4,6 +4,10 @@ date: 2025-01-21T2:24:01+01:00
 weight: 3
 ---
 
+## What should a task be
+
+A task can be anything! There's no limitation on what should a task be, but you may to follow creation guidelines so all of them follow a logical pattern!
+
 ## When to divide a task into subtasks {#when-to-divide-a-task-into-subtasks}
 
 When a task is too complex or too long, it is a good idea to divide it into subtasks. This makes the task easier to understand and manage.
