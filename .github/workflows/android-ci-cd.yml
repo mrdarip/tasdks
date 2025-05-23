@@ -70,7 +70,7 @@ jobs:
     - name: Create/Update GitHub Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: CI/CD Release
+        tag_name: GHactions
         name: ${{ github.sha }} - ${{ github.event.head_commit.message }}
         files: ./release-apk/*.apk
       env:
