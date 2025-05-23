@@ -71,7 +71,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: GHactions
-        name: ${{ github.sha.substr(0,7) }} - ${{ github.event.head_commit.message }}
+        name: ${{ github.ref_name }} - ${{ github.event.head_commit.message }}
         files: ./release-apk/*.apk
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
