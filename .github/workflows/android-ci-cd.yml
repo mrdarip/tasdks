@@ -8,6 +8,10 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: write
+  packages: read
+
 jobs:
   build:
     name: Build and Test
