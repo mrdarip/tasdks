@@ -13,7 +13,8 @@ enum class AppScreen(val route: String, val isEntityScreen: Boolean = false) {
     CreateTask("CreateTask", true),
     NotFound("NotFound", false),
     ManageRunningExecutions("ManageRunningExecutions"),
-    PlayExecution("PlayExecution", false); //TODO: is this false?
+    PlayExecution("PlayExecution", false), //TODO: is this false?
+    About("About", false);
 
     companion object {
         fun fromRoute(route: String): AppScreen {
