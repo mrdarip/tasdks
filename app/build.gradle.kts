@@ -5,6 +5,29 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
 }
 
+// Add function to get Git information
+fun getGitInfo(): Map<String, String> {
+    val result = HashMap<String, String>()
+    try {
+        val commitHashCommand = Runtime.getRuntime().exec("git rev-parse --short HEAD")
+        val commitHash = commitHashCommand.inputStream.bufferedReader().readText().trim()
+        result["commitHash"] = commitHash
+
+        val commitMsgCommand = Runtime.getRuntime().exec("git log -1 --pretty=%B")
+        val commitMsg = commitMsgCommand.inputStream.bufferedReader().readText().trim()
+        result["commitMsg"] = commitMsg
+
+        val branchCommand = Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD")
+        val branch = branchCommand.inputStream.bufferedReader().readText().trim()
+        result["branch"] = branch
+    } catch (e: Exception) {
+        result["commitHash"] = "unknown"
+        result["commitMsg"] = "unknown"
+        result["branch"] = "unknown"
+    }
+    return result
+}
+
 android {
     namespace = "com.mrdarip.tasdks"
     compileSdk = 35
@@ -15,6 +38,12 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+        // Add Git info to BuildConfig
+        val gitInfo = getGitInfo()
+        buildConfigField("String", "GIT_COMMIT_HASH", "\"${gitInfo["commitHash"]}\"")
+        buildConfigField("String", "GIT_COMMIT_MSG", "\"${gitInfo["commitMsg"]}\"")
+        buildConfigField("String", "GIT_BRANCH", "\"${gitInfo["branch"]}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -40,6 +69,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true  // Enable BuildConfig generation
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"

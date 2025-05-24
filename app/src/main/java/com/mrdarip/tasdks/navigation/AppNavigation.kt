@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -54,6 +55,7 @@ import com.mrdarip.tasdks.composables.EntitiesBackHandler
 import com.mrdarip.tasdks.composables.TwoButtonsListItem
 import com.mrdarip.tasdks.data.entity.Execution
 import com.mrdarip.tasdks.data.entity.IDRoute
+import com.mrdarip.tasdks.screens.AboutScreen
 import com.mrdarip.tasdks.screens.NotFoundScreen
 import com.mrdarip.tasdks.screens.bottomBarScreens.MainMenu
 import com.mrdarip.tasdks.screens.bottomBarScreens.SearchMenu
@@ -197,6 +199,22 @@ fun DrawerContent(navController: NavController, drawerState: DrawerState, scope:
             onClick = { /*TODO*/ },
             modifier = Modifier.padding(horizontal = 8.dp)
         )
+        
+        NavigationDrawerItem(
+            label = { Text(text = "About") },
+            icon = {
+                Icon(
+                    Icons.Filled.Info,
+                    contentDescription = "About"
+                )
+            },
+            selected = false,
+            onClick = { 
+                navController.navigate(AppScreen.About.route)
+                scope.launch { drawerState.close() }
+            },
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
     }
 }
 
@@ -311,6 +329,12 @@ fun MainNavHost(navController: NavHostController) {
             AppScreen.NotFound.route
         ) {
             NotFoundScreen()
+        }
+        
+        composable(
+            AppScreen.About.route
+        ) {
+            AboutScreen()
         }
 
         composable(
