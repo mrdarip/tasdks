@@ -28,6 +28,8 @@ class TasdksRepository(
     val activeTasks = taskDAO.getActive()
     val overdueTasks = activatorDAO.getOverdue()
     val pendingTasks = activatorDAO.getPending()
+    val overdueTasksWithStats = activatorDAO.getOverdueWithStats()
+    val pendingTasksWithStats = activatorDAO.getPendingWithStats()
     val tasksOrderByLastDone = taskDAO.getAllOrderByLastDone()
     val tasksOrderByUsuallyAtThisTime = taskDAO.getAllOrderByUsuallyAtThisTime()
     val activators = activatorDAO.getAllActivators()

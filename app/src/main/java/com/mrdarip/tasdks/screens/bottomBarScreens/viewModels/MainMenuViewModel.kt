@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.mrdarip.tasdks.data.Graph
 import com.mrdarip.tasdks.data.TasdksRepository
 import com.mrdarip.tasdks.data.entity.Activator
+import com.mrdarip.tasdks.data.entity.ActivatorAndStats
 import com.mrdarip.tasdks.data.entity.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -22,6 +23,8 @@ class MainMenuViewModel(
     init {
         getOverdueTasks()
         getPendingTasks()
+        getOverdueTasksWithStats()
+        getPendingTasksWithStats()
         getActiveTasks()
         getTasksOrderByLastDone()
         getTasksOrderByUsuallyAtThisTime()
@@ -47,6 +50,22 @@ class MainMenuViewModel(
         viewModelScope.launch {
             repository.pendingTasks.collectLatest {
                 state = state.copy(pendingActivators = it)
+            }
+        }
+    }
+
+    private fun getOverdueTasksWithStats() {
+        viewModelScope.launch {
+            repository.overdueTasksWithStats.collectLatest {
+                state = state.copy(overdueActivatorsWithStats = it)
+            }
+        }
+    }
+
+    private fun getPendingTasksWithStats() {
+        viewModelScope.launch {
+            repository.pendingTasksWithStats.collectLatest {
+                state = state.copy(pendingActivatorsWithStats = it)
             }
         }
     }
@@ -95,5 +114,7 @@ data class MainMenuState(
     val tasksOrderedByUsuallyAtThisTime: List<Task> = emptyList(),
     val overdueActivators: List<Activator> = emptyList(),
     val pendingActivators: List<Activator> = emptyList(),
+    val overdueActivatorsWithStats: List<ActivatorAndStats> = emptyList(),
+    val pendingActivatorsWithStats: List<ActivatorAndStats> = emptyList(),
     //TODO: Add other entities video 6/7
 )

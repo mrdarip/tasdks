@@ -39,7 +39,7 @@ private fun BodyContent(
     mainMenuState: MainMenuState,
     navController: NavController
 ) {
-    if (mainMenuState.activeTasks.isEmpty() && mainMenuState.overdueActivators.isEmpty() && mainMenuState.pendingActivators.isEmpty()) {
+    if (mainMenuState.activeTasks.isEmpty() && mainMenuState.overdueActivatorsWithStats.isEmpty() && mainMenuState.pendingActivatorsWithStats.isEmpty()) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -60,15 +60,13 @@ private fun BodyContent(
     } else {
         Column(Modifier.verticalScroll(rememberScrollState())) {
             ActivatorCardRow(
-                mainMenuState.overdueActivators,
+                mainMenuState.overdueActivatorsWithStats,
                 "Overdue Tasks",
-                mainMenuViewModel,
                 navController
             )
             ActivatorCardRow(
-                mainMenuState.pendingActivators,
+                mainMenuState.pendingActivatorsWithStats,
                 "Pending Tasks",
-                mainMenuViewModel,
                 navController
             )
 

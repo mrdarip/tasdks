@@ -12,15 +12,14 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mrdarip.tasdks.data.entity.Activator
+import com.mrdarip.tasdks.data.entity.ActivatorAndStats
 import com.mrdarip.tasdks.data.entity.Task
 import com.mrdarip.tasdks.navigation.AppScreen
-import com.mrdarip.tasdks.screens.bottomBarScreens.viewModels.MainMenuViewModel
 
 @Preview
 @Composable
@@ -48,9 +47,8 @@ fun MiniActivatorPlayer(
 
 @Composable
 fun ActivatorCardRow(
-    tasks: List<Activator>,
+    tasks: List<ActivatorAndStats>,
     title: String,
-    mainMenuViewModel: MainMenuViewModel,
     navController: NavController
 ) {
     if (tasks.isNotEmpty()) {
@@ -68,19 +66,13 @@ fun ActivatorCardRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            items(tasks) { activator ->
-                val task = mainMenuViewModel.getTaskById(activator.taskToActivateId)
-                    .collectAsState(initial = Task()).value
-
-                val taskETA = mainMenuViewModel.getMaxActivatorETA(activator.activatorId)
-                    .collectAsState(initial = 0).value
-
+            items(tasks) { activatorAndStats ->
                 TasdksCard(
-                    emoji = task.iconEmoji,
-                    title = task.name,
-                    subTitle = "ETA: $taskETA min\n" + activator.comment,
+                    emoji = activatorAndStats.task.iconEmoji,
+                    title = activatorAndStats.task.name,
+                    subTitle = "ETA: ${activatorAndStats.estimatedTimeMinutes} min\n" + activatorAndStats.activator.comment,
                     onClick = {
-                        navController.navigate("${AppScreen.PlayExecution.route}/activator/${activator.activatorId}")
+                        navController.navigate("${AppScreen.PlayExecution.route}/activator/${activatorAndStats.activator.activatorId}")
                     }
                 )
             }

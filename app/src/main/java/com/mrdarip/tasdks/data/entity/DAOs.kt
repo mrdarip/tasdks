@@ -348,6 +348,180 @@ class DAOs {
 
         @Query("SELECT * FROM activators WHERE activatorId = :activatorId")
         fun getActivatorWithTaskByActivatorId(activatorId: Long): ActivatorWithTask
+
+        @Query(
+            """
+                SELECT 
+                    activators.*,
+                    tasks.taskId as task_taskId,
+                    tasks.name as task_name,
+                    tasks.comment as task_comment,
+                    tasks.iconEmoji as task_iconEmoji,
+                    tasks.archived as task_archived,
+                    tasks.isFavourite as task_isFavourite,
+                    tasks.createdTime as task_createdTime,
+                    tasks.waitTime as task_waitTime,
+                    tasks.allowParallelTasks as task_allowParallelTasks,
+                    COALESCE(
+                        (
+                            WITH ActivatorExecutions AS (
+                                SELECT `end` - start AS duration
+                                FROM executions
+                                WHERE activatorId = activators.activatorId
+                                ORDER BY start DESC
+                                LIMIT 10
+                            ),
+                            TaskExecutions AS (
+                                SELECT `end` - start AS duration
+                                FROM executions
+                                WHERE taskId = activators.taskToActivateId
+                                ORDER BY start DESC
+                                LIMIT 10
+                            )
+                            SELECT duration / 60
+                            FROM (
+                                SELECT * FROM ActivatorExecutions
+                                UNION ALL
+                                SELECT * FROM TaskExecutions
+                                WHERE (SELECT COUNT(*) FROM ActivatorExecutions) < 10
+                            )
+                            ORDER BY duration ASC
+                            LIMIT 1 OFFSET 8
+                        ), 0
+                    ) AS estimatedTimeMinutes
+                FROM activators
+                JOIN tasks ON activators.taskToActivateId = tasks.taskId
+                LEFT JOIN executions ON activators.activatorId = executions.activatorId 
+                WHERE
+                    activators.userCancelled = 0 AND
+                    COALESCE(endAfterDate > strftime('%s', 'now'),1) AND
+                    COALESCE(endAfterRepetitions > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
+                GROUP BY activators.activatorId 
+                HAVING 
+                    (
+                        repetitionUnit = 'DAYS' AND
+                        (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.firstTimeDone ))) < activators.`end` * 86400 AND 
+                        (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.firstTimeDone ))) > activators.start * 86400
+                    ) OR
+                    (
+                        repetitionUnit = 'MONTHS' AND
+                        strftime('%d', 'now') > strftime('%d', activators.start, 'unixepoch') AND
+                        strftime('%d', 'now') < strftime('%d', activators.`end`, 'unixepoch') AND
+                        strftime('%Y%m', 'now') NOT IN (SELECT strftime('%Y%m', `end`,'unixepoch') FROM executions WHERE activators.activatorId = executions.activatorId)
+                    ) OR
+                    (
+                        repetitionUnit = 'YEARS' AND
+                        (
+                            (
+                                dateTime('now') > dateTime(activators.start,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+                                dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+                            ) OR
+                            (
+                                dateTime('now') < dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+                            )
+                        ) AND
+                        (
+                            SELECT COUNT(*) FROM executions WHERE 
+                                activators.activatorId = executions.activatorId AND
+                                (
+                                    (
+                                        dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch',printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+                                        dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+                                    ) OR
+                                    (
+                                        dateTime(executions.`end`,'unixepoch') < dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') 
+                                    )
+                                )
+                        ) = 0
+                    )
+                ORDER BY MAX(COALESCE(executions.`end`,activators.firstTimeDone )) ASC
+            """
+        )
+        fun getPendingWithStats(): Flow<List<ActivatorAndStats>>
+
+        @Query(
+            """
+                SELECT 
+                    activators.*,
+                    tasks.taskId as task_taskId,
+                    tasks.name as task_name,
+                    tasks.comment as task_comment,
+                    tasks.iconEmoji as task_iconEmoji,
+                    tasks.archived as task_archived,
+                    tasks.isFavourite as task_isFavourite,
+                    tasks.createdTime as task_createdTime,
+                    tasks.waitTime as task_waitTime,
+                    tasks.allowParallelTasks as task_allowParallelTasks,
+                    COALESCE(
+                        (
+                            WITH ActivatorExecutions AS (
+                                SELECT `end` - start AS duration
+                                FROM executions
+                                WHERE activatorId = activators.activatorId
+                                ORDER BY start DESC
+                                LIMIT 10
+                            ),
+                            TaskExecutions AS (
+                                SELECT `end` - start AS duration
+                                FROM executions
+                                WHERE taskId = activators.taskToActivateId
+                                ORDER BY start DESC
+                                LIMIT 10
+                            )
+                            SELECT duration / 60
+                            FROM (
+                                SELECT * FROM ActivatorExecutions
+                                UNION ALL
+                                SELECT * FROM TaskExecutions
+                                WHERE (SELECT COUNT(*) FROM ActivatorExecutions) < 10
+                            )
+                            ORDER BY duration ASC
+                            LIMIT 1 OFFSET 8
+                        ), 0
+                    ) AS estimatedTimeMinutes
+                FROM activators
+                JOIN tasks ON activators.taskToActivateId = tasks.taskId
+                LEFT JOIN executions ON activators.activatorId = executions.activatorId
+                WHERE 
+                    activators.userCancelled = 0 AND
+                    COALESCE(endAfterDate > strftime('%s', 'now'),1) AND
+                    COALESCE(endAfterRepetitions > (SELECT COUNT(activatorId) FROM executions WHERE activatorId = activators.activatorId),1)
+                GROUP BY activators.activatorId
+                HAVING 
+                    (
+                        repetitionUnit = 'DAYS' AND 
+                        (strftime('%s', 'now') - MAX(COALESCE(executions.`end`,activators.firstTimeDone ))) > activators.`end` * 86400
+                    ) OR
+                    (
+                        repetitionUnit = 'MONTHS' AND
+                        strftime('%d', 'now') > strftime('%d', activators.start, 'unixepoch') AND
+                        strftime('%d', 'now') < strftime('%d', activators.`end`, 'unixepoch') AND
+                        strftime('%Y%m', 'now') NOT IN (SELECT strftime('%Y%m', `end`,'unixepoch') FROM executions WHERE activators.activatorId = executions.activatorId)
+                    ) OR
+                    (
+                        repetitionUnit = 'YEARS' AND 
+                        (
+                            dateTime('now') > dateTime(activators.`end`,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+                            (
+                                SELECT COUNT(*) FROM executions WHERE
+                                    activators.activatorId = executions.activatorId AND
+                                    dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years')
+                            ) = 0
+                        ) OR
+                        (
+                            dateTime('now') > dateTime(activators.`end`,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years') AND
+                            dateTime('now') < dateTime(activators.start,'unixepoch', printf('%+d',abs(strftime('%Y','now') - strftime('%Y',activators.start,'unixepoch'))) || ' years') AND
+                            (
+                                SELECT COUNT(*) FROM executions WHERE
+                                    activators.activatorId = executions.activatorId AND
+                                    dateTime(executions.`end`,'unixepoch') > dateTime(activators.start,'unixepoch', printf('%+d',strftime('%Y','now', '-1 years') - strftime('%Y',activators.start,'unixepoch')) || ' years')
+                            ) = 0
+                        )
+                    )
+                ORDER BY MAX(COALESCE(executions.`end`,activators.firstTimeDone )) ASC
+            """
+        )
+        fun getOverdueWithStats(): Flow<List<ActivatorAndStats>>
     }
 
     @Dao
